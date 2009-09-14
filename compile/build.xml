@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<property name="base.dir"               value="${basedir}/.." />
+	<property name="src.skandium.dir"       value="${base.dir}/src" />
+	<property name="src.examples.dir"       value="${base.dir}/src-examples" />
+	<property name="javadoc.copyright"      value="Copyright 2009, NIC Labs, Universidad de Chile"/>
+	<property name="build.dir"              value="${base.dir}/build" />
+	<property name="compile.skandium.dir"   value="${build.dir}/skandium-classes" />
+	<property name="compile.examples.dir"   value="${build.dir}/examples-classes" />
+	<property name="skandium.version"       value="1.0b2" />
+	<property name="license.file"           value="${base.dir}/LICENSE" />
+	<property name="doc.dir"                value="${build.dir}/skandium-${skandium.version}-javadoc" />
+	<property name="source.level"		    value="1.6"/>
+	
+	<target name="all"  depends="clean, skandium.jar,skandium-src.jar, skandium-examples.jar, tar.development, tar.javadoc" description="Compile Everything"/>
+	
+	<target name="javadoc.skandium" description="Generate the Skandium source javadoc ">
+      <mkdir  dir="${doc.dir}"/>
+	  <javadoc  
+      destdir="${doc.dir}" 
+      author="true" 
+      version="true" 
+      source="${src.skandium.dir}" 
+      use="true" 
+      windowtitle="Skandium Library Complete API" 
+      breakiterator="yes" 
+      additionalparam="-docfilessubdirs -excludedocfilessubdir CVS:test_documentation"> 
+      
+      <packageset dir="${src.skandium.dir}" />
+
+      <link href="http://java.sun.com/j2se/1.6.0/docs/api/"/>
+      <doctitle>Skandium Programming</doctitle>
+      <bottom>${javadoc.copyright}</bottom>
+    </javadoc>
+  </target>
+	
+	<target name="compile.skandium" description="Compile Skandium">
+		<mkdir  dir="${build.dir}"/>
+		<delete dir="${compile.skandium.dir}"/>
+		<mkdir  dir="${compile.skandium.dir}"/>
+		<copy   todir="${compile.skandium.dir}" >
+			<fileset file="${license.file}"/>
+		</copy>
+		<javac  srcdir="${src.skandium.dir}" destdir="${compile.skandium.dir}" source="${source.level}"/>
+	</target>
+	
+	<target name="compile.examples" depends="skandium.jar" description="Compile Skandium Examples">
+		<mkdir  dir="${build.dir}"/>
+		<delete dir="${compile.examples.dir}"/>
+		<mkdir  dir="${compile.examples.dir}"/>
+		<copy   todir="${compile.examples.dir}" >
+			<fileset file="${license.file}"/>
+		</copy>
+		<javac  srcdir="${src.examples.dir}" destdir="${compile.examples.dir}" classpath="${build.dir}/skandium-${skandium.version}.jar"  source="${source.level}"/>
+	</target>
+	
+	<target name="skandium.jar" depends="compile.skandium" description="Creates the Skandium Library JAR">
+		<delete dir="${build.dir}/skandium-${skandium.version}.jar"/>
+        <jar    destfile="${build.dir}/skandium-${skandium.version}.jar" basedir="${compile.skandium.dir}">
+        	<manifest>
+        		<attribute name="Built-By" value="${user.name}"/>        		
+        		<attribute name="Implementation-Vendor"  value="NIC Labs, University of Chile"/>
+        		<attribute name="Implementation-Title"   value="Skandium Library"/>
+        		<attribute name="Implementation-Version" value="${skandium.version}"/>
+        	</manifest>
+       	</jar>
+	</target>
+	
+	<target name="skandium-src.jar" depends="compile.skandium" description="Creates the Skandium Library JAR">
+		<delete dir="${build.dir}/skandium-${skandium.version}-src.jar"/>
+        <jar    destfile="${build.dir}/skandium-${skandium.version}-src.jar" basedir="${src.skandium.dir}">
+	    	<manifest>
+	    		<attribute name="Built-By" value="${user.name}"/>        		
+	    		<attribute name="Implementation-Vendor"  value="NIC Labs, University of Chile"/>
+	    		<attribute name="Implementation-Title"   value="Skandium Library Source"/>
+	    		<attribute name="Implementation-Version" value="${skandium.version}"/>
+	    	</manifest>
+        </jar>
+	</target>
+	
+	<target name="skandium-examples.jar" depends="compile.examples" description="Creats the Skandium Examples JAR">
+		<delete dir="${build.dir}/skandium-${skandium.version}-examples.jar"/>
+		<jar destfile="${build.dir}/skandium-${skandium.version}-examples.jar">
+			<fileset dir="${compile.examples.dir}"/>
+			<fileset dir="${src.examples.dir}"/>
+			<fileset dir="${compile.skandium.dir}"/>
+	    	<manifest>
+	    		<attribute name="Class-Path" value="skandium-${skandium.version}.jar"/>
+	    		<attribute name="Main-Class" value="cl.niclabs.skandium.examples.Main"/>
+	    		<attribute name="Built-By" value="${user.name}"/>
+	    		<attribute name="Implementation-Vendor"  value="NIC Labs, University of Chile"/>
+	    		<attribute name="Implementation-Title"   value="Skandium Library Examples"/>
+	    		<attribute name="Implementation-Version" value="${skandium.version}"/>
+	    	</manifest>
+        </jar>
+	</target>
+	
+	<target name="tar.development" description="Create bundle file">
+		<delete dir="${build.dir}/skandium-${skandium.version}-dev.tgz"/>
+		<tar destfile="${build.dir}/skandium-${skandium.version}-dev.tgz" compression="gzip">
+		  <tarfileset dir="${base.dir}">
+		  		<exclude name="build/**"/>
+		  		<exclude name="doc/**"/>
+		  		<exclude name="bin/**"/>
+		  		<exclude name="classes/**"/>
+		  		<exclude name=".classpath"/>
+		  		<exclude name=".project"/>
+		  </tarfileset>
+		</tar>
+	</target>
+	
+	<target name="tar.javadoc" depends="javadoc.skandium" description="Create javadoc tar">
+		<delete dir="${doc.dir}.tgz"/>
+		<tar destfile="${doc.dir}.tgz" compression="gzip">
+		  <tarfileset dir="${doc.dir}"/>
+		</tar>
+	</target>
+	
+	<target name="clean" description="Clean build directory">
+		<delete dir="${build.dir}" />	
+	</target>
+		
+</project>
