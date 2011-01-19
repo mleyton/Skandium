@@ -29,7 +29,7 @@ public interface SkeletonVisitor {
     
     public <P,R> void visit(Farm<P, R> skeleton);
 
-    public <P,R> void visit(Pipe<P,R> skeleton);
+    public <P,X,R> void visit(Pipe<P,X,R> skeleton);
 
     public <P,R> void visit(Seq<P,R> skeleton);
 

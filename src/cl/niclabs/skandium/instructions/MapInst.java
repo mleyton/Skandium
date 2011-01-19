@@ -68,7 +68,7 @@ public class MapInst extends  AbstractInstruction {
 		}
 		
 		stack.push(new MergeInst(merge, strace));
-		
+
 		return params;
 	}
 	

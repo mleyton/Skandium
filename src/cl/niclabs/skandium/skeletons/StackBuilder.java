@@ -54,7 +54,7 @@ public class StackBuilder implements SkeletonVisitor {
 	}
 
 	@Override
-	public <P, R> void visit(Pipe<P, R> skeleton) {
+	public <P, X, R> void visit(Pipe<P, X, R> skeleton) {
 		
 		//mark the trace of the pipe skeleton
 		strace.add(skeleton.trace);

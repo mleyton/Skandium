@@ -24,20 +24,22 @@ import cl.niclabs.skandium.muscles.Execute;
  * @author mleyton
  *
  * @param <P> The input type of the {@link Skeleton}.
+ * @param <X> The intermediate type of the {@link Skeleton}. 
  * @param <R> The result type of the {@link Skeleton}. 
  * */
-public class Pipe<P,R> extends AbstractSkeleton<P,R> {
+public class Pipe<P,X,R> extends AbstractSkeleton<P,R> {
 
-	Skeleton<P,R> stage1, stage2;
+	Skeleton<P,X> stage1;
+        Skeleton<X,R> stage2;
 	
-	public Pipe(Skeleton<P,R> stage1, Skeleton<P,R> stage2){
+	public Pipe(Skeleton<P,X> stage1, Skeleton<X,R> stage2){
 		super();
 		this.stage1=stage1;
 		this.stage2=stage2;
 	}
 	
-	public Pipe(Execute<P,R> stage1,Execute<P,R> stage2){
-		this(new Seq<P,R>(stage1),new Seq<P,R>(stage2));
+	public Pipe(Execute<P,X> stage1,Execute<X,R> stage2){
+		this(new Seq<P,X>(stage1),new Seq<X,R>(stage2));
 	}
 	
 	/**

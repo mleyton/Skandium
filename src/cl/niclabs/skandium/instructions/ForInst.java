@@ -50,11 +50,11 @@ public class ForInst extends AbstractInstruction{
 	 */
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
-		
-		times--;
-		stack.push(this);
-		stack.addAll(substack);
-		
+		if (times > 0) {		
+			times--;
+			stack.push(this);
+			stack.addAll(substack);
+		}
 		return param;
 	}
 
