@@ -46,7 +46,7 @@ public class MapInst extends  AbstractInstruction {
 	 */
 	public MapInst(Split<?, ?> split, Stack<Instruction> stack, Merge<?, ?> merge, StackTraceElement[] strace) {
 		super(strace);
-		
+
 		this.split=split;
 		this.substack=stack;
 		this.merge=merge;

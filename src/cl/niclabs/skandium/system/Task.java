@@ -281,7 +281,7 @@ public class Task implements Runnable, Comparable<Task>{
 	 * 
 	 * If the <code>Task</code> is root, then the future is updated with the result.
 	 */
-	public <P> void notifyParent() {
+	protected <P> void notifyParent() {
 
 		if(this.isRoot()){
 			updateFutureWithResult();
