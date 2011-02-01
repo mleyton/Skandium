@@ -4,6 +4,8 @@ import cl.niclabs.skandium.Skandium;
 import cl.niclabs.skandium.examples.nqueensnaive.NQueens;
 import cl.niclabs.skandium.examples.pi.PI;
 import cl.niclabs.skandium.examples.quicksort.QuickSort;
+import cl.niclabs.skandium.examples.mergesort.MergeSort;
+import cl.niclabs.skandium.examples.bubblesort.BubbleSort;
 import cl.niclabs.skandium.examples.strassen.Strassen;
 
 public class Main {
@@ -30,6 +32,14 @@ public class Main {
 			String[] sub = {args[1],args[2]};
 			QuickSort.main(sub);
 		}
+		else if(args[0].equalsIgnoreCase("mergesort")){
+			String[] sub = {args[1],args[2]};
+			MergeSort.main(sub);
+		}
+		else if(args[0].equalsIgnoreCase("bubblesort")){
+			String[] sub = {args[1],args[2]};
+			BubbleSort.main(sub);
+		}
 		else{
 			usage();
 		}
@@ -52,8 +62,14 @@ public class Main {
 		System.out.println("Strassen:  java -jar skandium-"+Skandium.version()+"-examples.jar strassen "+ threads+ " 1024 128");
 		System.out.println("Strassen:  java -jar skandium-"+Skandium.version()+"-examples.jar strassen <threads> <matrixsize> <submatrixsize>");
 		System.out.println("");
-		System.out.println("QuickSort: java -jar skandium-"+Skandium.version()+"-examples.jar quicksort "+ threads+ " 67108864 2");
-		System.out.println("QuickSort: java -jar skandium-"+Skandium.version()+"-examples.jar strassen <threads> <size> <numthreads>");
+		System.out.println("QuickSort: java -jar skandium-"+Skandium.version()+"-examples.jar quicksort "+ threads+ " 67108864");
+		System.out.println("QuickSort: java -jar skandium-"+Skandium.version()+"-examples.jar quicksort <threads> <size>");
+		System.out.println("");
+		System.out.println("MergeSort: java -jar skandium-"+Skandium.version()+"-examples.jar mergesort "+ threads+ " 67108864");
+		System.out.println("MergeSort: java -jar skandium-"+Skandium.version()+"-examples.jar mergesort <threads> <size>");
+		System.out.println("");
+		System.out.println("BubbleSort: java -jar skandium-"+Skandium.version()+"-examples.jar mergesort "+ threads+ " 67108864");
+		System.out.println("BubbleSort: java -jar skandium-"+Skandium.version()+"-examples.jar mergesort <threads> <size>");
 		
 		System.exit(1);
 	}

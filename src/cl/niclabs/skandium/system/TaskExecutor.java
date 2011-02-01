@@ -17,7 +17,7 @@
  */
 package cl.niclabs.skandium.system;
 
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -36,7 +36,7 @@ public class TaskExecutor extends ThreadPoolExecutor {
 	 */
 	public TaskExecutor(int maxThreads){
 		
-		super(maxThreads, maxThreads, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+		super(maxThreads, maxThreads, 10, TimeUnit.SECONDS, new PriorityBlockingQueue<Runnable>());
 	}
 
 

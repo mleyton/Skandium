@@ -49,16 +49,8 @@ public class MergeInst extends AbstractInstruction{
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
 
 		Object []o = (Object [])param;
-		
-		if (o.length == 0) return null;
 
-		P[] input = (P[]) Array.newInstance(o[0].getClass(), o.length);
-		
-		for(int i=0;i<input.length;i++){
-			input[i]=(P)o[i];
-		}
-
-		return merge.merge(input);
+		return merge.merge(o);
 	}
 	
 	/**

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
+import java.lang.reflect.Array;
 
 import cl.niclabs.skandium.instructions.Instruction;
 
@@ -280,7 +281,7 @@ public class Task implements Runnable, Comparable<Task>{
 	 * 
 	 * If the <code>Task</code> is root, then the future is updated with the result.
 	 */
-	void notifyParent() {
+	public <P> void notifyParent() {
 
 		if(this.isRoot()){
 			updateFutureWithResult();
@@ -292,10 +293,10 @@ public class Task implements Runnable, Comparable<Task>{
 			
 			if(parent.children.size() > 0 && parent.childrenAreFinished()){
 				
-				Object[] results = new Object[parent.children.size()];
+				P[] results = (P []) Array.newInstance(this.getP().getClass(), parent.children.size());
 				
 				for(int i=0;i<results.length;i++){
-					results[i] = parent.children.get(i).getP();
+					results[i] = (P) parent.children.get(i).getP();
 				}
 				
 				parent.P=results;
