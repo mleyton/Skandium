@@ -1,4 +1,4 @@
-/*   Skandium: A Java(TM) based parallel skeleton library.
+/*   Skandium: A Java(TM) based parallel skeleton library. 
  *   
  *   Copyright (C) 2009 NIC Labs, Universidad de Chile.
  * 
