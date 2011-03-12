@@ -24,7 +24,7 @@ import cl.niclabs.skandium.muscles.Execute;
 
 
 /**
- * <p>This class computes Pi decimals for a given interval, using Bailey–Borwein–Plouffe (BPP) formula, using
+ * <p>This class computes Pi decimals for a given interval, using Bailey Borwein Plouffe (BPP) formula, using
  * custom data types (BigDecimal).</p>
  * 
  * <p>Note that the bigger the scale the slower operations are for BigDecimal types.</p>

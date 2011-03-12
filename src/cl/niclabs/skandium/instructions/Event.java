@@ -64,10 +64,10 @@ public class Event extends AbstractInstruction {
 	 * 
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, 
 			List<Stack<Instruction>> children) throws Exception {
+		System.out.println(type);
 		return param;
 	}
 
