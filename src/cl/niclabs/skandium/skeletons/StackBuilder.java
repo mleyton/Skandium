@@ -50,12 +50,10 @@ public class StackBuilder implements SkeletonVisitor {
 		
 		strace.add(skeleton.trace);
 
-		stack.push(new Event(Event.Type.BEFORE, null, 0, getStackTraceArray()));
-
+		stack.push(new Event(Event.Type.FARM_AFTER, null, getStraceAsArray()));
 		skeleton.subskel.accept(this);
+		stack.push(new Event(Event.Type.FARM_BEFORE, null, getStraceAsArray()));
 
-
-		stack.push(new Event(Event.Type.BEFORE, null, 0, getStackTraceArray()));
 	}
 
 	@Override
@@ -73,15 +71,23 @@ public class StackBuilder implements SkeletonVisitor {
 		skeleton.stage2.accept(stage2);
 		
 		//add the results to this stack (as there is no pipe instruction)
+		stack.push(new Event(Event.Type.PIPE_AFTER, null, getStraceAsArray()));
+		stack.push(new Event(Event.Type.PIPE_AFTER_STAGE, new Integer(1), getStraceAsArray()));
 		stack.addAll(stage2.stack);  //second stage first
+		stack.push(new Event(Event.Type.PIPE_BEFORE_STAGE, new Integer(1), getStraceAsArray()));
+		stack.push(new Event(Event.Type.PIPE_AFTER_STAGE, new Integer(0), getStraceAsArray()));
 		stack.addAll(stage1.stack);  //first stage last
+		stack.push(new Event(Event.Type.PIPE_BEFORE_STAGE, new Integer(0), getStraceAsArray()));
+		stack.push(new Event(Event.Type.PIPE_BEFORE, null, getStraceAsArray()));
 	}
 
 	@Override
 	public <P, R> void visit(Seq<P, R> skeleton) {	
 		strace.add(skeleton.trace);
 		
+		stack.push(new Event(Event.Type.SEQ_AFTER, null, getStraceAsArray()));
 		stack.push(new SeqInst(skeleton.execute, getStraceAsArray()));
+		stack.push(new Event(Event.Type.SEQ_BEFORE, null, getStraceAsArray()));
 	}
 
 	@Override
@@ -95,7 +101,9 @@ public class StackBuilder implements SkeletonVisitor {
 		skeleton.trueCase.accept(trueCaseStackBuilder);
 		skeleton.falseCase.accept(falseCaseStackBuilder);
 		
+		stack.push(new Event(Event.Type.IF_AFTER, null, getStraceAsArray()));
 		stack.push(new IfInst(skeleton.condition, trueCaseStackBuilder.stack, falseCaseStackBuilder.stack, getStraceAsArray()));
+		stack.push(new Event(Event.Type.IF_BEFORE, null, getStraceAsArray()));
 	}
 
 	@Override
@@ -106,7 +114,9 @@ public class StackBuilder implements SkeletonVisitor {
 
 		skeleton.subskel.accept(subStackBuilder);
 
+		stack.push(new Event(Event.Type.WHILE_AFTER, null, getStraceAsArray()));
 		stack.push(new WhileInst(skeleton.condition, subStackBuilder.stack, getStraceAsArray())); 
+		stack.push(new Event(Event.Type.WHILE_BEFORE, null, getStraceAsArray()));
 	}
 
 	@Override
@@ -117,7 +127,9 @@ public class StackBuilder implements SkeletonVisitor {
 
 		skeleton.subskel.accept(subStackBuilder);
 
+		stack.push(new Event(Event.Type.FOR_AFTER, null, getStraceAsArray()));
 		stack.push(new ForInst(subStackBuilder.stack, skeleton.times, getStraceAsArray())); 
+		stack.push(new Event(Event.Type.FOR_BEFORE, null, getStraceAsArray()));
 	}
 
 	@Override
@@ -128,7 +140,9 @@ public class StackBuilder implements SkeletonVisitor {
 		
 		skeleton.skeleton.accept(subStackBuilder);
 		
+		stack.push(new Event(Event.Type.MAP_AFTER, null, getStraceAsArray()));
 		stack.push(new MapInst(skeleton.split, subStackBuilder.stack ,skeleton.merge, getStraceAsArray()));
+		stack.push(new Event(Event.Type.MAP_BEFORE, null, getStraceAsArray()));
 	}
 
 	@Override
@@ -142,7 +156,9 @@ public class StackBuilder implements SkeletonVisitor {
 			s.accept(subStackBuilder);
 			stacks.add(subStackBuilder.stack);
 		}
+		stack.push(new Event(Event.Type.FORK_AFTER, null, getStraceAsArray()));
 		stack.push(new ForkInst(skeleton.split, stacks ,skeleton.merge, getStraceAsArray()));
+		stack.push(new Event(Event.Type.FORK_BEFORE, null, getStraceAsArray()));
 	}
 
 	@Override
@@ -153,7 +169,11 @@ public class StackBuilder implements SkeletonVisitor {
 		
 		skeleton.skeleton.accept(subStackBuilder);
 		
-		stack.push(new DaCInst(skeleton.condition, skeleton.split, subStackBuilder.stack, skeleton.merge, getStraceAsArray()));
+		Stack<Integer> rbranch = new Stack<Integer>();
+
+		stack.push(new Event(Event.Type.DAC_AFTER, rbranch, getStraceAsArray()));
+		stack.push(new DaCInst(skeleton.condition, skeleton.split, subStackBuilder.stack, skeleton.merge, rbranch, getStraceAsArray()));
+		stack.push(new Event(Event.Type.DAC_BEFORE, rbranch, getStraceAsArray()));
 	}
 	
 	@Override

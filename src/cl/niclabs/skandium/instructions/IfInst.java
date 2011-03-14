@@ -58,11 +58,18 @@ public class IfInst extends AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
 
+		(new Event(Event.Type.IF_BEFORE_CONDITION, null, strace)).interpret(param, stack, children);
 		if(condition.condition(param)){
+			(new Event(Event.Type.IF_AFTER_CONDITION, true, strace)).interpret(param, stack, children);
+			stack.push(new Event(Event.Type.IF_AFTER_NESTED_SKEL, true, strace));
 			stack.addAll(trueCaseStack);
+			stack.push(new Event(Event.Type.IF_BEFORE_NESTED_SKEL, true, strace));
 		}
 		else{
+			(new Event(Event.Type.IF_AFTER_CONDITION, false, strace)).interpret(param, stack, children);
+			stack.push(new Event(Event.Type.IF_AFTER_NESTED_SKEL, false, strace));
 			stack.addAll(falseCaseStack);
+			stack.push(new Event(Event.Type.IF_BEFORE_NESTED_SKEL, false, strace));
 		}
 		
 		return param;

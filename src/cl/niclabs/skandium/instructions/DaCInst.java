@@ -38,6 +38,7 @@ public class DaCInst extends  AbstractInstruction {
 	Stack<Instruction> substack;
 	@SuppressWarnings("unchecked")
 	Merge merge;
+	Stack<Integer> rbranch;
 	
 	/**
 	 * The constructor.
@@ -45,13 +46,16 @@ public class DaCInst extends  AbstractInstruction {
 	 * @param split the code to subdivide.
 	 * @param stack the stack of instructions to execute when the base case is reached.
 	 * @param merge the code to merge the results of a subdivision.
+	 * @param rbranch
 	 * @param strace 
 	 */
-	public DaCInst(Condition<?> condition, Split<?, ?> split, Stack<Instruction> stack, Merge<?, ?> merge, StackTraceElement[] strace) {
+	public DaCInst(Condition<?> condition, Split<?, ?> split, Stack<Instruction> stack, Merge<?, ?> merge, 
+			Stack<Integer> rbranch, StackTraceElement[] strace) {
 		super(strace);
 		this.condition = condition;
 		this.split = split;
 		this.substack = stack;
+		this.rbranch = rbranch;
 		this.merge = merge;
 	}
 
@@ -67,29 +71,46 @@ public class DaCInst extends  AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack,List<Stack<Instruction>> children) throws Exception {
 
+		(new Event(Event.Type.DAC_BEFORE_CONDITION, rbranch, strace)).interpret(param, stack, children);
+
 		//if condition is true we split 
 		if(condition.condition(param)){
-			
+			Object eventParam[] = {rbranch, true};
+			(new Event(Event.Type.DAC_AFTER_CONDITION, eventParam, strace)).interpret(param, stack, children);
+
+			(new Event(Event.Type.DAC_BEFORE_SPLIT, rbranch, strace)).interpret(param, stack, children);
 			Object result[]  =  split.split(param);
+			(new Event(Event.Type.DAC_AFTER_SPLIT, rbranch, strace)).interpret(result, stack, children);
 			
 			for(int i = 0 ; i < result.length ; i++){
+				Stack<Integer> subrbranch = new Stack<Integer>();
+				subrbranch.addAll(rbranch);
+				subrbranch.push(i);
 				
 				Stack<Instruction> newStack = new Stack<Instruction>();
-				
+
+				newStack.push(new Event(Event.Type.DAC_AFTER, subrbranch, strace));
 				newStack.add(this.copy());
+				newStack.push(new Event(Event.Type.DAC_BEFORE, subrbranch, strace));
 				
 				children.add(newStack);
 			}
 			
 			//Put a merge instruction on the current stack
 			//to merge results when children are finished.
+			stack.push(new Event(Event.Type.DAC_AFTER_MERGE, rbranch, strace));
 			stack.push(new MergeInst(merge, strace));
+			stack.push(new Event(Event.Type.DAC_BEFORE_MERGE, rbranch, strace));
 			
 			return result;
 		}
 		//else we execute 
 		else{
+			Object eventParam[] = {rbranch, false};
+			(new Event(Event.Type.DAC_AFTER_CONDITION, eventParam, strace)).interpret(param, stack, children);
+			stack.push(new Event(Event.Type.DAC_AFTER_NESTED_SKEL, rbranch, strace));
 			stack.addAll(this.substack);
+			stack.push(new Event(Event.Type.DAC_BEFORE_NESTED_SKEL, rbranch, strace));
 		}
 		
 		return param;
@@ -101,6 +122,6 @@ public class DaCInst extends  AbstractInstruction {
 	@Override
 	public Instruction copy() {
 	
-		return new DaCInst(condition, split, copyStack(substack), merge, strace);
+		return new DaCInst(condition, split, copyStack(substack), merge, rbranch, strace);
 	}
 }

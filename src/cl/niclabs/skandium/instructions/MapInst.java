@@ -61,13 +61,20 @@ public class MapInst extends  AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
 		
+		(new Event(Event.Type.MAP_BEFORE_SPLIT, null, strace)).interpret(param, stack, children);
 		Object[] params = split.split(param);
+		(new Event(Event.Type.MAP_AFTER_SPLIT, null, strace)).interpret(param, stack, children);
 		
 		for(int i=0;i<params.length;i++){
-			children.add(copyStack(this.substack));
+			Stack<Instruction> subStack = copyStack(this.substack);
+			subStack.add(0, new Event(Event.Type.MAP_AFTER_NESTED_SKEL, i, strace));
+			subStack.push(new Event(Event.Type.MAP_BEFORE_NESTED_SKEL, i, strace));
+			children.add(subStack);
 		}
 		
+		stack.push(new Event(Event.Type.MAP_AFTER_MERGE, null, strace));
 		stack.push(new MergeInst(merge, strace));
+		stack.push(new Event(Event.Type.MAP_BEFORE_MERGE, null, strace));
 
 		return params;
 	}

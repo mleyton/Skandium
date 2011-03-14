@@ -29,6 +29,7 @@ public class ForInst extends AbstractInstruction{
 
 	Stack<Instruction> substack;
 	int times;
+	int n;
 	
 	/**
 	 * The main constructor.
@@ -40,6 +41,7 @@ public class ForInst extends AbstractInstruction{
 		super(strace);
 		this.substack = substack;
 		this.times = times;
+		this.n = times;
 	}
 	
 	/**
@@ -54,7 +56,9 @@ public class ForInst extends AbstractInstruction{
 		if (times > 0) {		
 			times--;
 			stack.push(this);
+			stack.push(new Event(Event.Type.FOR_AFTER_NESTED_SKEL, n-times, strace));
 			stack.addAll(substack);
+			stack.push(new Event(Event.Type.FOR_BEFORE_NESTED_SKEL, n-times, strace));
 		}
 		return param;
 	}

@@ -33,6 +33,7 @@ public class WhileInst extends AbstractInstruction {
 	@SuppressWarnings("unchecked")
 	Condition condition;
 	Stack<Instruction> substack;
+	int iter;
 
 	/**
 	 * The main constructor
@@ -44,6 +45,7 @@ public class WhileInst extends AbstractInstruction {
 		super(strace);
 		this.condition = condition;
 		this.substack = stack;
+		iter = 0;
 	}
 
 	/**
@@ -54,9 +56,14 @@ public class WhileInst extends AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
 		
+		(new Event(Event.Type.WHILE_BEFORE_CONDITION, null, strace)).interpret(param, stack, children);
 		if(condition.condition(param)){
+			(new Event(Event.Type.WHILE_AFTER_CONDITION, null, strace)).interpret(param, stack, children);
 			stack.push(this);
+			stack.push(new Event(Event.Type.WHILE_AFTER_NESTED_SKEL, iter, strace));
 			stack.addAll(this.substack);
+			stack.push(new Event(Event.Type.WHILE_BEFORE_NESTED_SKEL, iter, strace));
+			iter++;
 		}
 		
 		return param;	
