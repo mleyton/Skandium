@@ -46,17 +46,19 @@ public class Event extends AbstractInstruction {
 		USER
 	}
 	Type type;
-	List<Skeleton> sbranch;
-	int i; /* index */
-	List<Integer> rb; /* recursive D&C branch */
+	int index; /* index */
+	Stack<Integer> rbranch; /* recursive D&C branch */
 
 	/**
 	 * The main constructor.
 	 * @param strace The logical stack trace of this instruction.
 	 */
-	public Event(Type type, List<Skeleton> sbranch, int i, 
-			List<Integer> rb, StackTraceElement[] strace){
+	public Event(Type type, int index, Stack<Integer> rbranch, 
+	    StackTraceElement[] strace){
 		super(strace);
+		this.type = type;
+		this.index = index;
+		this.rbranch = rbranch;
 	}
 	
 	/**
@@ -67,7 +69,12 @@ public class Event extends AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, 
 			List<Stack<Instruction>> children) throws Exception {
-		System.out.println(type);
+		System.out.printf("Inicio evento ...\n");
+		System.out.printf("Tipo: %s\n");
+		for (StackTraceElement e : strace) {
+			System.out.println(e);
+		}
+		System.out.printf("... Fin evento");
 		return param;
 	}
 
@@ -78,6 +85,6 @@ public class Event extends AbstractInstruction {
 	@Override
 	public Instruction copy() {
 	
-		return new Event(type, sbranch, i, rb, strace);
+		return new Event(type, index, rbranch, strace);
 	}
 }

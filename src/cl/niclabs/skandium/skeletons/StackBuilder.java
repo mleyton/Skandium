@@ -49,8 +49,13 @@ public class StackBuilder implements SkeletonVisitor {
 	public <P, R> void visit(Farm<P, R> skeleton) {
 		
 		strace.add(skeleton.trace);
-		
+
+		stack.push(new Event(Event.Type.BEFORE, null, 0, getStackTraceArray()));
+
 		skeleton.subskel.accept(this);
+
+
+		stack.push(new Event(Event.Type.BEFORE, null, 0, getStackTraceArray()));
 	}
 
 	@Override
