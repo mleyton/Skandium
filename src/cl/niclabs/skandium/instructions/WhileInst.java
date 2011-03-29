@@ -22,6 +22,7 @@ import java.util.Stack;
 
 import cl.niclabs.skandium.instructions.Instruction;
 import cl.niclabs.skandium.muscles.Condition;
+import cl.niclabs.skandium.skeletons.Skeleton;
 
 /**
  * Represents the behavior of a {@link cl.niclabs.skandium.skeletons.While} skeleton.
@@ -39,9 +40,9 @@ public class WhileInst extends AbstractInstruction {
 	 * The main constructor
 	 * @param condition The condition to evaluate.
 	 * @param stack The code to execute while the condition holds true.
-	 * @param stackTraceElements 
+	 * @param strace 
 	 */
-	public WhileInst(Condition<?> condition, Stack<Instruction> stack, StackTraceElement[] strace) {
+	public WhileInst(Condition<?> condition, Stack<Instruction> stack, Skeleton<?,?>[] strace) {
 		super(strace);
 		this.condition = condition;
 		this.substack = stack;
@@ -56,13 +57,14 @@ public class WhileInst extends AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
 		
-		(new Event(Event.Type.WHILE_BEFORE_CONDITION, null, strace)).interpret(param, stack, children);
-		if(condition.condition(param)){
-			(new Event(Event.Type.WHILE_AFTER_CONDITION, null, strace)).interpret(param, stack, children);
+		(new EventInst(When.BEFORE, Where.CONDITION, strace)).interpret(param, stack, children);
+		boolean cond = condition.condition(param);
+		(new EventInst(When.AFTER, Where.CONDITION, strace, cond)).interpret(param, stack, children);
+		if(cond){
 			stack.push(this);
-			stack.push(new Event(Event.Type.WHILE_AFTER_NESTED_SKEL, iter, strace));
+			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, iter));
 			stack.addAll(this.substack);
-			stack.push(new Event(Event.Type.WHILE_BEFORE_NESTED_SKEL, iter, strace));
+			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, iter));
 			iter++;
 		}
 		

@@ -20,41 +20,21 @@ package cl.niclabs.skandium.instructions;
 import java.util.List;
 import java.util.Stack;
 
+import cl.niclabs.skandium.skeletons.AbstractSkeleton;
 import cl.niclabs.skandium.skeletons.Skeleton;
+
 
 /**
  * 
  * @author gpabon
  */
-public class Event extends AbstractInstruction {
 
-	public enum Type {
-		FARM_BEFORE, FARM_AFTER,
-		PIPE_BEFORE, PIPE_AFTER, 
-		PIPE_BEFORE_STAGE, PIPE_AFTER_STAGE,
-		SEQ_BEFORE, SEQ_AFTER,
-		IF_BEFORE, IF_AFTER,
-		IF_BEFORE_CONDITION, IF_AFTER_CONDITION, 
-		IF_BEFORE_NESTED_SKEL, IF_AFTER_NESTED_SKEL,
-		WHILE_BEFORE, WHILE_AFTER,
-		WHILE_BEFORE_CONDITION, WHILE_AFTER_CONDITION,
-		WHILE_BEFORE_NESTED_SKEL, WHILE_AFTER_NESTED_SKEL,
-		FOR_BEFORE, FOR_AFTER,
-		FOR_BEFORE_NESTED_SKEL, FOR_AFTER_NESTED_SKEL,
-		MAP_BEFORE, MAP_AFTER,
-		MAP_BEFORE_SPLIT, MAP_AFTER_SPLIT, MAP_BEFORE_NESTED_SKEL,
-		MAP_AFTER_NESTED_SKEL, MAP_BEFORE_MERGE, MAP_AFTER_MERGE,
-		FORK_BEFORE, FORK_AFTER,
-		FORK_BEFORE_SPLIT, FORK_AFTER_SPLIT, FORK_BEFORE_NESTED_SKEL,
-		FORK_AFTER_NESTED_SKEL, FORK_BEFORE_MERGE, FORK_AFTER_MERGE,
-		DAC_BEFORE, DAC_AFTER,
-		DAC_BEFORE_CONDITION, DAC_AFTER_CONDITION, 
-		DAC_BEFORE_SPLIT, DAC_AFTER_SPLIT, DAC_BEFORE_NESTED_SKEL,
-		DAC_AFTER_NESTED_SKEL, DAC_BEFORE_MERGE, DAC_AFTER_MERGE,
-		USER
-	}
-	Type type;
-	Object eventParam;
+public class EventInst extends AbstractInstruction {
+	
+	When when;
+	Where where;
+	Skeleton<?,?>[] strace;
+	Object[] params;
 
 	/**
 	 * The main constructor.
@@ -62,10 +42,12 @@ public class Event extends AbstractInstruction {
 	 * @param eventParam
 	 * @param strace
 	 */
-	public Event(Type type, Object eventParam, StackTraceElement[] strace){
+	public EventInst(When when, Where where, Skeleton<?,?>[] strace, Object... params){
 		super(strace);
-		this.type = type;
-		this.eventParam = eventParam;
+		this.when = when;
+		this.where = where;
+		this.strace = strace;
+		this.params = params;
 	}
 	
 	/**
@@ -75,21 +57,17 @@ public class Event extends AbstractInstruction {
 	public <P> Object interpret(P param, Stack<Instruction> stack, 
 			List<Stack<Instruction>> children) throws Exception {
 		System.out.printf("Inicio evento\n");
-		System.out.printf("Tipo: %s\n", type.toString());
-		for (StackTraceElement e : strace) {
-			System.out.println(e);
+		System.out.printf("Cuando: %s, Donde %s\n", when, where);
+		for (Skeleton<?,?> e : strace) {
+			System.out.println(((AbstractSkeleton<?,?>)e).getTrace());
 		}
 		System.out.printf("Fin evento\n\n");
 		return param;
 	}
 
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Instruction copy() {
-	
-		return new Event(type, eventParam, strace);
+		return new EventInst(when, where, strace, params);
 	}
+
 }

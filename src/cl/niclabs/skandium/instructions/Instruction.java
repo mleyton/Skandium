@@ -20,6 +20,8 @@ package cl.niclabs.skandium.instructions;
 import java.util.List;
 import java.util.Stack;
 
+import cl.niclabs.skandium.skeletons.Skeleton;
+
 /**
  * Instructions are the code which actually harness parallelism patterns, 
  * as opposed to their {@link cl.niclabs.skandium.skeletons.Skeleton} counterparts which express the pattern
@@ -50,7 +52,7 @@ public interface Instruction {
 	public Instruction copy();
 	
 	/**
-	 * @return The skeleton logical stack trace associated with this instruction. 
+	 * @return The skeleton trace associated with this instruction. 
 	 */
-	public StackTraceElement[] getStackTrace();
+	public Skeleton<?, ?>[] getSkeletonTrace();
 }

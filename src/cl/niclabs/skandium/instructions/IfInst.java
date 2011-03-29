@@ -22,6 +22,7 @@ import java.util.Stack;
 
 import cl.niclabs.skandium.instructions.Instruction;
 import cl.niclabs.skandium.muscles.Condition;
+import cl.niclabs.skandium.skeletons.Skeleton;
 
 /**
  * This instruction holds the parallelism behavior of an {@link cl.niclabs.skandium.skeletons.If} skeleton.
@@ -41,7 +42,7 @@ public class IfInst extends AbstractInstruction {
 	 * @param falseCaseStack Code to execute in the false case.
 	 * @param strace 
 	 */
-	public IfInst(Condition<?> condition, Stack<Instruction> trueCaseStack, Stack<Instruction> falseCaseStack, StackTraceElement[] strace) {
+	public IfInst(Condition<?> condition, Stack<Instruction> trueCaseStack, Stack<Instruction> falseCaseStack, Skeleton<?,?>[] strace) {
 		super(strace);
 		this.condition = condition;
 		this.trueCaseStack = trueCaseStack;
@@ -58,18 +59,18 @@ public class IfInst extends AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
 
-		(new Event(Event.Type.IF_BEFORE_CONDITION, null, strace)).interpret(param, stack, children);
+		(new EventInst(When.BEFORE, Where.CONDITION, strace)).interpret(param, stack, children);
 		if(condition.condition(param)){
-			(new Event(Event.Type.IF_AFTER_CONDITION, true, strace)).interpret(param, stack, children);
-			stack.push(new Event(Event.Type.IF_AFTER_NESTED_SKEL, true, strace));
+			(new EventInst(When.AFTER, Where.CONDITION, strace, true)).interpret(param, stack, children);
+			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, true));
 			stack.addAll(trueCaseStack);
-			stack.push(new Event(Event.Type.IF_BEFORE_NESTED_SKEL, true, strace));
+			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, true));
 		}
 		else{
-			(new Event(Event.Type.IF_AFTER_CONDITION, false, strace)).interpret(param, stack, children);
-			stack.push(new Event(Event.Type.IF_AFTER_NESTED_SKEL, false, strace));
+			(new EventInst(When.AFTER, Where.CONDITION, strace, false)).interpret(param, stack, children);
+			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, false));
 			stack.addAll(falseCaseStack);
-			stack.push(new Event(Event.Type.IF_BEFORE_NESTED_SKEL, false, strace));
+			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, false));
 		}
 		
 		return param;

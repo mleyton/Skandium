@@ -98,4 +98,8 @@ public abstract class AbstractSkeleton<P,R> implements Skeleton<P,R> {
 			
 		return new StackTraceElement(className, method, file, line);
 	}
+	
+	public StackTraceElement getTrace() {
+		return trace;
+	}
 }

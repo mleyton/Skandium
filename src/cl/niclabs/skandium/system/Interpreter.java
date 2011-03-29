@@ -23,6 +23,8 @@ import java.util.Stack;
 import java.util.concurrent.ExecutionException;
 
 import cl.niclabs.skandium.instructions.Instruction;
+import cl.niclabs.skandium.skeletons.AbstractSkeleton;
+import cl.niclabs.skandium.skeletons.Skeleton;
 import cl.niclabs.skandium.system.Task;
 
 /**
@@ -53,7 +55,7 @@ public class Interpreter {
 		//get the current data, stack and strace
 		Object P = task.getP();
 		Stack<Instruction> stack = task.getStack();
-		StackTraceElement[] strace = null;
+		Skeleton<?,?>[] strace = null;
 		
 		try{	
 			//array for storing children if needed
@@ -64,7 +66,7 @@ public class Interpreter {
 		
 				//pop the instruction and interpret it
 				Instruction inst = stack.pop();
-				strace= inst.getStackTrace();  //stack trace in case of exception
+				strace= inst.getSkeletonTrace();  //skeleton trace in case of exception
 				P = inst.interpret(P, stack, children);
 				
 				//check that the task has not been canceled
@@ -110,7 +112,8 @@ public class Interpreter {
 		return task;
 	}
 	
-	private static void setLogicalException(Throwable t, StackTraceElement[] strace){
+	@SuppressWarnings("unchecked")
+	private static void setLogicalException(Throwable t, Skeleton<?,?>[] strace){
 
 		ArrayList<StackTraceElement> list = new ArrayList<StackTraceElement>();
 
@@ -137,7 +140,7 @@ public class Interpreter {
 					t.getStackTrace()[i+1].getClassName().equals(Interpreter.class.getCanonicalName())){
 			
 				for(int j=strace.length-1; j>=0; j--){
-					list.add(strace[j]);
+					list.add(((AbstractSkeleton)strace[j]).getTrace());
 				}
 			}
 			else{

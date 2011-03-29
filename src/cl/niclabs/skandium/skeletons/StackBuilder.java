@@ -21,174 +21,185 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import cl.niclabs.skandium.instructions.*;
+import cl.niclabs.skandium.instructions.DaCInst;
+import cl.niclabs.skandium.instructions.EventInst;
+import cl.niclabs.skandium.instructions.ForInst;
+import cl.niclabs.skandium.instructions.ForkInst;
+import cl.niclabs.skandium.instructions.IfInst;
+import cl.niclabs.skandium.instructions.Instruction;
+import cl.niclabs.skandium.instructions.MapInst;
+import cl.niclabs.skandium.instructions.SeqInst;
+import cl.niclabs.skandium.instructions.When;
+import cl.niclabs.skandium.instructions.Where;
+import cl.niclabs.skandium.instructions.WhileInst;
 
 /**
- * Using the visitor pattern, this class navigates a skeleton structure (ie nested skeletons),
- * and transforms the Skeletons into their Instructions representations.
+ * Using the visitor pattern, this class navigates a skeleton structure (ie
+ * nested skeletons), and transforms the Skeletons into their Instructions
+ * representations.
  * 
  * @author mleyton
  */
 public class StackBuilder implements SkeletonVisitor {
 
 	public Stack<Instruction> stack;
-	public Stack<StackTraceElement> strace;
-	
+	public Stack<Skeleton<?, ?>> strace;
+
 	public StackBuilder() {
 		super();
 		this.stack = new Stack<Instruction>();
-		this.strace = new Stack<StackTraceElement>();
+		this.strace = new Stack<Skeleton<?, ?>>();
 	}
 
-	public StackBuilder(Stack<StackTraceElement> trace){
+	public StackBuilder(Stack<Skeleton<?, ?>> trace) {
 		this();
 		this.strace.addAll(trace);
 	}
 
 	@Override
 	public <P, R> void visit(Farm<P, R> skeleton) {
-		
-		strace.add(skeleton.trace);
 
-		stack.push(new Event(Event.Type.FARM_AFTER, null, getStraceAsArray()));
+		strace.add(skeleton);
+		
+		stack.push(new EventInst(When.AFTER, Where.SKELETON, getStraceAsArray()));
 		skeleton.subskel.accept(this);
-		stack.push(new Event(Event.Type.FARM_BEFORE, null, getStraceAsArray()));
+		stack.push(new EventInst(When.BEFORE, Where.SKELETON, getStraceAsArray()));
 
 	}
 
 	@Override
 	public <P, R> void visit(Pipe<P, R> skeleton) {
-		
-		//mark the trace of the pipe skeleton
-		strace.add(skeleton.trace);
 
-		//create a new stack builder for each stage
+		// mark the trace of the pipe skeleton
+		strace.add(skeleton);
+
+		// create a new stack builder for each stage
 		StackBuilder stage1 = new StackBuilder(strace);
 		StackBuilder stage2 = new StackBuilder(strace);
-		
-		//construct the stack
+
+		// construct the stack
 		skeleton.stage1.accept(stage1);
 		skeleton.stage2.accept(stage2);
-		
-		//add the results to this stack (as there is no pipe instruction)
-		stack.push(new Event(Event.Type.PIPE_AFTER, null, getStraceAsArray()));
-		stack.push(new Event(Event.Type.PIPE_AFTER_STAGE, 1, getStraceAsArray()));
-		stack.addAll(stage2.stack);  //second stage first
-		stack.push(new Event(Event.Type.PIPE_BEFORE_STAGE, 1, getStraceAsArray()));
-		stack.push(new Event(Event.Type.PIPE_AFTER_STAGE, 0, getStraceAsArray()));
-		stack.addAll(stage1.stack);  //first stage last
-		stack.push(new Event(Event.Type.PIPE_BEFORE_STAGE, 0, getStraceAsArray()));
-		stack.push(new Event(Event.Type.PIPE_BEFORE, null, getStraceAsArray()));
+
+		// add the results to this stack (as there is no pipe instruction)
+		stack.push(new EventInst(When.AFTER, Where.SKELETON, getStraceAsArray()));
+		stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, getStraceAsArray(), 1));
+		stack.addAll(stage2.stack); // second stage first
+		stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, getStraceAsArray(), 1));
+		stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, getStraceAsArray(), 0));
+		stack.addAll(stage1.stack); // first stage last
+		stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, getStraceAsArray(), 0));
+		stack.push(new EventInst(When.BEFORE, Where.SKELETON, getStraceAsArray()));
 	}
 
 	@Override
-	public <P, R> void visit(Seq<P, R> skeleton) {	
-		strace.add(skeleton.trace);
-		
-		stack.push(new Event(Event.Type.SEQ_AFTER, null, getStraceAsArray()));
+	public <P, R> void visit(Seq<P, R> skeleton) {
+		strace.add(skeleton);
+
+		stack.push(new EventInst(When.AFTER, Where.SKELETON, getStraceAsArray()));
 		stack.push(new SeqInst(skeleton.execute, getStraceAsArray()));
-		stack.push(new Event(Event.Type.SEQ_BEFORE, null, getStraceAsArray()));
+		stack.push(new EventInst(When.BEFORE, Where.SKELETON, getStraceAsArray()));
 	}
 
 	@Override
 	public <P, R> void visit(If<P, R> skeleton) {
-		
-		strace.add(skeleton.trace);
-		
+
+		strace.add(skeleton);
+
 		StackBuilder trueCaseStackBuilder = new StackBuilder(strace);
 		StackBuilder falseCaseStackBuilder = new StackBuilder(strace);
-		
+
 		skeleton.trueCase.accept(trueCaseStackBuilder);
 		skeleton.falseCase.accept(falseCaseStackBuilder);
-		
-		stack.push(new Event(Event.Type.IF_AFTER, null, getStraceAsArray()));
-		stack.push(new IfInst(skeleton.condition, trueCaseStackBuilder.stack, falseCaseStackBuilder.stack, getStraceAsArray()));
-		stack.push(new Event(Event.Type.IF_BEFORE, null, getStraceAsArray()));
+
+		stack.push(new EventInst(When.AFTER, Where.SKELETON, getStraceAsArray()));
+		stack.push(new IfInst(skeleton.condition, trueCaseStackBuilder.stack,
+				falseCaseStackBuilder.stack, getStraceAsArray()));
+		stack.push(new EventInst(When.BEFORE, Where.SKELETON, getStraceAsArray()));
 	}
 
 	@Override
 	public <P> void visit(While<P> skeleton) {
-		
-		strace.add(skeleton.trace);
+
+		strace.add(skeleton);
 		StackBuilder subStackBuilder = new StackBuilder(strace);
 
 		skeleton.subskel.accept(subStackBuilder);
 
-		stack.push(new Event(Event.Type.WHILE_AFTER, null, getStraceAsArray()));
-		stack.push(new WhileInst(skeleton.condition, subStackBuilder.stack, getStraceAsArray())); 
-		stack.push(new Event(Event.Type.WHILE_BEFORE, null, getStraceAsArray()));
+		stack.push(new EventInst(When.AFTER, Where.SKELETON, getStraceAsArray()));
+		stack.push(new WhileInst(skeleton.condition, subStackBuilder.stack,
+				getStraceAsArray()));
+		stack.push(new EventInst(When.BEFORE, Where.SKELETON, getStraceAsArray()));
 	}
 
 	@Override
 	public <P> void visit(For<P> skeleton) {
-		
-		strace.add(skeleton.trace);
+
+		strace.add(skeleton);
 		StackBuilder subStackBuilder = new StackBuilder(strace);
 
 		skeleton.subskel.accept(subStackBuilder);
 
-		stack.push(new Event(Event.Type.FOR_AFTER, null, getStraceAsArray()));
-		stack.push(new ForInst(subStackBuilder.stack, skeleton.times, getStraceAsArray())); 
-		stack.push(new Event(Event.Type.FOR_BEFORE, null, getStraceAsArray()));
+		stack.push(new EventInst(When.AFTER, Where.SKELETON, getStraceAsArray()));
+		stack.push(new ForInst(subStackBuilder.stack, skeleton.times,
+				getStraceAsArray()));
+		stack.push(new EventInst(When.BEFORE, Where.SKELETON, getStraceAsArray()));
 	}
 
 	@Override
 	public <P, R> void visit(Map<P, R> skeleton) {
-		
-		strace.add(skeleton.trace);
+
+		strace.add(skeleton);
 		StackBuilder subStackBuilder = new StackBuilder(strace);
-		
+
 		skeleton.skeleton.accept(subStackBuilder);
-		
-		stack.push(new Event(Event.Type.MAP_AFTER, null, getStraceAsArray()));
-		stack.push(new MapInst(skeleton.split, subStackBuilder.stack ,skeleton.merge, getStraceAsArray()));
-		stack.push(new Event(Event.Type.MAP_BEFORE, null, getStraceAsArray()));
+
+		stack.push(new EventInst(When.AFTER, Where.SKELETON, getStraceAsArray()));
+		stack.push(new MapInst(skeleton.split, subStackBuilder.stack,
+				skeleton.merge, getStraceAsArray()));
+		stack.push(new EventInst(When.BEFORE,Where.SKELETON, getStraceAsArray()));
 	}
 
 	@Override
 	public <P, R> void visit(Fork<P, R> skeleton) {
-		
-		List <Stack<Instruction>> stacks= new ArrayList<Stack<Instruction>>();
 
-		strace.add(skeleton.trace);
-		for(Skeleton s:skeleton.skeletons){	
+		List<Stack<Instruction>> stacks = new ArrayList<Stack<Instruction>>();
+
+		strace.add(skeleton);
+		for (Skeleton<?, ?> s : skeleton.skeletons) {
 			StackBuilder subStackBuilder = new StackBuilder(strace);
 			s.accept(subStackBuilder);
 			stacks.add(subStackBuilder.stack);
 		}
-		stack.push(new Event(Event.Type.FORK_AFTER, null, getStraceAsArray()));
-		stack.push(new ForkInst(skeleton.split, stacks ,skeleton.merge, getStraceAsArray()));
-		stack.push(new Event(Event.Type.FORK_BEFORE, null, getStraceAsArray()));
+		stack.push(new EventInst(When.AFTER, Where.SKELETON, getStraceAsArray()));
+		stack.push(new ForkInst(skeleton.split, stacks, skeleton.merge,
+				getStraceAsArray()));
+		stack.push(new EventInst(When.BEFORE, Where.SKELETON, getStraceAsArray()));
 	}
 
 	@Override
 	public <P, R> void visit(DaC<P, R> skeleton) {
-		
-		strace.add(skeleton.trace);
+
+		strace.add(skeleton);
 		StackBuilder subStackBuilder = new StackBuilder(strace);
-		
+
 		skeleton.skeleton.accept(subStackBuilder);
-		
+
 		Stack<Integer> rbranch = new Stack<Integer>();
 
-		stack.push(new Event(Event.Type.DAC_AFTER, rbranch, getStraceAsArray()));
-		stack.push(new DaCInst(skeleton.condition, skeleton.split, subStackBuilder.stack, skeleton.merge, rbranch, getStraceAsArray()));
-		stack.push(new Event(Event.Type.DAC_BEFORE, rbranch, getStraceAsArray()));
+		stack.push(new EventInst(When.AFTER, Where.SKELETON, getStraceAsArray(), rbranch));
+		stack.push(new DaCInst(skeleton.condition, skeleton.split,
+				subStackBuilder.stack, skeleton.merge, rbranch,
+				getStraceAsArray()));
+		stack.push(new EventInst(When.BEFORE, Where.SKELETON, getStraceAsArray(), rbranch));
 	}
-	
+
 	@Override
 	public <P, R> void visit(AbstractSkeleton<P, R> skeleton) {
 		throw new RuntimeException("Should not be here!");
 	}
-	
-	private Stack<StackTraceElement> copyStackTrace(){
-		Stack<StackTraceElement> strace = new Stack<StackTraceElement>();
-		strace.addAll(this.strace);
-		
-		return strace;
-	}
-	
-	private StackTraceElement[] getStraceAsArray(){
-		return strace.toArray(new StackTraceElement[strace.size()]);
+
+	private Skeleton<?, ?>[] getStraceAsArray() {
+		return strace.toArray(new Skeleton[strace.size()]);
 	}
 }

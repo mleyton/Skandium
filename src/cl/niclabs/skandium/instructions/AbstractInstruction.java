@@ -19,6 +19,8 @@ package cl.niclabs.skandium.instructions;
 
 import java.util.Stack;
 
+import cl.niclabs.skandium.skeletons.Skeleton;
+
 /**
  * The main class from which all other Instructions inherit.
  * 
@@ -28,9 +30,9 @@ import java.util.Stack;
  */
 abstract class AbstractInstruction implements Instruction {
 
-	final StackTraceElement[] strace;
+	final Skeleton<?,?>[] strace;
 	
-	AbstractInstruction(StackTraceElement[] strace){
+	AbstractInstruction(Skeleton<?,?>[] strace){
 		//this.stackTraceElements = strace.toArray(new StackTraceElement[strace.size()]);
 		this.strace = strace;
 	}
@@ -54,7 +56,7 @@ abstract class AbstractInstruction implements Instruction {
 	}
 	
 	@Override
-	public StackTraceElement[] getStackTrace(){
+	public Skeleton<?,?>[] getSkeletonTrace(){
 		
 		return strace;
 	}

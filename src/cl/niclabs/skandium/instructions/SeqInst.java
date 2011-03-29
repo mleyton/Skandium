@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Stack;
 
 import cl.niclabs.skandium.muscles.Execute;
+import cl.niclabs.skandium.skeletons.Skeleton;
 
 /**
  * Represent the behavior of a {@link cl.niclabs.skandium.skeletons.Seq} {@link cl.niclabs.skandium.skeletons.Skeleton}, used to wrap an {@link Execute} muscle.
@@ -37,7 +38,7 @@ public class SeqInst extends AbstractInstruction {
 	 * @param execute The {@link cl.niclabs.skandium.muscles.Muscle} to execute. 
 	 * @param strace The logical stack trace of this instruction.
 	 */
-	public SeqInst(Execute<?,?> execute, StackTraceElement[] strace){
+	public SeqInst(Execute<?,?> execute, Skeleton<?,?>[] strace){
 		super(strace);
 		this.execute = execute;
 	}

@@ -23,6 +23,7 @@ import java.util.Stack;
 import cl.niclabs.skandium.muscles.Condition;
 import cl.niclabs.skandium.muscles.Merge;
 import cl.niclabs.skandium.muscles.Split;
+import cl.niclabs.skandium.skeletons.Skeleton;
 
 /**
  * This instruction holds the parallelism behavior of a Divide and Conquer ({@link cl.niclabs.skandium.skeletons.DaC}) skeleton.
@@ -50,7 +51,7 @@ public class DaCInst extends  AbstractInstruction {
 	 * @param strace 
 	 */
 	public DaCInst(Condition<?> condition, Split<?, ?> split, Stack<Instruction> stack, Merge<?, ?> merge, 
-			Stack<Integer> rbranch, StackTraceElement[] strace) {
+			Stack<Integer> rbranch, Skeleton<?,?>[] strace) {
 		super(strace);
 		this.condition = condition;
 		this.split = split;
@@ -71,16 +72,15 @@ public class DaCInst extends  AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack,List<Stack<Instruction>> children) throws Exception {
 
-		(new Event(Event.Type.DAC_BEFORE_CONDITION, rbranch, strace)).interpret(param, stack, children);
+		(new EventInst(When.BEFORE, Where.CONDITION, strace, rbranch)).interpret(param, stack, children);
 
 		//if condition is true we split 
 		if(condition.condition(param)){
-			Object eventParam[] = {rbranch, true};
-			(new Event(Event.Type.DAC_AFTER_CONDITION, eventParam, strace)).interpret(param, stack, children);
+			(new EventInst(When.AFTER, Where.CONDITION, strace, rbranch, true)).interpret(param, stack, children);
 
-			(new Event(Event.Type.DAC_BEFORE_SPLIT, rbranch, strace)).interpret(param, stack, children);
+			(new EventInst(When.BEFORE, Where.SPLIT, strace, rbranch)).interpret(param, stack, children);
 			Object result[]  =  split.split(param);
-			(new Event(Event.Type.DAC_AFTER_SPLIT, rbranch, strace)).interpret(result, stack, children);
+			(new EventInst(When.AFTER, Where.SPLIT, strace, rbranch)).interpret(result, stack, children);
 			
 			for(int i = 0 ; i < result.length ; i++){
 				Stack<Integer> subrbranch = new Stack<Integer>();
@@ -89,28 +89,27 @@ public class DaCInst extends  AbstractInstruction {
 				
 				Stack<Instruction> newStack = new Stack<Instruction>();
 
-				newStack.push(new Event(Event.Type.DAC_AFTER, subrbranch, strace));
-				newStack.add(this.copy());
-				newStack.push(new Event(Event.Type.DAC_BEFORE, subrbranch, strace));
+				DaCInst subInst = (DaCInst) this.copy();
+				subInst.rbranch = subrbranch;
+				newStack.add(subInst);
 				
 				children.add(newStack);
 			}
 			
 			//Put a merge instruction on the current stack
 			//to merge results when children are finished.
-			stack.push(new Event(Event.Type.DAC_AFTER_MERGE, rbranch, strace));
+			stack.push(new EventInst(When.AFTER, Where.MERGE, strace, rbranch));
 			stack.push(new MergeInst(merge, strace));
-			stack.push(new Event(Event.Type.DAC_BEFORE_MERGE, rbranch, strace));
+			stack.push(new EventInst(When.BEFORE, Where.MERGE, strace, rbranch));
 			
 			return result;
 		}
 		//else we execute 
 		else{
-			Object eventParam[] = {rbranch, false};
-			(new Event(Event.Type.DAC_AFTER_CONDITION, eventParam, strace)).interpret(param, stack, children);
-			stack.push(new Event(Event.Type.DAC_AFTER_NESTED_SKEL, rbranch, strace));
+			(new EventInst(When.AFTER, Where.CONDITION, strace, rbranch, false)).interpret(param, stack, children);
+			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, rbranch));
 			stack.addAll(this.substack);
-			stack.push(new Event(Event.Type.DAC_BEFORE_NESTED_SKEL, rbranch, strace));
+			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, rbranch));
 		}
 		
 		return param;

@@ -17,11 +17,11 @@
  */
 package cl.niclabs.skandium.instructions;
 
-import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Stack;
 
 import cl.niclabs.skandium.muscles.Merge;
+import cl.niclabs.skandium.skeletons.Skeleton;
 
 /**
  * This is a utility instruction and does not represent a {@link cl.niclabs.skandium.skeletons.Skeleton} in particular.
@@ -34,9 +34,9 @@ public class MergeInst extends AbstractInstruction{
 	
 	@SuppressWarnings("unchecked")
 	Merge merge;
-	StackTraceElement[] strace;
+	Skeleton<?,?>[] strace;
 	
-	public MergeInst(Merge<?,?> merge, StackTraceElement[] strace) {
+	public MergeInst(Merge<?,?> merge, Skeleton<?,?>[] strace) {
 		super(strace);
 		this.merge = merge;
 	}

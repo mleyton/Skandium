@@ -20,6 +20,9 @@ package cl.niclabs.skandium.instructions;
 import java.util.List;
 import java.util.Stack;
 
+import cl.niclabs.skandium.skeletons.Skeleton;
+
+
 /**
  * This instruction holds the parallelism behavior of a {@link cl.niclabs.skandium.skeletons.For} skeleton.
  * 
@@ -37,7 +40,7 @@ public class ForInst extends AbstractInstruction{
 	 * @param times The number of times to iterate.
 	 * @param strace 
 	 */
-	public ForInst(Stack<Instruction> substack, int times, StackTraceElement[] strace) {
+	public ForInst(Stack<Instruction> substack, int times, Skeleton<?,?>[] strace) {
 		super(strace);
 		this.substack = substack;
 		this.times = times;
@@ -56,9 +59,9 @@ public class ForInst extends AbstractInstruction{
 		if (times > 0) {		
 			times--;
 			stack.push(this);
-			stack.push(new Event(Event.Type.FOR_AFTER_NESTED_SKEL, n-times, strace));
+			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, n-times));
 			stack.addAll(substack);
-			stack.push(new Event(Event.Type.FOR_BEFORE_NESTED_SKEL, n-times, strace));
+			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, n-times));
 		}
 		return param;
 	}
