@@ -72,12 +72,12 @@ public class StackBuilder implements SkeletonVisitor {
 		
 		//add the results to this stack (as there is no pipe instruction)
 		stack.push(new Event(Event.Type.PIPE_AFTER, null, getStraceAsArray()));
-		stack.push(new Event(Event.Type.PIPE_AFTER_STAGE, new Integer(1), getStraceAsArray()));
+		stack.push(new Event(Event.Type.PIPE_AFTER_STAGE, 1, getStraceAsArray()));
 		stack.addAll(stage2.stack);  //second stage first
-		stack.push(new Event(Event.Type.PIPE_BEFORE_STAGE, new Integer(1), getStraceAsArray()));
-		stack.push(new Event(Event.Type.PIPE_AFTER_STAGE, new Integer(0), getStraceAsArray()));
+		stack.push(new Event(Event.Type.PIPE_BEFORE_STAGE, 1, getStraceAsArray()));
+		stack.push(new Event(Event.Type.PIPE_AFTER_STAGE, 0, getStraceAsArray()));
 		stack.addAll(stage1.stack);  //first stage last
-		stack.push(new Event(Event.Type.PIPE_BEFORE_STAGE, new Integer(0), getStraceAsArray()));
+		stack.push(new Event(Event.Type.PIPE_BEFORE_STAGE, 0, getStraceAsArray()));
 		stack.push(new Event(Event.Type.PIPE_BEFORE, null, getStraceAsArray()));
 	}
 

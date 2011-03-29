@@ -74,12 +74,12 @@ public class Event extends AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, 
 			List<Stack<Instruction>> children) throws Exception {
-		System.out.printf("Inicio evento ...\n");
+		System.out.printf("Inicio evento\n");
 		System.out.printf("Tipo: %s\n", type.toString());
 		for (StackTraceElement e : strace) {
 			System.out.println(e);
 		}
-		System.out.printf("... Fin evento");
+		System.out.printf("Fin evento\n\n");
 		return param;
 	}
 
