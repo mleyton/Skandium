@@ -20,6 +20,14 @@ package cl.niclabs.skandium.instructions;
 import java.util.List;
 import java.util.Stack;
 
+import cl.niclabs.skandium.events.BooleanParamListener;
+import cl.niclabs.skandium.events.EventListener;
+import cl.niclabs.skandium.events.IntegerParamListener;
+import cl.niclabs.skandium.events.NoParamListener;
+import cl.niclabs.skandium.events.RBranchBooleanParamListener;
+import cl.niclabs.skandium.events.RBranchParamListener;
+import cl.niclabs.skandium.events.When;
+import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.skeletons.AbstractSkeleton;
 import cl.niclabs.skandium.skeletons.Skeleton;
 
@@ -53,15 +61,40 @@ public class EventInst extends AbstractInstruction {
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, 
 			List<Stack<Instruction>> children) throws Exception {
-		System.out.printf("Inicio evento\n");
-		System.out.printf("Cuando: %s, Donde %s\n", when, where);
-		for (Skeleton<?,?> e : strace) {
-			System.out.println(((AbstractSkeleton<?,?>)e).getTrace());
+		Skeleton<?,?> curr = strace[strace.length-1];
+		EventListener[] listeners = ((AbstractSkeleton<?,?>) curr).getListeners(when, where);
+		if (listeners != null) {
+			for (EventListener l : listeners) {
+				if (l instanceof NoParamListener) {
+					if (((NoParamListener) l).guard(param, strace)) {
+						((NoParamListener) l).handler(param, strace);
+					}
+				} else if (l instanceof IntegerParamListener) {
+					if (((IntegerParamListener) l).guard(param, strace, (Integer) params[0])) {
+						((IntegerParamListener) l).handler(param, strace, (Integer) params[0]);
+					}
+				} else if (l instanceof BooleanParamListener) {
+					if (((BooleanParamListener) l).guard(param, strace, (Boolean) params[0])) {
+						((BooleanParamListener) l).handler(param, strace, (Boolean) params[0]);
+					}
+				} else if (l instanceof RBranchParamListener) {
+					Stack<Integer> rbranch =(Stack<Integer>) params[0];
+					if (((RBranchParamListener) l).guard(param, strace, (Integer[]) (rbranch.toArray(new Integer[rbranch.size()])))) {
+						((RBranchParamListener) l).handler(param, strace, (Integer[]) (rbranch.toArray(new Integer[rbranch.size()])));
+					}
+				} else if (l instanceof RBranchBooleanParamListener) {
+					Stack<Integer> rbranch =(Stack<Integer>) params[0];
+					if (((RBranchBooleanParamListener) l).guard(param, strace, (Integer[]) (rbranch.toArray(new Integer[rbranch.size()])), (Boolean) params[1])) {
+						((RBranchBooleanParamListener) l).handler(param, strace, (Integer[]) (rbranch.toArray(new Integer[rbranch.size()])), (Boolean) params[1]);
+					}
+				} else throw new Error("ErrorFaltal");
+
+			}
 		}
-		System.out.printf("Fin evento\n\n");
 		return param;
 	}
 

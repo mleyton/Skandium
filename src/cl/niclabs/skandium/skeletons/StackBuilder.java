@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import cl.niclabs.skandium.events.When;
+import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.instructions.DaCInst;
 import cl.niclabs.skandium.instructions.EventInst;
 import cl.niclabs.skandium.instructions.ForInst;
@@ -29,8 +31,6 @@ import cl.niclabs.skandium.instructions.IfInst;
 import cl.niclabs.skandium.instructions.Instruction;
 import cl.niclabs.skandium.instructions.MapInst;
 import cl.niclabs.skandium.instructions.SeqInst;
-import cl.niclabs.skandium.instructions.When;
-import cl.niclabs.skandium.instructions.Where;
 import cl.niclabs.skandium.instructions.WhileInst;
 
 /**

@@ -2,10 +2,10 @@ package cl.niclabs.skandium.events;
 
 import cl.niclabs.skandium.skeletons.Skeleton;
 
-interface RBranchParamListener extends EventListener {
+public interface RBranchParamListener extends EventListener {
 
-	public boolean guard(Skeleton<?,?>[] strace, Integer[] rbranch);
+	public <P> boolean guard(P param, Skeleton<?,?>[] strace, Integer[] rbranch);
 
-	public void handler(Skeleton<?,?>[] strace, Integer[] rbranch);
+	public <P> void handler(P param, Skeleton<?,?>[] strace, Integer[] rbranch);
 
 }

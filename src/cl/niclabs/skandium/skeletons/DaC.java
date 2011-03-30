@@ -17,6 +17,8 @@
  */
 package cl.niclabs.skandium.skeletons;
 
+import cl.niclabs.skandium.events.BadListenerException;
+import cl.niclabs.skandium.events.DaCListener;
 import cl.niclabs.skandium.muscles.Condition;
 import cl.niclabs.skandium.muscles.Execute;
 import cl.niclabs.skandium.muscles.Merge;
@@ -34,7 +36,7 @@ import cl.niclabs.skandium.muscles.Split;
  * @param <R> The type of the result.
  */
 public class DaC<P,R> extends AbstractSkeleton<P,R> {
-
+	
 	Condition<P> condition;
 	Split<P,P> split;
 	Skeleton<P,R> skeleton;
@@ -73,5 +75,13 @@ public class DaC<P,R> extends AbstractSkeleton<P,R> {
 	 */
     public void accept(SkeletonVisitor visitor) {
         visitor.visit(this);
+    }
+    
+    public void addListener(DaCListener l) throws BadListenerException {
+    	eregis.addListener(l);
+    }
+
+    public void removeListener(DaCListener l) throws BadListenerException {
+    	eregis.removeListener(l);
     }
 }

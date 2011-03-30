@@ -2,10 +2,10 @@ package cl.niclabs.skandium.events;
 
 import cl.niclabs.skandium.skeletons.Skeleton;
 
-interface NoParamListener extends EventListener {
+public interface NoParamListener extends EventListener {
 
-	public boolean guard(Skeleton<?,?>[] strace);
+	public <P> boolean guard(P param, Skeleton<?,?>[] strace);
 
-	public void handler(Skeleton<?,?>[] strace);
+	public <P> void handler(P param, Skeleton<?,?>[] strace);
 
 }

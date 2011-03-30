@@ -1,5 +1,5 @@
 package cl.niclabs.skandium.events;
 
-interface EventListener extends java.util.EventListener, Comparable<EventListener> {
+public interface EventListener extends java.util.EventListener, Comparable<EventListener> {
 
 }
