@@ -26,6 +26,7 @@ import cl.niclabs.skandium.events.IntegerParamListener;
 import cl.niclabs.skandium.events.NoParamListener;
 import cl.niclabs.skandium.events.RBranchBooleanParamListener;
 import cl.niclabs.skandium.events.RBranchParamListener;
+import cl.niclabs.skandium.events.UndefinedParamListener;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.skeletons.AbstractSkeleton;
@@ -91,7 +92,11 @@ public class EventInst extends AbstractInstruction {
 					if (((RBranchBooleanParamListener) l).guard(param, strace, (Integer[]) (rbranch.toArray(new Integer[rbranch.size()])), (Boolean) params[1])) {
 						((RBranchBooleanParamListener) l).handler(param, strace, (Integer[]) (rbranch.toArray(new Integer[rbranch.size()])), (Boolean) params[1]);
 					}
-				} else throw new Error("ErrorFaltal");
+				} else if (l instanceof UndefinedParamListener) {
+					if (((UndefinedParamListener) l).guard(param, strace, when, where, params)) {
+						((UndefinedParamListener) l).handler(param, strace, when, where, params);
+					}
+				} else throw new RuntimeException("Should not be here!");;
 
 			}
 		}

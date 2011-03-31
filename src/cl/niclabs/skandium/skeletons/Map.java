@@ -17,6 +17,8 @@
  */
 package cl.niclabs.skandium.skeletons;
 
+import cl.niclabs.skandium.events.BadListenerException;
+import cl.niclabs.skandium.events.MapListener;
 import cl.niclabs.skandium.muscles.Execute;
 import cl.niclabs.skandium.muscles.Merge;
 import cl.niclabs.skandium.muscles.Split;
@@ -67,5 +69,13 @@ public class Map<P,R> extends AbstractSkeleton<P,R> {
 	 */
     public void accept(SkeletonVisitor visitor) {
         visitor.visit(this);
+    }
+
+    public boolean addListener(MapListener l) throws BadListenerException {
+    	return eregis.addListener(l);
+    }
+
+    public boolean removeListener(MapListener l) throws BadListenerException {
+    	return eregis.removeListener(l);
     }
 }

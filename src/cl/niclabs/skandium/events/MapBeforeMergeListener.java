@@ -1,5 +1,5 @@
 package cl.niclabs.skandium.events;
 
-public interface MapBeforeMergeListener extends MapListener, NoParamListener {
+public interface MapBeforeMergeListener extends MapListener, NoParamListener, BeforeListener, MergeListener {
 
 }

@@ -1,5 +1,5 @@
 package cl.niclabs.skandium.events;
 
-public interface WhileAfterListener extends WhileListener, NoParamListener {
+public interface WhileAfterListener extends WhileListener, NoParamListener, AfterListener, SkeletonListener {
 
 }

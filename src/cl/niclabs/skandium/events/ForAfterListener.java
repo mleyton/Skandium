@@ -1,5 +1,5 @@
 package cl.niclabs.skandium.events;
 
-public interface ForAfterListener extends ForListener, NoParamListener {
+public interface ForAfterListener extends ForListener, NoParamListener, AfterListener, SkeletonListener {
 
 }

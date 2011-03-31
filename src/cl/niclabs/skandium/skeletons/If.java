@@ -17,6 +17,8 @@
  */
 package cl.niclabs.skandium.skeletons;
 
+import cl.niclabs.skandium.events.BadListenerException;
+import cl.niclabs.skandium.events.IfListener;
 import cl.niclabs.skandium.muscles.Condition;
 import cl.niclabs.skandium.muscles.Execute;
 
@@ -65,5 +67,13 @@ public class If<P,R> extends AbstractSkeleton<P,R> {
 	 */
     public void accept(SkeletonVisitor visitor) {
         visitor.visit(this);
+    }
+
+    public boolean addListener(IfListener l) throws BadListenerException {
+    	return eregis.addListener(l);
+    }
+
+    public boolean removeListener(IfListener l) throws BadListenerException {
+    	return eregis.removeListener(l);
     }
 }

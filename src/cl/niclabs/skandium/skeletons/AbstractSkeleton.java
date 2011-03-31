@@ -23,6 +23,7 @@ import cl.niclabs.skandium.Skandium;
 import cl.niclabs.skandium.Stream;
 import cl.niclabs.skandium.events.EventListener;
 import cl.niclabs.skandium.events.EventRegistry;
+import cl.niclabs.skandium.events.GenericListener;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 
@@ -111,5 +112,19 @@ public abstract class AbstractSkeleton<P,R> implements Skeleton<P,R> {
 	
     public EventListener[] getListeners(When when, Where where) {
 		return eregis.getListeners(when, where);
-    }	
+    }
+    
+    @SuppressWarnings("unchecked")
+	public boolean addListener(GenericListener l, Class pattern, When when, Where where) {
+    	GenericListenerRegistry gres = new GenericListenerRegistry(false, pattern, when, where, l);
+    	this.accept(gres);
+    	return gres.getR();
+    }
+
+    @SuppressWarnings("unchecked")
+	public boolean removeListener(GenericListener l, Class pattern, When when, Where where) {
+    	GenericListenerRegistry gres = new GenericListenerRegistry(true, pattern, when, where, l);
+    	this.accept(gres);
+    	return gres.getR();
+    }
 }

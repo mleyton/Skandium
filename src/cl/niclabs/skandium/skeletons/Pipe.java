@@ -17,6 +17,8 @@
  */
 package cl.niclabs.skandium.skeletons;
 
+import cl.niclabs.skandium.events.BadListenerException;
+import cl.niclabs.skandium.events.PipeListener;
 import cl.niclabs.skandium.muscles.Execute;
 
 /**
@@ -46,5 +48,13 @@ public class Pipe<P,R> extends AbstractSkeleton<P,R> {
 	 */
     public void accept(SkeletonVisitor visitor) {
         visitor.visit(this);
+    }
+
+    public boolean addListener(PipeListener l) throws BadListenerException {
+    	return eregis.addListener(l);
+    }
+
+    public boolean removeListener(PipeListener l) throws BadListenerException {
+    	return eregis.removeListener(l);
     }
 }

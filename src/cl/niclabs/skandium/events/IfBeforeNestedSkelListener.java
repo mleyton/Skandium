@@ -1,5 +1,5 @@
 package cl.niclabs.skandium.events;
 
-public interface IfBeforeNestedSkelListener extends IfListener, BooleanParamListener {
+public interface IfBeforeNestedSkelListener extends IfListener, BooleanParamListener, BeforeListener, NestedSkelListener {
 
 }

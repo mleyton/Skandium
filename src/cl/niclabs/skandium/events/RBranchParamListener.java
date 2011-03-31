@@ -4,8 +4,10 @@ import cl.niclabs.skandium.skeletons.Skeleton;
 
 public interface RBranchParamListener extends EventListener {
 
-	public <P> boolean guard(P param, Skeleton<?,?>[] strace, Integer[] rbranch);
+	@SuppressWarnings("unchecked")
+	public boolean guard(Object param, Skeleton[] strace, Integer[] rbranch);
 
-	public <P> void handler(P param, Skeleton<?,?>[] strace, Integer[] rbranch);
+	@SuppressWarnings("unchecked")
+	public void handler(Object param, Skeleton[] strace, Integer[] rbranch);
 
 }

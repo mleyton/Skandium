@@ -1,5 +1,5 @@
 package cl.niclabs.skandium.events;
 
-public interface IfAfterConditionListener extends IfListener, BooleanParamListener {
+public interface IfAfterConditionListener extends IfListener, BooleanParamListener, AfterListener, ConditionListener {
 
 }

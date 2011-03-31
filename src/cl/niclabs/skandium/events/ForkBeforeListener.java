@@ -1,5 +1,5 @@
 package cl.niclabs.skandium.events;
 
-public interface ForkBeforeListener extends ForkListener, NoParamListener {
+public interface ForkBeforeListener extends ForkListener, NoParamListener, BeforeListener, SkeletonListener {
 
 }

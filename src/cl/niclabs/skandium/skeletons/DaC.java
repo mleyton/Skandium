@@ -77,11 +77,11 @@ public class DaC<P,R> extends AbstractSkeleton<P,R> {
         visitor.visit(this);
     }
     
-    public void addListener(DaCListener l) throws BadListenerException {
-    	eregis.addListener(l);
+    public boolean addListener(DaCListener l) throws BadListenerException {
+    	return eregis.addListener(l);
     }
 
-    public void removeListener(DaCListener l) throws BadListenerException {
-    	eregis.removeListener(l);
+    public boolean removeListener(DaCListener l) throws BadListenerException {
+    	return eregis.removeListener(l);
     }
 }

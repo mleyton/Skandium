@@ -1,5 +1,5 @@
 package cl.niclabs.skandium.events;
 
-public interface MapBeforeListener extends MapListener, NoParamListener {
+public interface MapBeforeListener extends MapListener, NoParamListener, BeforeListener, SkeletonListener {
 
 }

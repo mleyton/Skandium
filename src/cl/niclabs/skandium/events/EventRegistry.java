@@ -2,6 +2,7 @@ package cl.niclabs.skandium.events;
 
 import java.util.concurrent.PriorityBlockingQueue;
 
+
 public class EventRegistry {
 	private PriorityBlockingQueue<EventListener>[] listeners;
 
@@ -11,14 +12,24 @@ public class EventRegistry {
 		listeners = new PriorityBlockingQueue[Where.values().length * When.values().length];
 	}
 
-	public boolean addListener(EventListener e) throws BadListenerException {
+	public boolean addListener(NonGenericListener e) throws BadListenerException {
 		int index = getIndex(getWhen(e), getWhere(e));
 		if (listeners[index] == null) listeners[index] = new PriorityBlockingQueue<EventListener>();
 		return listeners[index].add(e);
 	}
 	
-	public boolean removeListener(EventListener e) throws BadListenerException {
+	public boolean addListener(When when, Where where, GenericListener e) {
+		int index = getIndex(when, where);
+		if (listeners[index] == null) listeners[index] = new PriorityBlockingQueue<EventListener>();
+		return listeners[index].add(e);
+	}
+	
+	public boolean removeListener(NonGenericListener e) throws BadListenerException {
 		return listeners[getIndex(getWhen(e), getWhere(e))].remove(e);
+	}
+
+	public boolean removeListener(When when, Where where, GenericListener e) {
+		return listeners[getIndex(when, where)].remove(e);
 	}
 
 	public EventListener[] getListeners(When when, Where where) {

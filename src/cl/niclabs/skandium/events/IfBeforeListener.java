@@ -1,5 +1,5 @@
 package cl.niclabs.skandium.events;
 
-public interface IfBeforeListener extends IfListener, NoParamListener {
+public interface IfBeforeListener extends IfListener, NoParamListener, BeforeListener, SkeletonListener {
 
 }

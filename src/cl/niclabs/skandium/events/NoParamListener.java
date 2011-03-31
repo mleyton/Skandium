@@ -4,8 +4,10 @@ import cl.niclabs.skandium.skeletons.Skeleton;
 
 public interface NoParamListener extends EventListener {
 
-	public <P> boolean guard(P param, Skeleton<?,?>[] strace);
+	@SuppressWarnings("unchecked")
+	public boolean guard(Object param, Skeleton[] strace);
 
-	public <P> void handler(P param, Skeleton<?,?>[] strace);
+	@SuppressWarnings("unchecked")
+	public void handler(Object param, Skeleton[] strace);
 
 }
