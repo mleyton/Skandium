@@ -22,7 +22,7 @@ import java.util.concurrent.Future;
 import cl.niclabs.skandium.Skandium;
 import cl.niclabs.skandium.Stream;
 import cl.niclabs.skandium.events.EventListener;
-import cl.niclabs.skandium.events.EventRegistry;
+import cl.niclabs.skandium.events.PatternEventRegistry;
 import cl.niclabs.skandium.events.GenericListener;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
@@ -39,11 +39,11 @@ public abstract class AbstractSkeleton<P,R> implements Skeleton<P,R> {
 	
 	//holds reference to source code instantiation, for skeleton logical exceptions.
 	StackTraceElement trace;
-	EventRegistry eregis;
+	PatternEventRegistry eregis;
 	
 	protected AbstractSkeleton(){		
 		trace  = getInitStackElement();
-		eregis = new EventRegistry();
+		eregis = new PatternEventRegistry();
 	}
 	
 	/**

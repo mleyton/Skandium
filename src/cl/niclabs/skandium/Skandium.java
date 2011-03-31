@@ -17,6 +17,8 @@
  */
 package cl.niclabs.skandium;
 
+import cl.niclabs.skandium.events.MaxThreadPoolListener;
+import cl.niclabs.skandium.events.SkandiumEventRegistry;
 import cl.niclabs.skandium.skeletons.Skeleton;
 import cl.niclabs.skandium.system.TaskExecutor;
 
@@ -31,6 +33,7 @@ public class Skandium {
 
 	TaskExecutor executor;
 	private static Skandium singleton = null;
+	private SkandiumEventRegistry eregis;
 	
 	/**
 	 * A constructor which creates a new Skandium instance with a maximum number of computation 
@@ -48,7 +51,8 @@ public class Skandium {
 		
 		if(maxThreads < 1) throw new IllegalArgumentException("The specified number of threads must be larger than 1");
 		
-		executor = new TaskExecutor(maxThreads);
+		executor = new TaskExecutor(maxThreads);		
+		eregis = new SkandiumEventRegistry(executor.getMaximumPoolSize()); 
 	}
 	
 	/**
@@ -86,5 +90,14 @@ public class Skandium {
 	
 	public static String version(){
 		return "1.0b2";
+	}
+
+	/**
+	 * Adds a new {@link MaxThreadPoolListener}, which will be executed to inform the current maximum number of threads configured.
+	 * @param l The maximum-number-of-threads event listener.
+	 * @return true if the listener was registered correctly and fale otherwise.
+	 */
+	public boolean addListener(MaxThreadPoolListener l) {
+		return eregis.addListener(l);
 	}
 }
