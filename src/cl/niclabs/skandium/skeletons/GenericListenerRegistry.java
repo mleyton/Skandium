@@ -17,11 +17,11 @@
  */
 package cl.niclabs.skandium.skeletons;
 
-import cl.niclabs.skandium.events.GenericListener;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
+import cl.niclabs.skandium.system.events.GenericListener;
 
-class GenericListenerRegistry implements SkeletonVisitor {
+public class GenericListenerRegistry implements SkeletonVisitor {
 	
 	private boolean remove;
 	@SuppressWarnings("unchecked")

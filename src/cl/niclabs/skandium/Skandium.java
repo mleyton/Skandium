@@ -18,9 +18,9 @@
 package cl.niclabs.skandium;
 
 import cl.niclabs.skandium.events.MaxThreadPoolListener;
-import cl.niclabs.skandium.events.SkandiumEventRegistry;
 import cl.niclabs.skandium.skeletons.Skeleton;
 import cl.niclabs.skandium.system.TaskExecutor;
+import cl.niclabs.skandium.system.events.SkandiumEventRegistry;
 
 /**
  * This class is the entry point for the <code>Skandium</code> library.

@@ -17,6 +17,11 @@
  */
 package cl.niclabs.skandium.events;
 
+import cl.niclabs.skandium.system.events.BeforeListener;
+import cl.niclabs.skandium.system.events.MapListener;
+import cl.niclabs.skandium.system.events.NoParamListener;
+import cl.niclabs.skandium.system.events.SkeletonListener;
+
 public interface MapBeforeListener extends MapListener, NoParamListener, BeforeListener, SkeletonListener {
 
 }

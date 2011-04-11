@@ -17,6 +17,11 @@
  */
 package cl.niclabs.skandium.events;
 
+import cl.niclabs.skandium.system.events.BeforeListener;
+import cl.niclabs.skandium.system.events.IntegerParamListener;
+import cl.niclabs.skandium.system.events.MapListener;
+import cl.niclabs.skandium.system.events.NestedSkelListener;
+
 public interface MapBeforeNestedSkelListener extends MapListener, IntegerParamListener, BeforeListener, NestedSkelListener {
 
 }

@@ -17,11 +17,11 @@
  */
 package cl.niclabs.skandium.skeletons;
 
-import cl.niclabs.skandium.events.BadListenerException;
-import cl.niclabs.skandium.events.MapListener;
 import cl.niclabs.skandium.muscles.Execute;
 import cl.niclabs.skandium.muscles.Merge;
 import cl.niclabs.skandium.muscles.Split;
+import cl.niclabs.skandium.system.events.BadListenerException;
+import cl.niclabs.skandium.system.events.MapListener;
 
 /**
  * A <code>Map</code> {@link Skeleton} divides an input parameter into a list of sub-parameters,

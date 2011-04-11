@@ -17,10 +17,10 @@
  */
 package cl.niclabs.skandium.skeletons;
 
-import cl.niclabs.skandium.events.BadListenerException;
-import cl.niclabs.skandium.events.IfListener;
 import cl.niclabs.skandium.muscles.Condition;
 import cl.niclabs.skandium.muscles.Execute;
+import cl.niclabs.skandium.system.events.BadListenerException;
+import cl.niclabs.skandium.system.events.IfListener;
 
 /**
  * An <code>If</code> {@link Skeleton} represents condition branching.

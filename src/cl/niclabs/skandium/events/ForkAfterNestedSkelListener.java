@@ -17,6 +17,11 @@
  */
 package cl.niclabs.skandium.events;
 
+import cl.niclabs.skandium.system.events.AfterListener;
+import cl.niclabs.skandium.system.events.ForkListener;
+import cl.niclabs.skandium.system.events.IntegerParamListener;
+import cl.niclabs.skandium.system.events.NestedSkelListener;
+
 public interface ForkAfterNestedSkelListener extends ForkListener, IntegerParamListener, AfterListener, NestedSkelListener {
 
 }

@@ -17,9 +17,9 @@
  */
 package cl.niclabs.skandium.skeletons;
 
-import cl.niclabs.skandium.events.BadListenerException;
-import cl.niclabs.skandium.events.PipeListener;
 import cl.niclabs.skandium.muscles.Execute;
+import cl.niclabs.skandium.system.events.BadListenerException;
+import cl.niclabs.skandium.system.events.PipeListener;
 
 /**
  * A <code></code> {@link Skeleton}

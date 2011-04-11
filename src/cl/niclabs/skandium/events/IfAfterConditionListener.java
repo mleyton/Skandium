@@ -17,6 +17,11 @@
  */
 package cl.niclabs.skandium.events;
 
+import cl.niclabs.skandium.system.events.AfterListener;
+import cl.niclabs.skandium.system.events.BooleanParamListener;
+import cl.niclabs.skandium.system.events.ConditionListener;
+import cl.niclabs.skandium.system.events.IfListener;
+
 public interface IfAfterConditionListener extends IfListener, BooleanParamListener, AfterListener, ConditionListener {
 
 }

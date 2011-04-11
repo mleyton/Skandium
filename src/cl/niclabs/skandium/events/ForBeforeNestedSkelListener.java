@@ -17,6 +17,11 @@
  */
 package cl.niclabs.skandium.events;
 
+import cl.niclabs.skandium.system.events.BeforeListener;
+import cl.niclabs.skandium.system.events.ForListener;
+import cl.niclabs.skandium.system.events.IntegerParamListener;
+import cl.niclabs.skandium.system.events.NestedSkelListener;
+
 public interface ForBeforeNestedSkelListener extends ForListener, IntegerParamListener, BeforeListener, NestedSkelListener {
 
 }

@@ -17,6 +17,11 @@
  */
 package cl.niclabs.skandium.events;
 
+import cl.niclabs.skandium.system.events.AfterListener;
+import cl.niclabs.skandium.system.events.DaCListener;
+import cl.niclabs.skandium.system.events.MergeListener;
+import cl.niclabs.skandium.system.events.RBranchParamListener;
+
 public interface DaCAfterMergeListener extends DaCListener, RBranchParamListener, AfterListener, MergeListener {
 
 }

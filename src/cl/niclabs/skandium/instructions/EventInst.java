@@ -20,17 +20,17 @@ package cl.niclabs.skandium.instructions;
 import java.util.List;
 import java.util.Stack;
 
-import cl.niclabs.skandium.events.BooleanParamListener;
-import cl.niclabs.skandium.events.EventListener;
-import cl.niclabs.skandium.events.IntegerParamListener;
-import cl.niclabs.skandium.events.NoParamListener;
-import cl.niclabs.skandium.events.RBranchBooleanParamListener;
-import cl.niclabs.skandium.events.RBranchParamListener;
-import cl.niclabs.skandium.events.UndefinedParamListener;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.skeletons.AbstractSkeleton;
 import cl.niclabs.skandium.skeletons.Skeleton;
+import cl.niclabs.skandium.system.events.BooleanParamListener;
+import cl.niclabs.skandium.system.events.ComparableEventListener;
+import cl.niclabs.skandium.system.events.IntegerParamListener;
+import cl.niclabs.skandium.system.events.NoParamListener;
+import cl.niclabs.skandium.system.events.RBranchBooleanParamListener;
+import cl.niclabs.skandium.system.events.RBranchParamListener;
+import cl.niclabs.skandium.system.events.UndefinedParamListener;
 
 
 /**
@@ -67,9 +67,9 @@ public class EventInst extends AbstractInstruction {
 	public <P> Object interpret(P param, Stack<Instruction> stack, 
 			List<Stack<Instruction>> children) throws Exception {
 		Skeleton<?,?> curr = strace[strace.length-1];
-		EventListener[] listeners = ((AbstractSkeleton<?,?>) curr).getListeners(when, where);
+		ComparableEventListener[] listeners = ((AbstractSkeleton<?,?>) curr).getListeners(when, where);
 		if (listeners != null) {
-			for (EventListener l : listeners) {
+			for (ComparableEventListener l : listeners) {
 				if (l instanceof NoParamListener) {
 					if (((NoParamListener) l).guard(param, strace)) {
 						((NoParamListener) l).handler(param, strace);

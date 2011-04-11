@@ -17,6 +17,11 @@
  */
 package cl.niclabs.skandium.events;
 
+import cl.niclabs.skandium.system.events.BeforeListener;
+import cl.niclabs.skandium.system.events.NoParamListener;
+import cl.niclabs.skandium.system.events.SeqListener;
+import cl.niclabs.skandium.system.events.SkeletonListener;
+
 public interface SeqBeforeListener extends SeqListener, NoParamListener, BeforeListener, SkeletonListener {
 
 }

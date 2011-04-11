@@ -17,6 +17,11 @@
  */
 package cl.niclabs.skandium.events;
 
+import cl.niclabs.skandium.system.events.AfterListener;
+import cl.niclabs.skandium.system.events.ConditionListener;
+import cl.niclabs.skandium.system.events.DaCListener;
+import cl.niclabs.skandium.system.events.RBranchBooleanParamListener;
+
 public interface DaCAfterConditionListener extends DaCListener, RBranchBooleanParamListener, AfterListener, ConditionListener {
 
 }

@@ -17,6 +17,11 @@
  */
 package cl.niclabs.skandium.events;
 
+import cl.niclabs.skandium.system.events.BeforeListener;
+import cl.niclabs.skandium.system.events.DaCListener;
+import cl.niclabs.skandium.system.events.RBranchParamListener;
+import cl.niclabs.skandium.system.events.SplitListener;
+
 public interface DaCBeforeSplitListener extends DaCListener, RBranchParamListener, BeforeListener, SplitListener {
 
 }

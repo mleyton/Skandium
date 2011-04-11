@@ -21,11 +21,11 @@ import java.util.concurrent.Future;
 
 import cl.niclabs.skandium.Skandium;
 import cl.niclabs.skandium.Stream;
-import cl.niclabs.skandium.events.EventListener;
-import cl.niclabs.skandium.events.PatternEventRegistry;
-import cl.niclabs.skandium.events.GenericListener;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
+import cl.niclabs.skandium.system.events.ComparableEventListener;
+import cl.niclabs.skandium.system.events.GenericListener;
+import cl.niclabs.skandium.system.events.PatternEventRegistry;
 
 /**
  * Abstract skeleton class from which all skeletons extends.
@@ -110,7 +110,7 @@ public abstract class AbstractSkeleton<P,R> implements Skeleton<P,R> {
 		return trace;
 	}
 	
-    public EventListener[] getListeners(When when, Where where) {
+    public ComparableEventListener[] getListeners(When when, Where where) {
 		return eregis.getListeners(when, where);
     }
     

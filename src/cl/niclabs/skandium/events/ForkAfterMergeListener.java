@@ -17,6 +17,11 @@
  */
 package cl.niclabs.skandium.events;
 
+import cl.niclabs.skandium.system.events.AfterListener;
+import cl.niclabs.skandium.system.events.ForkListener;
+import cl.niclabs.skandium.system.events.MergeListener;
+import cl.niclabs.skandium.system.events.NoParamListener;
+
 public interface ForkAfterMergeListener extends ForkListener, NoParamListener, AfterListener, MergeListener {
 
 }

@@ -17,10 +17,10 @@
  */
 package cl.niclabs.skandium.skeletons;
 
-import cl.niclabs.skandium.events.BadListenerException;
-import cl.niclabs.skandium.events.ForListener;
 import cl.niclabs.skandium.muscles.Execute;
 import cl.niclabs.skandium.muscles.Muscle;
+import cl.niclabs.skandium.system.events.BadListenerException;
+import cl.niclabs.skandium.system.events.ForListener;
 
 /**
  * A <code>For</code> {@link Skeleton} provides a fixed iteration.

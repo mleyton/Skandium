@@ -17,6 +17,11 @@
  */
 package cl.niclabs.skandium.events;
 
+import cl.niclabs.skandium.system.events.AfterListener;
+import cl.niclabs.skandium.system.events.BooleanParamListener;
+import cl.niclabs.skandium.system.events.IfListener;
+import cl.niclabs.skandium.system.events.NestedSkelListener;
+
 public interface IfAfterNestedSkelListener extends IfListener, BooleanParamListener, AfterListener, NestedSkelListener {
 
 }

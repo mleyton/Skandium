@@ -17,6 +17,11 @@
  */
 package cl.niclabs.skandium.events;
 
+import cl.niclabs.skandium.system.events.BeforeListener;
+import cl.niclabs.skandium.system.events.ConditionListener;
+import cl.niclabs.skandium.system.events.IfListener;
+import cl.niclabs.skandium.system.events.NoParamListener;
+
 public interface IfBeforeConditionListener extends IfListener, NoParamListener, BeforeListener, ConditionListener {
 
 }

@@ -17,7 +17,9 @@
  */
 package cl.niclabs.skandium.events;
 
-public interface MaxThreadPoolListener extends EventListener {
+import cl.niclabs.skandium.system.events.ComparableEventListener;
+
+public interface MaxThreadPoolListener extends ComparableEventListener {
 
 	public boolean guard(int maxThreadPoolSize);
 

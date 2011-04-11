@@ -17,9 +17,9 @@
  */
 package cl.niclabs.skandium.skeletons;
 
-import cl.niclabs.skandium.events.BadListenerException;
-import cl.niclabs.skandium.events.FarmListener;
 import cl.niclabs.skandium.muscles.Execute;
+import cl.niclabs.skandium.system.events.BadListenerException;
+import cl.niclabs.skandium.system.events.FarmListener;
 
 /**
  * A <code>Farm</code> {@link Skeleton} provides task replication or master-worker like parallelism.

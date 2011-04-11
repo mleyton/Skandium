@@ -17,6 +17,11 @@
  */
 package cl.niclabs.skandium.events;
 
+import cl.niclabs.skandium.system.events.BeforeListener;
+import cl.niclabs.skandium.system.events.ForkListener;
+import cl.niclabs.skandium.system.events.NoParamListener;
+import cl.niclabs.skandium.system.events.SplitListener;
+
 public interface ForkBeforeSplitListener extends ForkListener, NoParamListener, BeforeListener, SplitListener {
 
 }

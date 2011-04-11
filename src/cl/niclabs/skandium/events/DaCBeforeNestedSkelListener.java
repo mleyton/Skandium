@@ -17,6 +17,11 @@
  */
 package cl.niclabs.skandium.events;
 
+import cl.niclabs.skandium.system.events.BeforeListener;
+import cl.niclabs.skandium.system.events.DaCListener;
+import cl.niclabs.skandium.system.events.NestedSkelListener;
+import cl.niclabs.skandium.system.events.RBranchParamListener;
+
 public interface DaCBeforeNestedSkelListener extends DaCListener, RBranchParamListener, BeforeListener, NestedSkelListener {
 
 }
