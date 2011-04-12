@@ -25,6 +25,6 @@ public interface RBranchBooleanParamListener<P> extends ComparableEventListener 
 	public boolean guard(P param, Skeleton[] strace, Integer[] rbranch, boolean cresult);
 
 	@SuppressWarnings("unchecked")
-	public void handler(P param, Skeleton[] strace, Integer[] rbranch, boolean cresult);
+	public P handler(P param, Skeleton[] strace, Integer[] rbranch, boolean cresult);
 
 }

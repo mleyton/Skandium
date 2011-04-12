@@ -27,6 +27,6 @@ public interface UndefinedParamListener extends ComparableEventListener {
 	public boolean guard(Object param, Skeleton[] strace, When when, Where where, Object... params);
 
 	@SuppressWarnings("unchecked")
-	public void handler(Object param, Skeleton[] strace,  When when, Where where, Object... params);
+	public Object handler(Object param, Skeleton[] strace,  When when, Where where, Object... params);
 
 }

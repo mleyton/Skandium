@@ -25,6 +25,6 @@ public interface NoParamListener<P> extends ComparableEventListener {
 	public boolean guard(P param, Skeleton[] strace);
 
 	@SuppressWarnings("unchecked")
-	public void handler(P param, Skeleton[] strace);
+	public P handler(P param, Skeleton[] strace);
 
 }
