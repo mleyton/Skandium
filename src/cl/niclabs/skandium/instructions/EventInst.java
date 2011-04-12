@@ -68,37 +68,34 @@ public class EventInst extends AbstractInstruction {
 			List<Stack<Instruction>> children) throws Exception {
 		Skeleton<?,?> curr = strace[strace.length-1];
 		ComparableEventListener[] listeners = ((AbstractSkeleton<?,?>) curr).getListeners(when, where);
-		if (listeners != null) {
-			for (ComparableEventListener l : listeners) {
-				if (l instanceof NoParamListener<?>) {
-					if (((NoParamListener<P>) l).guard(param, strace)) {
-						param = ((NoParamListener<P>) l).handler(param, strace);
-					}
-				} else if (l instanceof IntegerParamListener<?>) {
-					if (((IntegerParamListener<P>) l).guard(param, strace, (Integer) params[0])) {
-						param = ((IntegerParamListener<P>) l).handler(param, strace, (Integer) params[0]);
-					}
-				} else if (l instanceof BooleanParamListener<?>) {
-					if (((BooleanParamListener<P>) l).guard(param, strace, (Boolean) params[0])) {
-						param = ((BooleanParamListener<P>) l).handler(param, strace, (Boolean) params[0]);
-					}
-				} else if (l instanceof RBranchParamListener<?>) {
-					Stack<Integer> rbranch =(Stack<Integer>) params[0];
-					if (((RBranchParamListener<P>) l).guard(param, strace, (Integer[]) (rbranch.toArray(new Integer[rbranch.size()])))) {
-						param = ((RBranchParamListener<P>) l).handler(param, strace, (Integer[]) (rbranch.toArray(new Integer[rbranch.size()])));
-					}
-				} else if (l instanceof RBranchBooleanParamListener<?>) {
-					Stack<Integer> rbranch =(Stack<Integer>) params[0];
-					if (((RBranchBooleanParamListener<P>) l).guard(param, strace, (Integer[]) (rbranch.toArray(new Integer[rbranch.size()])), (Boolean) params[1])) {
-						param = ((RBranchBooleanParamListener<P>) l).handler(param, strace, (Integer[]) (rbranch.toArray(new Integer[rbranch.size()])), (Boolean) params[1]);
-					}
-				} else if (l instanceof UndefinedParamListener) {
-					if (((UndefinedParamListener) l).guard(param, strace, when, where, params)) {
-						param = (P) ((UndefinedParamListener) l).handler(param, strace, when, where, params);
-					}
-				} else throw new RuntimeException("Should not be here!");;
-
-			}
+		for (ComparableEventListener l : listeners) {
+			if (l instanceof NoParamListener<?>) {
+				if (((NoParamListener<P>) l).guard(param, strace)) {
+					param = ((NoParamListener<P>) l).handler(param, strace);
+				}
+			} else if (l instanceof IntegerParamListener<?>) {
+				if (((IntegerParamListener<P>) l).guard(param, strace, (Integer) params[0])) {
+					param = ((IntegerParamListener<P>) l).handler(param, strace, (Integer) params[0]);
+				}
+			} else if (l instanceof BooleanParamListener<?>) {
+				if (((BooleanParamListener<P>) l).guard(param, strace, (Boolean) params[0])) {
+					param = ((BooleanParamListener<P>) l).handler(param, strace, (Boolean) params[0]);
+				}
+			} else if (l instanceof RBranchParamListener<?>) {
+				Stack<Integer> rbranch =(Stack<Integer>) params[0];
+				if (((RBranchParamListener<P>) l).guard(param, strace, (Integer[]) (rbranch.toArray(new Integer[rbranch.size()])))) {
+					param = ((RBranchParamListener<P>) l).handler(param, strace, (Integer[]) (rbranch.toArray(new Integer[rbranch.size()])));
+				}
+			} else if (l instanceof RBranchBooleanParamListener<?>) {
+				Stack<Integer> rbranch =(Stack<Integer>) params[0];
+				if (((RBranchBooleanParamListener<P>) l).guard(param, strace, (Integer[]) (rbranch.toArray(new Integer[rbranch.size()])), (Boolean) params[1])) {
+					param = ((RBranchBooleanParamListener<P>) l).handler(param, strace, (Integer[]) (rbranch.toArray(new Integer[rbranch.size()])), (Boolean) params[1]);
+				}
+			} else if (l instanceof UndefinedParamListener) {
+				if (((UndefinedParamListener) l).guard(param, strace, when, where, params)) {
+					param = (P) ((UndefinedParamListener) l).handler(param, strace, when, where, params);
+				}
+			} else throw new RuntimeException("Should not be here!");;
 		}
 		return param;
 	}

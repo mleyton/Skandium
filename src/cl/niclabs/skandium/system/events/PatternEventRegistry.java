@@ -17,6 +17,7 @@
  */
 package cl.niclabs.skandium.system.events;
 
+import java.util.Hashtable;
 import java.util.concurrent.PriorityBlockingQueue;
 
 import cl.niclabs.skandium.events.When;
@@ -24,41 +25,47 @@ import cl.niclabs.skandium.events.Where;
 
 
 public class PatternEventRegistry {
-	private PriorityBlockingQueue<ComparableEventListener>[] listeners;
+	private Hashtable<Integer,PriorityBlockingQueue<ComparableEventListener>> listeners;
 
 	
-	@SuppressWarnings("unchecked")
 	public PatternEventRegistry() {
-		listeners = new PriorityBlockingQueue[Where.values().length * When.values().length];
+		listeners = new Hashtable<Integer,PriorityBlockingQueue<ComparableEventListener>>(Where.values().length * When.values().length);
 	}
 
 	public boolean addListener(NonGenericListener e) throws BadListenerException {
-		int index = getIndex(getWhen(e), getWhere(e));
-		if (listeners[index] == null) listeners[index] = new PriorityBlockingQueue<ComparableEventListener>();
-		return listeners[index].add(e);
+		return addListener(getWhen(e), getWhere(e), e);
 	}
 	
-	public boolean addListener(When when, Where where, GenericListener e) {
-		int index = getIndex(when, where);
-		if (listeners[index] == null) listeners[index] = new PriorityBlockingQueue<ComparableEventListener>();
-		return listeners[index].add(e);
+	public boolean addListener(When when, Where where, ComparableEventListener e) {
+		int hashCode = getHashCode(when, where);
+		PriorityBlockingQueue<ComparableEventListener> q;
+		if (!listeners.containsKey(hashCode)) {
+			q = new PriorityBlockingQueue<ComparableEventListener>();
+			listeners.put(hashCode, q);
+		} else {
+			q = listeners.get(hashCode);
+		}
+		return q.add(e);
 	}
 	
 	public boolean removeListener(NonGenericListener e) throws BadListenerException {
-		return listeners[getIndex(getWhen(e), getWhere(e))].remove(e);
+		return removeListener(getWhen(e), getWhere(e),e);
 	}
 
-	public boolean removeListener(When when, Where where, GenericListener e) {
-		return listeners[getIndex(when, where)].remove(e);
+	public boolean removeListener(When when, Where where, ComparableEventListener e) {
+		return listeners.get(getHashCode(when, where)).remove(e);
 	}
 
 	public ComparableEventListener[] getListeners(When when, Where where) {
-		PriorityBlockingQueue<ComparableEventListener> l = listeners[getIndex(when, where)];
-		if (l == null) return null;
-		return l.toArray(new ComparableEventListener[l.size()]);
+		int hashCode = getHashCode(when, where);
+		if (!listeners.containsKey(hashCode)) {
+			return new ComparableEventListener[0];
+		} 
+		PriorityBlockingQueue<ComparableEventListener> q = listeners.get(hashCode);
+		return q.toArray(new ComparableEventListener[q.size()]);
 	}
 
-	private int getIndex(When when, Where where) {
+	private int getHashCode(When when, Where where) {
 		return where.ordinal() + Where.values().length * when.ordinal();
 	}
 	
