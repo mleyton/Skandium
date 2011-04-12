@@ -46,11 +46,11 @@ public class Seq<P,R> extends AbstractSkeleton<P,R> {
         visitor.visit(this);
     }
 
-    public boolean addListener(SeqListener l) throws BadListenerException {
+    public boolean addListener(SeqListener<P,R> l) throws BadListenerException {
     	return eregis.addListener(l);
     }
 
-    public boolean removeListener(SeqListener l) throws BadListenerException {
+    public boolean removeListener(SeqListener<P,R> l) throws BadListenerException {
     	return eregis.removeListener(l);
     }
 }

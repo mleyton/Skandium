@@ -17,6 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-public interface DaCListener extends NonGenericListener {
+public interface DaCListener<P,X,Y,R> extends NonGenericListener {
 
 }

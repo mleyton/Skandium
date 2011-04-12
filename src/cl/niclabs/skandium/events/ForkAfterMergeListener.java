@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.ForkListener;
 import cl.niclabs.skandium.system.events.MergeListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
 
-public interface ForkAfterMergeListener extends ForkListener, NoParamListener, AfterListener, MergeListener {
+public interface ForkAfterMergeListener<P,X,Y,R> extends ForkListener<P,X,Y,R>, NoParamListener<R>, AfterListener, MergeListener {
 
 }

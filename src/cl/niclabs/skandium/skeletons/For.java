@@ -64,11 +64,11 @@ public class For<P> extends AbstractSkeleton<P,P> {
         visitor.visit(this);
     }
 
-    public boolean addListener(ForListener l) throws BadListenerException {
+    public boolean addListener(ForListener<P> l) throws BadListenerException {
     	return eregis.addListener(l);
     }
 
-    public boolean removeListener(ForListener l) throws BadListenerException {
+    public boolean removeListener(ForListener<P> l) throws BadListenerException {
     	return eregis.removeListener(l);
     }
 }

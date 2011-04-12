@@ -69,11 +69,11 @@ public class If<P,R> extends AbstractSkeleton<P,R> {
         visitor.visit(this);
     }
 
-    public boolean addListener(IfListener l) throws BadListenerException {
+    public boolean addListener(IfListener<P,R> l) throws BadListenerException {
     	return eregis.addListener(l);
     }
 
-    public boolean removeListener(IfListener l) throws BadListenerException {
+    public boolean removeListener(IfListener<P,R> l) throws BadListenerException {
     	return eregis.removeListener(l);
     }
 }

@@ -38,9 +38,9 @@ import cl.niclabs.skandium.system.events.DaCListener;
 public class DaC<P,R> extends AbstractSkeleton<P,R> {
 	
 	Condition<P> condition;
-	Split<P,P> split;
-	Skeleton<P,R> skeleton;
-	Merge<R,R> merge;
+	Split<P,?> split;
+	Skeleton<?,?> skeleton;
+	Merge<?,R> merge;
 	
 	/**
 	 * The constructor.
@@ -50,7 +50,7 @@ public class DaC<P,R> extends AbstractSkeleton<P,R> {
 	 * @param skeleton the skeleton code to execute when the subdivision process is finished. 
 	 * @param merge the code to reduce the results into a single output.
 	 */
-	public DaC(Condition<P> condition, Split<P,P> split, Skeleton<P,R> skeleton, Merge<R,R> merge){
+	public <X,Y> DaC(Condition<P> condition, Split<P,X> split, Skeleton<X,Y> skeleton, Merge<Y,R> merge){
     	
 		this.condition = condition;
 		this.split=split;
@@ -66,8 +66,8 @@ public class DaC<P,R> extends AbstractSkeleton<P,R> {
 	 * @param execute the code to execute when the subdivision process is finished. 
 	 * @param merge the code to reduce the results into a single output.
 	 */
-	public DaC(Condition<P> condition, Split<P,P> split, Execute<P,R> execute, Merge<R,R> merge){
-		this(condition, split,new Seq<P,R>(execute), merge);
+	public <X,Y> DaC(Condition<P> condition, Split<P,X> split, Execute<X,Y> execute, Merge<Y,R> merge){
+		this(condition, split,new Seq<X,Y>(execute), merge);
 	}
 	
 	/**
@@ -77,11 +77,11 @@ public class DaC<P,R> extends AbstractSkeleton<P,R> {
         visitor.visit(this);
     }
     
-    public boolean addListener(DaCListener l) throws BadListenerException {
+    public <X,Y> boolean addListener(DaCListener<P,X,Y,R> l) throws BadListenerException {
     	return eregis.addListener(l);
     }
 
-    public boolean removeListener(DaCListener l) throws BadListenerException {
+    public <X,Y> boolean removeListener(DaCListener<P,X,Y,R> l) throws BadListenerException {
     	return eregis.removeListener(l);
     }
 }

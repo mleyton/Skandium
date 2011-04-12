@@ -71,11 +71,11 @@ public class Map<P,R> extends AbstractSkeleton<P,R> {
         visitor.visit(this);
     }
 
-    public boolean addListener(MapListener l) throws BadListenerException {
+    public <X,Y> boolean addListener(MapListener<P,X,Y,R> l) throws BadListenerException {
     	return eregis.addListener(l);
     }
 
-    public boolean removeListener(MapListener l) throws BadListenerException {
+    public <X,Y> boolean removeListener(MapListener<P,X,Y,R> l) throws BadListenerException {
     	return eregis.removeListener(l);
     }
 }

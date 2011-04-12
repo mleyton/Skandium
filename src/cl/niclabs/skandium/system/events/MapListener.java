@@ -17,6 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-public interface MapListener extends NonGenericListener {
+public interface MapListener<P,X,Y,R> extends NonGenericListener {
 
 }

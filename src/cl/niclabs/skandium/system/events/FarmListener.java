@@ -17,6 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-public interface FarmListener extends NonGenericListener {
+public interface FarmListener<P,R> extends NonGenericListener {
 
 }

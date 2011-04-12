@@ -34,9 +34,9 @@ import cl.niclabs.skandium.system.events.ForkListener;
  * */
 public class Fork<P,R> extends AbstractSkeleton<P,R> {
 
-	Split<P,R> split;
-	Skeleton<P,R> skeletons[];
-	Merge<R,R> merge;
+	Split<P,?> split;
+	Skeleton<?,?> skeletons[];
+	Merge<?,R> merge;
 	
 	/**
 	 * The constructor.
@@ -50,7 +50,7 @@ public class Fork<P,R> extends AbstractSkeleton<P,R> {
 	 * @param skeletons  A list of skeletons to execute, one for each sub-parameter.
 	 * @param merge The code used to merge the results of the computation into a single one.
 	 */
-	public Fork(Split<P,R> split, Skeleton<P,R> skeletons[], Merge<R,R> merge){
+	public <X,Y> Fork(Split<P,X> split, Skeleton<X,Y> skeletons[], Merge<Y,R> merge){
 		super();
 		this.split=split;
 		this.skeletons=skeletons;
@@ -70,11 +70,11 @@ public class Fork<P,R> extends AbstractSkeleton<P,R> {
 	 * @param merge The code used to merge the results of the computation into a single one.
 	 */
 	@SuppressWarnings("unchecked")
-	public Fork(Split<P,R> split, Execute<P,R> executes[], Merge<R,R> merge){
+	public <X,Y> Fork(Split<P,X> split, Execute<X,Y> executes[], Merge<Y,R> merge){
 		this(split,new Seq[executes.length], merge);
 		
 		for(int i=0;i<executes.length;i++){
-			skeletons[i]=new Seq<P,R>(executes[i]);
+			skeletons[i]=new Seq<X,Y>(executes[i]);
 		}
 	}
 	
@@ -85,11 +85,11 @@ public class Fork<P,R> extends AbstractSkeleton<P,R> {
         visitor.visit(this);
     }
 
-    public boolean addListener(ForkListener l) throws BadListenerException {
+    public <X,Y> boolean addListener(ForkListener<P,X,Y,R> l) throws BadListenerException {
     	return eregis.addListener(l);
     }
 
-    public boolean removeListener(ForkListener l) throws BadListenerException {
+    public <X,Y> boolean removeListener(ForkListener<P,X,Y,R> l) throws BadListenerException {
     	return eregis.removeListener(l);
     }
 }

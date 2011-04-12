@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.MapListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.SkeletonListener;
 
-public interface MapAfterListener extends MapListener, NoParamListener, AfterListener, SkeletonListener {
+public interface MapAfterListener<P,X,Y,R> extends MapListener<P,X,Y,R>, NoParamListener<R>, AfterListener, SkeletonListener {
 
 }

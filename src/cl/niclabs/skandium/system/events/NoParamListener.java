@@ -19,12 +19,12 @@ package cl.niclabs.skandium.system.events;
 
 import cl.niclabs.skandium.skeletons.Skeleton;
 
-public interface NoParamListener extends ComparableEventListener {
+public interface NoParamListener<P> extends ComparableEventListener {
 
 	@SuppressWarnings("unchecked")
-	public boolean guard(Object param, Skeleton[] strace);
+	public boolean guard(P param, Skeleton[] strace);
 
 	@SuppressWarnings("unchecked")
-	public void handler(Object param, Skeleton[] strace);
+	public void handler(P param, Skeleton[] strace);
 
 }

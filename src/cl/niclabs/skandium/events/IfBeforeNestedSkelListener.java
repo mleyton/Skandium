@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.BooleanParamListener;
 import cl.niclabs.skandium.system.events.IfListener;
 import cl.niclabs.skandium.system.events.NestedSkelListener;
 
-public interface IfBeforeNestedSkelListener extends IfListener, BooleanParamListener, BeforeListener, NestedSkelListener {
+public interface IfBeforeNestedSkelListener<P,R> extends IfListener<P,R>, BooleanParamListener<P>, BeforeListener, NestedSkelListener {
 
 }

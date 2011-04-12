@@ -17,6 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-public interface WhileListener extends NonGenericListener {
+public interface WhileListener<P> extends NonGenericListener {
 
 }

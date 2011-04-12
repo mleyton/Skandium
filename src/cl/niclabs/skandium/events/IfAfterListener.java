@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.IfListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.SkeletonListener;
 
-public interface IfAfterListener extends IfListener, NoParamListener, AfterListener, SkeletonListener {
+public interface IfAfterListener<P,R> extends IfListener<P,R>, NoParamListener<R>, AfterListener, SkeletonListener {
 
 }

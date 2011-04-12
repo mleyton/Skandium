@@ -18,10 +18,10 @@
 package cl.niclabs.skandium.events;
 
 import cl.niclabs.skandium.system.events.BeforeListener;
-import cl.niclabs.skandium.system.events.IntegerParamListener;
 import cl.niclabs.skandium.system.events.NestedSkelListener;
+import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.PipeListener;
 
-public interface PipeBeforeNestedSkelListener extends PipeListener, IntegerParamListener, BeforeListener, NestedSkelListener {
+public interface PipeBeforeStage1<P,X,R> extends PipeListener<P,X,R>, NoParamListener<P>, BeforeListener, NestedSkelListener {
 
 }

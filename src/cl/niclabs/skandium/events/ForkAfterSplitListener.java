@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.ForkListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.SplitListener;
 
-public interface ForkAfterSplitListener extends ForkListener, NoParamListener, AfterListener, SplitListener {
+public interface ForkAfterSplitListener<P,X,Y,R> extends ForkListener<P,X,Y,R>, NoParamListener<X[]>, AfterListener, SplitListener {
 
 }

@@ -17,6 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-public interface ForkListener extends NonGenericListener {
+public interface ForkListener<P,X,Y,R> extends NonGenericListener {
 
 }

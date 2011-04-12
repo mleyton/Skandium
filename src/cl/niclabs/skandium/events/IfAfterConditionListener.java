@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.BooleanParamListener;
 import cl.niclabs.skandium.system.events.ConditionListener;
 import cl.niclabs.skandium.system.events.IfListener;
 
-public interface IfAfterConditionListener extends IfListener, BooleanParamListener, AfterListener, ConditionListener {
+public interface IfAfterConditionListener<P,R> extends IfListener<P,R>, BooleanParamListener<P>, AfterListener, ConditionListener {
 
 }

@@ -61,11 +61,11 @@ public class Farm<P,R> extends AbstractSkeleton<P,R> {
         visitor.visit(this);
     }
 
-    public boolean addListener(FarmListener l) throws BadListenerException {
+    public boolean addListener(FarmListener<P,R> l) throws BadListenerException {
     	return eregis.addListener(l);
     }
 
-    public boolean removeListener(FarmListener l) throws BadListenerException {
+    public boolean removeListener(FarmListener<P,R> l) throws BadListenerException {
     	return eregis.removeListener(l);
     }
 }

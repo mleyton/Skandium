@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.SeqListener;
 import cl.niclabs.skandium.system.events.SkeletonListener;
 
-public interface SeqBeforeListener extends SeqListener, NoParamListener, BeforeListener, SkeletonListener {
+public interface SeqBeforeListener<P,R> extends SeqListener<P,R>, NoParamListener<P>, BeforeListener, SkeletonListener {
 
 }

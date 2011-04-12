@@ -17,11 +17,11 @@
  */
 package cl.niclabs.skandium.events;
 
-import cl.niclabs.skandium.system.events.BeforeListener;
-import cl.niclabs.skandium.system.events.ForkListener;
+import cl.niclabs.skandium.system.events.AfterListener;
+import cl.niclabs.skandium.system.events.NestedSkelListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
-import cl.niclabs.skandium.system.events.SkeletonListener;
+import cl.niclabs.skandium.system.events.PipeListener;
 
-public interface ForkBeforeListener<P,X,Y,R> extends ForkListener<P,X,Y,R>, NoParamListener<P>, BeforeListener, SkeletonListener {
+public interface PipeAfterStage2<P,X,R> extends PipeListener<P,X,R>, NoParamListener<R>, AfterListener, NestedSkelListener {
 
 }

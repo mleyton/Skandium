@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.ForListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.SkeletonListener;
 
-public interface ForBeforeListener extends ForListener, NoParamListener, BeforeListener, SkeletonListener {
+public interface ForBeforeListener<P> extends ForListener<P>, NoParamListener<P>, BeforeListener, SkeletonListener {
 
 }

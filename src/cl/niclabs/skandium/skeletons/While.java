@@ -50,11 +50,11 @@ public class While<P> extends AbstractSkeleton<P,P> {
         visitor.visit(this);
     }
 
-    public boolean addListener(WhileListener l) throws BadListenerException {
+    public boolean addListener(WhileListener<P> l) throws BadListenerException {
     	return eregis.addListener(l);
     }
 
-    public boolean removeListener(WhileListener l) throws BadListenerException {
+    public boolean removeListener(WhileListener<P> l) throws BadListenerException {
     	return eregis.removeListener(l);
     }
 }

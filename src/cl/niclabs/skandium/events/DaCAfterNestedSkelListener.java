@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.DaCListener;
 import cl.niclabs.skandium.system.events.NestedSkelListener;
 import cl.niclabs.skandium.system.events.RBranchParamListener;
 
-public interface DaCAfterNestedSkelListener extends DaCListener, RBranchParamListener, AfterListener, NestedSkelListener {
+public interface DaCAfterNestedSkelListener<P,X,Y,R> extends DaCListener<P,X,Y,R>, RBranchParamListener<Y>, AfterListener, NestedSkelListener {
 
 }

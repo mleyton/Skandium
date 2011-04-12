@@ -17,6 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-public interface SeqListener extends NonGenericListener {
+public interface SeqListener<P,R> extends NonGenericListener {
 
 }

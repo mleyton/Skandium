@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.DaCListener;
 import cl.niclabs.skandium.system.events.RBranchParamListener;
 import cl.niclabs.skandium.system.events.SkeletonListener;
 
-public interface DaCBeforeListener extends DaCListener, RBranchParamListener, BeforeListener, SkeletonListener {
+public interface DaCBeforeListener<P,X,Y,R> extends DaCListener<P,X,Y,R>, RBranchParamListener<P>, BeforeListener, SkeletonListener {
 
 }

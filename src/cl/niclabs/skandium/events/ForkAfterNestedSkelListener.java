@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.ForkListener;
 import cl.niclabs.skandium.system.events.IntegerParamListener;
 import cl.niclabs.skandium.system.events.NestedSkelListener;
 
-public interface ForkAfterNestedSkelListener extends ForkListener, IntegerParamListener, AfterListener, NestedSkelListener {
+public interface ForkAfterNestedSkelListener<P,X,Y,R> extends ForkListener<P,X,Y,R>, IntegerParamListener<Y>, AfterListener, NestedSkelListener {
 
 }

@@ -17,6 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-public interface IfListener extends NonGenericListener {
+public interface IfListener<P,R> extends NonGenericListener {
 
 }
