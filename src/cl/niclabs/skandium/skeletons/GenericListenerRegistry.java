@@ -24,14 +24,14 @@ import cl.niclabs.skandium.system.events.GenericListener;
 public class GenericListenerRegistry implements SkeletonVisitor {
 	
 	private boolean remove;
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	private Class pattern;
 	private When when;
 	private Where where;
 	private GenericListener listener;
 	private boolean r;
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public GenericListenerRegistry(boolean remove, Class pattern, When when,
 			Where where, GenericListener listener) {
 		super();

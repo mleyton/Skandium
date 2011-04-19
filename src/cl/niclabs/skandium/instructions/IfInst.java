@@ -33,7 +33,7 @@ import cl.niclabs.skandium.skeletons.Skeleton;
  */
 public class IfInst extends AbstractInstruction {
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	Condition condition;
 	Stack<Instruction> trueCaseStack, falseCaseStack;
 	

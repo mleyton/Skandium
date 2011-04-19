@@ -59,7 +59,7 @@ public class Map<P,R> extends AbstractSkeleton<P,R> {
 	 * @param execute The code to execute on each sub-parameter.
 	 * @param merge The code to reduce the results into a single one.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public <X,Y>  Map(Split<P,X> split, Execute<X,Y> execute, Merge<Y,R> merge){
 		this(split,new Seq(execute), merge);
 	}

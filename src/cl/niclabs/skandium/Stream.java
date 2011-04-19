@@ -42,7 +42,7 @@ import cl.niclabs.skandium.system.TaskExecutor;
 public class Stream<P,R> {
 
 	TaskExecutor executor;
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	Skeleton skeleton;
 	
 	/**

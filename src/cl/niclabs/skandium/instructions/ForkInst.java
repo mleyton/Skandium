@@ -34,10 +34,10 @@ import cl.niclabs.skandium.skeletons.Skeleton;
  */
 public class ForkInst extends  AbstractInstruction {
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	Split split; 
 	List<Stack<Instruction>> substacks; 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	Merge merge;
 	
 	/**

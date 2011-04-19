@@ -114,14 +114,14 @@ public abstract class AbstractSkeleton<P,R> implements Skeleton<P,R> {
 		return eregis.getListeners(when, where);
     }
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
 	public boolean addListener(GenericListener l, Class pattern, When when, Where where) {
     	GenericListenerRegistry gres = new GenericListenerRegistry(false, pattern, when, where, l);
     	this.accept(gres);
     	return gres.getR();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
 	public boolean removeListener(GenericListener l, Class pattern, When when, Where where) {
     	GenericListenerRegistry gres = new GenericListenerRegistry(true, pattern, when, where, l);
     	this.accept(gres);

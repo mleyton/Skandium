@@ -33,7 +33,7 @@ import cl.niclabs.skandium.skeletons.Skeleton;
  */
 public class WhileInst extends AbstractInstruction {
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	Condition condition;
 	Stack<Instruction> substack;
 	int iter;

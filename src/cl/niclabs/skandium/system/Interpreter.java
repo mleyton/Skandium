@@ -112,7 +112,7 @@ public class Interpreter {
 		return task;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	private static void setLogicalException(Throwable t, Skeleton<?,?>[] strace){
 
 		ArrayList<StackTraceElement> list = new ArrayList<StackTraceElement>();

@@ -32,7 +32,7 @@ import cl.niclabs.skandium.skeletons.Skeleton;
  */
 public class MergeInst extends AbstractInstruction{
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	Merge merge;
 	Skeleton<?,?>[] strace;
 	

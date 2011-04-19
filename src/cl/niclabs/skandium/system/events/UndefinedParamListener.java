@@ -23,10 +23,10 @@ import cl.niclabs.skandium.skeletons.Skeleton;
 
 public interface UndefinedParamListener extends ComparableEventListener {
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public boolean guard(Object param, Skeleton[] strace, When when, Where where, Object... params);
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public Object handler(Object param, Skeleton[] strace,  When when, Where where, Object... params);
 
 }

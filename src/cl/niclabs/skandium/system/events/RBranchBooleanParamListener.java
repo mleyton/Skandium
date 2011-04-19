@@ -21,10 +21,10 @@ import cl.niclabs.skandium.skeletons.Skeleton;
 
 public interface RBranchBooleanParamListener<P> extends ComparableEventListener {
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public boolean guard(P param, Skeleton[] strace, Integer[] rbranch, boolean cresult);
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public P handler(P param, Skeleton[] strace, Integer[] rbranch, boolean cresult);
 
 }

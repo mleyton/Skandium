@@ -48,7 +48,7 @@ public class Task implements Runnable, Comparable<Task>{
 	long unfinishedChildren;		//The number of unfinished children tasks.
 	Throwable exception;			//The current exception.
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	SkandiumFuture future;			//The future object (if this is a root task) which will hold the computation's result.
 	TaskExecutor executor;			//The executor service used for computation.
 

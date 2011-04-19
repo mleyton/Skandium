@@ -30,7 +30,7 @@ import cl.niclabs.skandium.skeletons.Skeleton;
  */
 public class SeqInst extends AbstractInstruction {
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	Execute execute;
 
 	/**

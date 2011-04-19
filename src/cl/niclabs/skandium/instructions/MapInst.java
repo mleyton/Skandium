@@ -33,10 +33,10 @@ import cl.niclabs.skandium.skeletons.Skeleton;
  */
 public class MapInst extends  AbstractInstruction {
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	Split split;
 	Stack<Instruction> substack;
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	Merge merge;
 
 	/**
