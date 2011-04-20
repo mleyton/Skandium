@@ -62,25 +62,10 @@ public class ForkInst extends  AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
 
-		(new EventInst(When.BEFORE, Where.SPLIT, strace)).interpret(param, stack, children);
 		Object[] params = split.split(param);
-		(new EventInst(When.AFTER, Where.SPLIT, strace)).interpret(param, stack, children);
 		
-		if(params.length != substacks.size()){
-			throw new Exception("Invalid number of divisions for Fork skeleton. Expected "+ substacks.size() +" but was "+params.length+".");
-		}
-		
-		// For each stack copy all of its elements
-		for(int i=0; i < params.length; i++){
-			Stack<Instruction> subStack = copyStack(this.substacks.get(i));
-			subStack.add(0,new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, i));
-			subStack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, i));
-			children.add(subStack);
-		}
-		
-		stack.push(new EventInst(When.AFTER, Where.MERGE, strace));
-		stack.push(new MergeInst(merge, strace));
-		stack.push(new EventInst(When.BEFORE, Where.MERGE, strace));
+		stack.push(new SplitInst(substacks, merge, strace));
+		stack.push(new EventInst(When.AFTER, Where.SPLIT, strace));
 		
 		return params;
 	}

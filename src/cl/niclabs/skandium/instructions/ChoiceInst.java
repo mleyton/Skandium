@@ -1,6 +1,6 @@
 /*   Skandium: A Java(TM) based parallel skeleton library.
  *   
- *   Copyright (C) 2009 NIC Labs, Universidad de Chile.
+ *   Copyright (C) 2011 NIC Labs, Universidad de Chile.
  * 
  *   Skandium is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -20,44 +20,50 @@ package cl.niclabs.skandium.instructions;
 import java.util.List;
 import java.util.Stack;
 
-import cl.niclabs.skandium.muscles.Merge;
 import cl.niclabs.skandium.skeletons.Skeleton;
 
+
 /**
- * This is a utility instruction and does not represent a {@link cl.niclabs.skandium.skeletons.Skeleton} in particular.
- * When child substacks are finished, this instruction can be placed on a stack to merge
- * the list of results into a single one.
  * 
- * @author mleyton
+ * @author gpabon
  */
-public class MergeInst extends AbstractInstruction{
+
+public class ChoiceInst extends AbstractInstruction {
 	
-	@SuppressWarnings("rawtypes")
-	Merge merge;
-	
-	public MergeInst(Merge<?,?> merge, Skeleton<?,?>[] strace) {
-		super(strace);
-		this.merge = merge;
-	}
+	boolean cond;
+	Stack<Instruction> trueCaseStack, falseCaseStack;
 
 	/**
-	 * Merges a list of subparams into a single one using a {@link Merge} muscle.
+	 * The main constructor.
+	 * @param condition
+	 * @param trueCaseStack
+	 * @param falseCaseStack
+	 * @param strace
 	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
-
-		Object []o = (Object [])param;
-
-		return merge.merge(o);
+	public ChoiceInst(boolean cond, Stack<Instruction> trueCaseStack, Stack<Instruction> falseCaseStack, Skeleton<?,?>[] strace){
+		super(strace);
+		this.cond = cond;
+		this.trueCaseStack = trueCaseStack;
+		this.falseCaseStack = falseCaseStack;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Instruction copy() {
-		
-		return new MergeInst(merge, strace);
+	public <P> Object interpret(P param, Stack<Instruction> stack, 
+			List<Stack<Instruction>> children) throws Exception {
+		if(cond){
+			stack.addAll(trueCaseStack);
+		} else {
+			stack.addAll(falseCaseStack);
+		}
+		return param;
 	}
+
+	@Override
+	public Instruction copy() {
+		return new ChoiceInst(cond, copyStack(trueCaseStack), copyStack(falseCaseStack), strace);
+	}
+
 }

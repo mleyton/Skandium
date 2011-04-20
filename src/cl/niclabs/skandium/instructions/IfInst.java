@@ -61,20 +61,12 @@ public class IfInst extends AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
 
-		(new EventInst(When.BEFORE, Where.CONDITION, strace)).interpret(param, stack, children);
-		if(condition.condition(param)){
-			(new EventInst(When.AFTER, Where.CONDITION, strace, true)).interpret(param, stack, children);
-			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, true));
-			stack.addAll(trueCaseStack);
-			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, true));
-		}
-		else{
-			(new EventInst(When.AFTER, Where.CONDITION, strace, false)).interpret(param, stack, children);
-			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, false));
-			stack.addAll(falseCaseStack);
-			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, false));
-		}
-		
+		boolean cond = condition.condition(param);
+		stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, cond));
+		stack.push(new ChoiceInst(cond, trueCaseStack, falseCaseStack, strace));
+		stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, cond));
+		stack.push(new EventInst(When.AFTER, Where.CONDITION, strace, cond));
+
 		return param;
 	}
 

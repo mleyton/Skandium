@@ -59,14 +59,13 @@ public class WhileInst extends AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
 		
-		(new EventInst(When.BEFORE, Where.CONDITION, strace)).interpret(param, stack, children);
 		boolean cond = condition.condition(param);
-		(new EventInst(When.AFTER, Where.CONDITION, strace, cond)).interpret(param, stack, children);
 		if(cond){
 			stack.push(this);
 			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, iter));
 			stack.addAll(this.substack);
 			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, iter));
+			stack.push(new EventInst(When.AFTER, Where.CONDITION, strace, cond));
 			iter++;
 		}
 		

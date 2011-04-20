@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Stack;
 
 import cl.niclabs.skandium.muscles.Execute;
+import cl.niclabs.skandium.muscles.Muscle;
+import cl.niclabs.skandium.muscles.Split;
 import cl.niclabs.skandium.skeletons.Skeleton;
 
 /**
@@ -31,14 +33,14 @@ import cl.niclabs.skandium.skeletons.Skeleton;
 public class SeqInst extends AbstractInstruction {
 
 	@SuppressWarnings("rawtypes")
-	Execute execute;
+	Muscle execute;
 
 	/**
 	 * The main constructor.
 	 * @param execute The {@link cl.niclabs.skandium.muscles.Muscle} to execute. 
 	 * @param strace The logical stack trace of this instruction.
 	 */
-	public SeqInst(Execute<?,?> execute, Skeleton<?,?>[] strace){
+	public SeqInst(Muscle<?,?> execute, Skeleton<?,?>[] strace){
 		super(strace);
 		this.execute = execute;
 	}
@@ -52,7 +54,8 @@ public class SeqInst extends AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
 		
-		return execute.execute(param);
+		if (execute instanceof Split) return ((Split)execute).split(param);
+		return ((Execute)execute).execute(param);
 	}
 
 

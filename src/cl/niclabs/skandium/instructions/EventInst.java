@@ -42,7 +42,6 @@ public class EventInst extends AbstractInstruction {
 	
 	When when;
 	Where where;
-	Skeleton<?,?>[] strace;
 	Object[] params;
 
 	/**
@@ -55,7 +54,6 @@ public class EventInst extends AbstractInstruction {
 		super(strace);
 		this.when = when;
 		this.where = where;
-		this.strace = strace;
 		this.params = params;
 	}
 	

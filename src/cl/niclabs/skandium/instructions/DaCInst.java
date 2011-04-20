@@ -17,6 +17,7 @@
  */
 package cl.niclabs.skandium.instructions;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -74,46 +75,30 @@ public class DaCInst extends  AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack,List<Stack<Instruction>> children) throws Exception {
 
-		(new EventInst(When.BEFORE, Where.CONDITION, strace, rbranch)).interpret(param, stack, children);
-
-		//if condition is true we split 
-		if(condition.condition(param)){
-			(new EventInst(When.AFTER, Where.CONDITION, strace, rbranch, true)).interpret(param, stack, children);
-
-			(new EventInst(When.BEFORE, Where.SPLIT, strace, rbranch)).interpret(param, stack, children);
-			Object result[]  =  split.split(param);
-			(new EventInst(When.AFTER, Where.SPLIT, strace, rbranch)).interpret(result, stack, children);
-			
-			for(int i = 0 ; i < result.length ; i++){
-				Stack<Integer> subrbranch = new Stack<Integer>();
-				subrbranch.addAll(rbranch);
-				subrbranch.push(i);
-				
-				Stack<Instruction> newStack = new Stack<Instruction>();
-
-				DaCInst subInst = (DaCInst) this.copy();
-				subInst.rbranch = subrbranch;
-				newStack.add(subInst);
-				
-				children.add(newStack);
-			}
-			
-			//Put a merge instruction on the current stack
-			//to merge results when children are finished.
-			stack.push(new EventInst(When.AFTER, Where.MERGE, strace, rbranch));
-			stack.push(new MergeInst(merge, strace));
-			stack.push(new EventInst(When.BEFORE, Where.MERGE, strace, rbranch));
-			
-			return result;
-		}
-		//else we execute 
-		else{
-			(new EventInst(When.AFTER, Where.CONDITION, strace, rbranch, false)).interpret(param, stack, children);
-			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, rbranch));
-			stack.addAll(this.substack);
-			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, rbranch));
-		}
+		boolean cond = condition.condition(param);
 		
+		Stack<Instruction> splitStack = new Stack<Instruction>();
+
+		Stack<Instruction> newStack = new Stack<Instruction>();
+		DaCInst subInst = (DaCInst) this.copy();
+		newStack.add(subInst);
+		List<Stack<Instruction>> substacks = new ArrayList<Stack<Instruction>>();
+		substacks.add(newStack);
+		
+		splitStack.push(new SplitInst(substacks, merge, strace, rbranch));
+		splitStack.push(new EventInst(When.AFTER, Where.SPLIT, strace, rbranch));
+		splitStack.push(new SeqInst(split, strace));
+		splitStack.push(new EventInst(When.BEFORE, Where.SPLIT, strace, rbranch));
+		
+		Stack<Instruction> execStack = new Stack<Instruction>();
+
+		execStack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, rbranch));
+		execStack.addAll(this.substack);
+		execStack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, rbranch));
+
+		stack.push(new ChoiceInst(cond, splitStack, execStack, strace));
+		stack.push(new EventInst(When.AFTER, Where.CONDITION, strace, rbranch, cond));
+				
 		return param;
 	}
 

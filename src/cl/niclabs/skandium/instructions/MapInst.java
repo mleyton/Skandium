@@ -17,6 +17,7 @@
  */
 package cl.niclabs.skandium.instructions;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -64,21 +65,12 @@ public class MapInst extends  AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
 		
-		(new EventInst(When.BEFORE, Where.SPLIT, strace)).interpret(param, stack, children);
 		Object[] params = split.split(param);
-		(new EventInst(When.AFTER, Where.SPLIT, strace)).interpret(param, stack, children);
+		List<Stack<Instruction>> substacks = new ArrayList<Stack<Instruction>>();
+		substacks.add(copyStack(this.substack));
 		
-		for(int i=0;i<params.length;i++){
-			Stack<Instruction> subStack = copyStack(this.substack);
-			subStack.add(0, new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, i));
-			subStack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, i));
-			children.add(subStack);
-		}
-		
-		stack.push(new EventInst(When.AFTER, Where.MERGE, strace));
-		stack.push(new MergeInst(merge, strace));
-		stack.push(new EventInst(When.BEFORE, Where.MERGE, strace));
-
+		stack.push(new SplitInst(substacks, merge, strace));
+		stack.push(new EventInst(When.AFTER, Where.SPLIT, strace));
 		return params;
 	}
 	

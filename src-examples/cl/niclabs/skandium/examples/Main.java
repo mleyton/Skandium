@@ -68,8 +68,8 @@ public class Main {
 		System.out.println("MergeSort: java -jar skandium-"+Skandium.version()+"-examples.jar mergesort "+ threads+ " 67108864");
 		System.out.println("MergeSort: java -jar skandium-"+Skandium.version()+"-examples.jar mergesort <threads> <size>");
 		System.out.println("");
-		System.out.println("BubbleSort: java -jar skandium-"+Skandium.version()+"-examples.jar mergesort "+ threads+ " 67108864");
-		System.out.println("BubbleSort: java -jar skandium-"+Skandium.version()+"-examples.jar mergesort <threads> <size>");
+		System.out.println("BubbleSort: java -jar skandium-"+Skandium.version()+"-examples.jar bubblesort "+ threads+ " 67108864");
+		System.out.println("BubbleSort: java -jar skandium-"+Skandium.version()+"-examples.jar bubblesort <threads> <size>");
 		
 		System.exit(1);
 	}
