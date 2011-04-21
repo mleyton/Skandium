@@ -26,6 +26,7 @@ import cl.niclabs.skandium.skeletons.AbstractSkeleton;
 import cl.niclabs.skandium.skeletons.Skeleton;
 import cl.niclabs.skandium.system.events.BooleanParamListener;
 import cl.niclabs.skandium.system.events.ComparableEventListener;
+import cl.niclabs.skandium.system.events.IntegerBooleanParamListener;
 import cl.niclabs.skandium.system.events.IntegerParamListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.RBranchBooleanParamListener;
@@ -46,9 +47,6 @@ public class EventInst extends AbstractInstruction {
 
 	/**
 	 * The main constructor.
-	 * @param type
-	 * @param eventParam
-	 * @param strace
 	 */
 	public EventInst(When when, Where where, Skeleton<?,?>[] strace, Object... params){
 		super(strace);
@@ -78,6 +76,10 @@ public class EventInst extends AbstractInstruction {
 			} else if (l instanceof BooleanParamListener<?>) {
 				if (((BooleanParamListener<P>) l).guard(param, strace, (Boolean) params[0])) {
 					param = ((BooleanParamListener<P>) l).handler(param, strace, (Boolean) params[0]);
+				}
+			} else if (l instanceof IntegerBooleanParamListener<?>) {
+				if (((IntegerBooleanParamListener<P>) l).guard(param, strace, (Integer) params[0], (Boolean) params[1])) {
+					param = ((IntegerBooleanParamListener<P>) l).handler(param, strace, (Integer) params[0], (Boolean) params[1]);
 				}
 			} else if (l instanceof RBranchParamListener<?>) {
 				Stack<Integer> rbranch =(Stack<Integer>) params[0];

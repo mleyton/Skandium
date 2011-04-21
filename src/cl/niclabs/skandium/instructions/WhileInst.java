@@ -62,13 +62,13 @@ public class WhileInst extends AbstractInstruction {
 		boolean cond = condition.condition(param);
 		if(cond){
 			stack.push(this);
+			stack.push(new EventInst(When.BEFORE, Where.CONDITION, strace, iter+1));
 			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, iter));
 			stack.addAll(this.substack);
 			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, iter));
-			stack.push(new EventInst(When.AFTER, Where.CONDITION, strace, cond));
-			iter++;
 		}
-		
+		stack.push(new EventInst(When.AFTER, Where.CONDITION, strace, iter, cond));
+		iter++;		
 		return param;	
 	}
 

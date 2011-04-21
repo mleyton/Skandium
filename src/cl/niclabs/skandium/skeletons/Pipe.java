@@ -50,11 +50,11 @@ public class Pipe<P,R> extends AbstractSkeleton<P,R> {
         visitor.visit(this);
     }
 
-    public <X> boolean addListener(PipeListener<P,X,R> l) throws BadListenerException {
+    public <X> boolean addListener(PipeListener<P,R> l) throws BadListenerException {
     	return eregis.addListener(l);
     }
 
-    public <X> boolean removeListener(PipeListener<P,X,R> l) throws BadListenerException {
+    public <X> boolean removeListener(PipeListener<P,R> l) throws BadListenerException {
     	return eregis.removeListener(l);
     }
 }

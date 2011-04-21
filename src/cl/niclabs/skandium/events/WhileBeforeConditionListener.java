@@ -19,9 +19,9 @@ package cl.niclabs.skandium.events;
 
 import cl.niclabs.skandium.system.events.BeforeListener;
 import cl.niclabs.skandium.system.events.ConditionListener;
-import cl.niclabs.skandium.system.events.NoParamListener;
+import cl.niclabs.skandium.system.events.IntegerParamListener;
 import cl.niclabs.skandium.system.events.WhileListener;
 
-public interface WhileBeforeConditionListener<P> extends WhileListener<P>, NoParamListener<P>, BeforeListener, ConditionListener {
+public interface WhileBeforeConditionListener<P> extends WhileListener<P>, IntegerParamListener<P>, BeforeListener, ConditionListener {
 
 }

@@ -81,7 +81,7 @@ public class DaCInst extends  AbstractInstruction {
 
 		Stack<Instruction> newStack = new Stack<Instruction>();
 		DaCInst subInst = (DaCInst) this.copy();
-		newStack.add(subInst);
+		newStack.push(subInst);
 		List<Stack<Instruction>> substacks = new ArrayList<Stack<Instruction>>();
 		substacks.add(newStack);
 		

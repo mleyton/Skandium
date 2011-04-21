@@ -17,6 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-public interface PipeListener<P,X,R> extends NonGenericListener {
+public interface PipeListener<P,R> extends NonGenericListener {
 
 }

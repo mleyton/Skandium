@@ -15,13 +15,16 @@
  *   You should have received a copy of the GNU General Public License
  *   along with Skandium.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cl.niclabs.skandium.events;
+package cl.niclabs.skandium.system.events;
 
-import cl.niclabs.skandium.system.events.BeforeListener;
-import cl.niclabs.skandium.system.events.NestedSkelListener;
-import cl.niclabs.skandium.system.events.NoParamListener;
-import cl.niclabs.skandium.system.events.PipeListener;
+import cl.niclabs.skandium.skeletons.Skeleton;
 
-public interface PipeBeforeStage2<P,X,R> extends PipeListener<P,X,R>, NoParamListener<X>, BeforeListener, NestedSkelListener {
+public interface IntegerBooleanParamListener<P> extends ComparableEventListener {
+
+	@SuppressWarnings("rawtypes")
+	public boolean guard(P param, Skeleton[] strace, int index, boolean cond);
+
+	@SuppressWarnings("rawtypes")
+	public P handler(P param, Skeleton[] strace, int index, boolean cond);
 
 }

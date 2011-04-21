@@ -35,10 +35,6 @@ public class ChoiceInst extends AbstractInstruction {
 
 	/**
 	 * The main constructor.
-	 * @param condition
-	 * @param trueCaseStack
-	 * @param falseCaseStack
-	 * @param strace
 	 */
 	public ChoiceInst(boolean cond, Stack<Instruction> trueCaseStack, Stack<Instruction> falseCaseStack, Skeleton<?,?>[] strace){
 		super(strace);

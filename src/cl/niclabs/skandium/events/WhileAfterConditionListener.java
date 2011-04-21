@@ -18,10 +18,10 @@
 package cl.niclabs.skandium.events;
 
 import cl.niclabs.skandium.system.events.AfterListener;
-import cl.niclabs.skandium.system.events.BooleanParamListener;
 import cl.niclabs.skandium.system.events.ConditionListener;
+import cl.niclabs.skandium.system.events.IntegerBooleanParamListener;
 import cl.niclabs.skandium.system.events.WhileListener;
 
-public interface WhileAfterConditionListener<P> extends WhileListener<P>, BooleanParamListener<P>, AfterListener, ConditionListener {
+public interface WhileAfterConditionListener<P> extends WhileListener<P>, IntegerBooleanParamListener<P>, AfterListener, ConditionListener {
 
 }

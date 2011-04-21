@@ -135,7 +135,7 @@ public class StackBuilder implements SkeletonVisitor {
 		Skeleton<?,?>[] straceArray = getStraceAsArray();
 		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray));
 		stack.push(new WhileInst(skeleton.condition, subStackBuilder.stack, straceArray));
-		stack.push(new EventInst(When.BEFORE, Where.CONDITION, straceArray));
+		stack.push(new EventInst(When.BEFORE, Where.CONDITION, straceArray, 0));
 		stack.push(new EventInst(When.BEFORE, Where.SKELETON, straceArray));
 	}
 

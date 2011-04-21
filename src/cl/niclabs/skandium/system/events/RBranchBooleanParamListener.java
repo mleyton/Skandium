@@ -22,9 +22,9 @@ import cl.niclabs.skandium.skeletons.Skeleton;
 public interface RBranchBooleanParamListener<P> extends ComparableEventListener {
 
 	@SuppressWarnings("rawtypes")
-	public boolean guard(P param, Skeleton[] strace, Integer[] rbranch, boolean cresult);
+	public boolean guard(P param, Skeleton[] strace, Integer[] rbranch, boolean cond);
 
 	@SuppressWarnings("rawtypes")
-	public P handler(P param, Skeleton[] strace, Integer[] rbranch, boolean cresult);
+	public P handler(P param, Skeleton[] strace, Integer[] rbranch, boolean cond);
 
 }

@@ -46,7 +46,7 @@ public class ForInst extends AbstractInstruction{
 		super(strace);
 		this.substack = substack;
 		this.times = times;
-		this.n = times;
+		this.n = times-1;
 	}
 	
 	/**

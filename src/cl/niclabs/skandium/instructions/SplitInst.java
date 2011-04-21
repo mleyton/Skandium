@@ -41,10 +41,6 @@ public class SplitInst extends AbstractInstruction {
 
 	/**
 	 * The main constructor.
-	 * @param condition
-	 * @param trueCaseStack
-	 * @param falseCaseStack
-	 * @param strace
 	 */
 	@SuppressWarnings("rawtypes")
 	public SplitInst(List<Stack<Instruction>> substacks, Merge merge, Skeleton<?,?>[] strace){
@@ -53,6 +49,9 @@ public class SplitInst extends AbstractInstruction {
 		this.merge = merge;
 	}
 	
+	/**
+	 * The constructor when reducing DaCInst.
+	 */
 	@SuppressWarnings("rawtypes")
 	public SplitInst(List<Stack<Instruction>> substacks, Merge merge, Skeleton<?,?>[] strace, Stack<Integer> rbranch){
 		this(substacks,merge,strace);
@@ -80,6 +79,7 @@ public class SplitInst extends AbstractInstruction {
 				subrbranch.addAll(rbranch);
 				subrbranch.push(i);
 				((DaCInst)subStack.peek()).rbranch = subrbranch;
+				subStack.push(new EventInst(When.BEFORE, Where.CONDITION, strace, subrbranch, cond));				
 			} else {
 				subStack.add(0,new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, i));
 				subStack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, i));
