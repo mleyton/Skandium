@@ -1,23 +1,23 @@
-package cl.niclabs.skandium.visualizer;
+package cl.niclabs.skandium.trace;
 
 
 import cl.niclabs.skandium.Skandium;
 import cl.niclabs.skandium.skeletons.AbstractSkeleton;
 import cl.niclabs.skandium.skeletons.Skeleton;
 
-public class Visualizer {
+public class Logger {
 	
 	private Skandium skandium;
 	private AbstractSkeleton<?,?> skeleton;
-	private EventHandler handler;
+	private PlainHandler handler;
 	private boolean running;
 	private SkeletonListener listener;
 	
-	public Visualizer(Skandium skandium, AbstractSkeleton<?, ?> skeleton) {
+	public Logger(Skandium skandium, Skeleton<?, ?> skeleton) {
 		super();
 		this.skandium = skandium;
-		this.skeleton = skeleton;
-		this.handler = new EventHandler();
+		this.skeleton = (AbstractSkeleton<?,?>) skeleton;
+		this.handler = new PlainHandler();
 		this.running = false;
 		this.listener = new SkeletonListener(handler);
 	}
@@ -35,13 +35,5 @@ public class Visualizer {
 			running = !skeleton.removeListener(listener, Skeleton.class, null, null);
 		}
 		return !running;
-	}
-	
-	public void open() {
-		// TODO open
-	}
-
-	public void close() {
-		// TODO close
 	}
 }

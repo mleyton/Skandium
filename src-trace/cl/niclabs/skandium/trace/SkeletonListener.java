@@ -1,4 +1,4 @@
-package cl.niclabs.skandium.visualizer;
+package cl.niclabs.skandium.trace;
 
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
