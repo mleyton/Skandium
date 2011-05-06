@@ -68,4 +68,10 @@ public class Farm<P,R> extends AbstractSkeleton<P,R> {
     public boolean removeListener(FarmListener<P,R> l) throws BadListenerException {
     	return eregis.removeListener(l);
     }
+
+	public Skeleton<P, R> getSubskel() {
+		return subskel;
+	}
+    
+    
 }

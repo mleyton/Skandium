@@ -92,4 +92,8 @@ public class Fork<P,R> extends AbstractSkeleton<P,R> {
     public <X,Y> boolean removeListener(ForkListener<P,X,Y,R> l) throws BadListenerException {
     	return eregis.removeListener(l);
     }
+
+	public Skeleton<?, ?>[] getSkeletons() {
+		return skeletons;
+	}
 }

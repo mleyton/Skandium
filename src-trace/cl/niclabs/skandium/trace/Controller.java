@@ -1,5 +1,11 @@
 package cl.niclabs.skandium.trace;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import cl.niclabs.skandium.Skandium;
 import cl.niclabs.skandium.skeletons.AbstractSkeleton;
 import cl.niclabs.skandium.skeletons.Skeleton;
@@ -11,18 +17,24 @@ class Controller {
 	private SkeletonListener listener;
 	private VisualHandler handler;
 	private boolean tracing;
+	private boolean open;
+	private Map<Long,List<TraceElement>> threadTraces;
+	private int maxThreadPoolSize;
 	
 	Controller(Skandium skandium, AbstractSkeleton<?, ?> skeleton) {
 		super();
 		this.skandium = skandium;
 		this.skeleton = skeleton;
 		this.tracing = false;
-		this.handler = new VisualHandler();
+		this.handler = new VisualHandler(this);
 		this.listener = new SkeletonListener(handler);
+		this.open = false;
+		threadTraces = Collections.synchronizedMap(new HashMap<Long,List<TraceElement>>());
 	}
 	
 	boolean startTrace() {
-		if (!tracing) {			
+		if (!tracing) {
+			threadTraces = Collections.synchronizedMap(new HashMap<Long,List<TraceElement>>());
 			skandium.addListener(new MaxThreadPoolListener(handler));
 			tracing = skeleton.addListener(listener, Skeleton.class, null, null);
 		}
@@ -37,12 +49,34 @@ class Controller {
 	}
 	
 	boolean open() {
-		// TODO
-		return false;
+		if (!open) {
+			open = true;
+			// TODO
+		}
+		return open;
 	}
 	
 	boolean close() {
-		// TODO
-		return false;
+		if (open) {
+			open = false;
+			// TODO
+		}
+		return !open;
 	}
+
+	void setMaxThreadPoolSize(int maxThreadPoolSize) {
+		this.maxThreadPoolSize = maxThreadPoolSize;
+	}
+	
+	void addTraceElement(long threadId, TraceElement e) {
+		List<TraceElement> threadTrace;
+		if (threadTraces.containsKey(threadId)) {
+			threadTrace = threadTraces.get(threadId);
+		} else {
+			threadTrace = Collections.synchronizedList(new ArrayList<TraceElement>());
+			threadTraces.put(threadId, threadTrace);
+		}
+		threadTrace.add(e);		
+	}
+	
 }

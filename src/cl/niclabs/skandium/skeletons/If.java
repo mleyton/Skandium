@@ -76,4 +76,12 @@ public class If<P,R> extends AbstractSkeleton<P,R> {
     public boolean removeListener(IfListener<P,R> l) throws BadListenerException {
     	return eregis.removeListener(l);
     }
+
+	public Skeleton<P, R> getTrueCase() {
+		return trueCase;
+	}
+
+	public Skeleton<P, R> getFalseCase() {
+		return falseCase;
+	}
 }

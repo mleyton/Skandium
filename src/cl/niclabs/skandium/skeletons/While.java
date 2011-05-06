@@ -57,4 +57,8 @@ public class While<P> extends AbstractSkeleton<P,P> {
     public boolean removeListener(WhileListener<P> l) throws BadListenerException {
     	return eregis.removeListener(l);
     }
+
+	public Skeleton<P, P> getSubskel() {
+		return subskel;
+	}
 }

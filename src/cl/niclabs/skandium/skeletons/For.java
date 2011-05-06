@@ -71,4 +71,10 @@ public class For<P> extends AbstractSkeleton<P,P> {
     public boolean removeListener(ForListener<P> l) throws BadListenerException {
     	return eregis.removeListener(l);
     }
+
+	public Skeleton<P, P> getSubskel() {
+		return subskel;
+	}
+    
+    
 }

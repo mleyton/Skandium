@@ -57,4 +57,12 @@ public class Pipe<P,R> extends AbstractSkeleton<P,R> {
     public <X> boolean removeListener(PipeListener<P,R> l) throws BadListenerException {
     	return eregis.removeListener(l);
     }
+
+	public Skeleton<P, ?> getStage1() {
+		return stage1;
+	}
+
+	public Skeleton<?, R> getStage2() {
+		return stage2;
+	}
 }
