@@ -7,27 +7,25 @@ import cl.niclabs.skandium.skeletons.Skeleton;
 
 public class Visualizer {
 	
-	private Skandium skandium;
-	private AbstractSkeleton<?,?> skeleton;
 	private boolean running;
+	private Controller controller;
 	
 	public Visualizer(Skandium skandium, Skeleton<?, ?> skeleton) {
 		super();
-		this.skandium = skandium;
-		this.skeleton = (AbstractSkeleton<?,?>) skeleton;
+		controller = new Controller(skandium, (AbstractSkeleton<?,?>)skeleton);
 		this.running = false;
 	}
 
 	public boolean open() {
 		if (!running) {			
-			running = true;
+			running = controller.open();
 		}
 		return running;
 	}
 	
 	public boolean stop() {
 		if (running) {
-			running = false;
+			running = !controller.close();
 		}
 		return !running;
 	}
