@@ -18,7 +18,4 @@ public class Visualizer {
 		return controller.open();
 	}
 	
-	public boolean stop() {
-		return controller.close();
-	}
 }

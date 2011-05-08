@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JFrame;
+
 import cl.niclabs.skandium.Skandium;
 import cl.niclabs.skandium.skeletons.AbstractSkeleton;
 import cl.niclabs.skandium.skeletons.Skeleton;
@@ -51,7 +53,10 @@ class Controller {
 	boolean open() {
 		if (!open) {
 			open = true;
-			// TODO
+			SkelFrame frame = new SkelFrame(skeleton);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setSize(400, 320);
+			frame.setVisible(true);
 		}
 		return open;
 	}
