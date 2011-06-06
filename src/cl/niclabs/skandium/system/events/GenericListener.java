@@ -17,6 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-public interface GenericListener extends UndefinedParamListener {
+public abstract class GenericListener extends UndefinedParamListener {
 
 }

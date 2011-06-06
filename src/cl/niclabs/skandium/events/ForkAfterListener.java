@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.ForkListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.SkeletonListener;
 
-public interface ForkAfterListener<P,X,Y,R> extends ForkListener<P,X,Y,R>, NoParamListener<R>, AfterListener, SkeletonListener {
+public abstract class ForkAfterListener<P,X,Y,R> extends NoParamListener<R> implements ForkListener<P,X,Y,R>, AfterListener, SkeletonListener {
 
 }

@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.FarmListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.SkeletonListener;
 
-public interface FarmAfterListener<P,R> extends FarmListener<P,R>, NoParamListener<R>, AfterListener, SkeletonListener {
+public abstract class FarmAfterListener<P,R> extends NoParamListener<R> implements FarmListener<P,R>, AfterListener, SkeletonListener {
 
 }

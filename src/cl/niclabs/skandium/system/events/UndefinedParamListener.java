@@ -21,12 +21,19 @@ import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.skeletons.Skeleton;
 
-public interface UndefinedParamListener extends ComparableEventListener {
+public abstract class UndefinedParamListener implements SkandiumEventListener {
+
+	@Override
+	public int compareTo(SkandiumEventListener o) {
+		return Integer.MAX_VALUE;
+	}
 
 	@SuppressWarnings("rawtypes")
-	public boolean guard(Object param, Skeleton[] strace, When when, Where where, Object... params);
+	public boolean guard(Object param, Skeleton[] strace, When when, Where where, Object... params) {
+		return true;
+	}
 
 	@SuppressWarnings("rawtypes")
-	public Object handler(Object param, Skeleton[] strace,  When when, Where where, Object... params);
+	public abstract Object handler(Object param, Skeleton[] strace,  When when, Where where, Object... params);
 
 }

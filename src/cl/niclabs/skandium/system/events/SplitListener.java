@@ -17,6 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-public interface SplitListener extends ComparableEventListener {
+public interface SplitListener extends SkandiumEventListener {
 
 }

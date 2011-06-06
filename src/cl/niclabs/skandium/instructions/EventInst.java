@@ -25,7 +25,7 @@ import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.skeletons.AbstractSkeleton;
 import cl.niclabs.skandium.skeletons.Skeleton;
 import cl.niclabs.skandium.system.events.BooleanParamListener;
-import cl.niclabs.skandium.system.events.ComparableEventListener;
+import cl.niclabs.skandium.system.events.SkandiumEventListener;
 import cl.niclabs.skandium.system.events.IntegerBooleanParamListener;
 import cl.niclabs.skandium.system.events.IntegerParamListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
@@ -63,8 +63,8 @@ public class EventInst extends AbstractInstruction {
 	public <P> Object interpret(P param, Stack<Instruction> stack, 
 			List<Stack<Instruction>> children) throws Exception {
 		Skeleton<?,?> curr = strace[strace.length-1];
-		ComparableEventListener[] listeners = ((AbstractSkeleton<?,?>) curr).getListeners(when, where);
-		for (ComparableEventListener l : listeners) {
+		SkandiumEventListener[] listeners = ((AbstractSkeleton<?,?>) curr).getListeners(when, where);
+		for (SkandiumEventListener l : listeners) {
 			if (l instanceof NoParamListener<?>) {
 				if (((NoParamListener<P>) l).guard(param, strace)) {
 					param = ((NoParamListener<P>) l).handler(param, strace);

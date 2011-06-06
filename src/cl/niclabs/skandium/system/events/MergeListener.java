@@ -17,6 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-public interface MergeListener extends ComparableEventListener {
+public interface MergeListener extends SkandiumEventListener {
 
 }

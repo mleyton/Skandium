@@ -17,6 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-public interface ComparableEventListener extends java.util.EventListener, Comparable<ComparableEventListener> {
+public interface SkandiumEventListener extends java.util.EventListener, Comparable<SkandiumEventListener>  {
 
 }

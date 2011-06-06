@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.ConditionListener;
 import cl.niclabs.skandium.system.events.IntegerBooleanParamListener;
 import cl.niclabs.skandium.system.events.WhileListener;
 
-public interface WhileAfterConditionListener<P> extends WhileListener<P>, IntegerBooleanParamListener<P>, AfterListener, ConditionListener {
+public abstract class WhileAfterConditionListener<P> extends IntegerBooleanParamListener<P> implements WhileListener<P>, AfterListener, ConditionListener {
 
 }

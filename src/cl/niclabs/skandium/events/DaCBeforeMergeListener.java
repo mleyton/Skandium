@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.DaCListener;
 import cl.niclabs.skandium.system.events.MergeListener;
 import cl.niclabs.skandium.system.events.RBranchParamListener;
 
-public interface DaCBeforeMergeListener<P,X,Y,R> extends DaCListener<P,X,Y,R>, RBranchParamListener<Y[]>, BeforeListener, MergeListener {
+public abstract class DaCBeforeMergeListener<P,X,Y,R> extends RBranchParamListener<Y[]> implements DaCListener<P,X,Y,R>, BeforeListener, MergeListener {
 
 }

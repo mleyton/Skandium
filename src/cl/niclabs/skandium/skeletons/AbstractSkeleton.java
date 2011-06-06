@@ -23,7 +23,7 @@ import cl.niclabs.skandium.Skandium;
 import cl.niclabs.skandium.Stream;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
-import cl.niclabs.skandium.system.events.ComparableEventListener;
+import cl.niclabs.skandium.system.events.SkandiumEventListener;
 import cl.niclabs.skandium.system.events.GenericListener;
 import cl.niclabs.skandium.system.events.PatternEventRegistry;
 
@@ -110,7 +110,7 @@ public abstract class AbstractSkeleton<P,R> implements Skeleton<P,R> {
 		return trace;
 	}
 	
-    public ComparableEventListener[] getListeners(When when, Where where) {
+    public SkandiumEventListener[] getListeners(When when, Where where) {
 		return eregis.getListeners(when, where);
     }
     

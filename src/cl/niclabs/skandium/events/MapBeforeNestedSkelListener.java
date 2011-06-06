@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.IntegerParamListener;
 import cl.niclabs.skandium.system.events.MapListener;
 import cl.niclabs.skandium.system.events.NestedSkelListener;
 
-public interface MapBeforeNestedSkelListener<P,X,Y,R> extends MapListener<P,X,Y,R>, IntegerParamListener<X>, BeforeListener, NestedSkelListener {
+public abstract class MapBeforeNestedSkelListener<P,X,Y,R> extends IntegerParamListener<X> implements MapListener<P,X,Y,R>, BeforeListener, NestedSkelListener {
 
 }

@@ -25,22 +25,22 @@ import cl.niclabs.skandium.events.Where;
 
 
 public class PatternEventRegistry {
-	private Hashtable<Integer,PriorityBlockingQueue<ComparableEventListener>> listeners;
+	private Hashtable<Integer,PriorityBlockingQueue<SkandiumEventListener>> listeners;
 
 	
 	public PatternEventRegistry() {
-		listeners = new Hashtable<Integer,PriorityBlockingQueue<ComparableEventListener>>(Where.values().length * When.values().length);
+		listeners = new Hashtable<Integer,PriorityBlockingQueue<SkandiumEventListener>>(Where.values().length * When.values().length);
 	}
 
 	public boolean addListener(NonGenericListener e) throws BadListenerException {
 		return addListener(getWhen(e), getWhere(e), e);
 	}
 	
-	public boolean addListener(When when, Where where, ComparableEventListener e) {
+	public boolean addListener(When when, Where where, SkandiumEventListener e) {
 		int hashCode = getHashCode(when, where);
-		PriorityBlockingQueue<ComparableEventListener> q;
+		PriorityBlockingQueue<SkandiumEventListener> q;
 		if (!listeners.containsKey(hashCode)) {
-			q = new PriorityBlockingQueue<ComparableEventListener>();
+			q = new PriorityBlockingQueue<SkandiumEventListener>();
 			listeners.put(hashCode, q);
 		} else {
 			q = listeners.get(hashCode);
@@ -52,24 +52,24 @@ public class PatternEventRegistry {
 		return removeListener(getWhen(e), getWhere(e),e);
 	}
 
-	public boolean removeListener(When when, Where where, ComparableEventListener e) {
+	public boolean removeListener(When when, Where where, SkandiumEventListener e) {
 		return listeners.get(getHashCode(when, where)).remove(e);
 	}
 
-	public ComparableEventListener[] getListeners(When when, Where where) {
+	public SkandiumEventListener[] getListeners(When when, Where where) {
 		int hashCode = getHashCode(when, where);
 		if (!listeners.containsKey(hashCode)) {
-			return new ComparableEventListener[0];
+			return new SkandiumEventListener[0];
 		} 
-		PriorityBlockingQueue<ComparableEventListener> q = listeners.get(hashCode);
-		return q.toArray(new ComparableEventListener[q.size()]);
+		PriorityBlockingQueue<SkandiumEventListener> q = listeners.get(hashCode);
+		return q.toArray(new SkandiumEventListener[q.size()]);
 	}
 
 	private int getHashCode(When when, Where where) {
 		return where.ordinal() + Where.values().length * when.ordinal();
 	}
 	
-	private Where getWhere(ComparableEventListener e) throws BadListenerException {
+	private Where getWhere(SkandiumEventListener e) throws BadListenerException {
 		if (e instanceof SkeletonListener) return Where.SKELETON;
 		if (e instanceof NestedSkelListener) return Where.NESTED_SKELETON;
 		if (e instanceof ConditionListener) return Where.CONDITION;
@@ -78,7 +78,7 @@ public class PatternEventRegistry {
 		throw new BadListenerException();
 	}
 
-	private When getWhen(ComparableEventListener e) throws BadListenerException {
+	private When getWhen(SkandiumEventListener e) throws BadListenerException {
 		if (e instanceof BeforeListener) return When.BEFORE;
 		if (e instanceof AfterListener) return When.AFTER;
 		throw new BadListenerException();

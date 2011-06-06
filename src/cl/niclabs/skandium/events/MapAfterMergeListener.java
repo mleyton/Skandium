@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.MapListener;
 import cl.niclabs.skandium.system.events.MergeListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
 
-public interface MapAfterMergeListener<P,X,Y,R> extends MapListener<P,X,Y,R>, NoParamListener<R>, AfterListener, MergeListener {
+public abstract class MapAfterMergeListener<P,X,Y,R> extends NoParamListener<R> implements MapListener<P,X,Y,R>, AfterListener, MergeListener {
 
 }

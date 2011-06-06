@@ -17,6 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-public interface NestedSkelListener extends ComparableEventListener {
+public interface NestedSkelListener extends SkandiumEventListener {
 
 }

@@ -23,6 +23,6 @@ import cl.niclabs.skandium.system.events.NestedSkelListener;
 import cl.niclabs.skandium.system.events.PipeListener;
 
 @SuppressWarnings("rawtypes")
-public interface PipeBeforeStageListener<P,R> extends PipeListener<P,R>, IntegerParamListener, BeforeListener, NestedSkelListener {
+public abstract class PipeBeforeStageListener extends IntegerParamListener implements PipeListener, BeforeListener, NestedSkelListener {
 
 }

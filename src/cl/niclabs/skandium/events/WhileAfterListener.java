@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.SkeletonListener;
 import cl.niclabs.skandium.system.events.WhileListener;
 
-public interface WhileAfterListener<P> extends WhileListener<P>, NoParamListener<P>, AfterListener, SkeletonListener {
+public abstract class WhileAfterListener<P> extends NoParamListener<P> implements WhileListener<P>, AfterListener, SkeletonListener {
 
 }

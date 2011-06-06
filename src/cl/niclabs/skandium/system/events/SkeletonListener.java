@@ -17,6 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-public interface SkeletonListener extends ComparableEventListener {
+public interface SkeletonListener extends SkandiumEventListener {
 
 }

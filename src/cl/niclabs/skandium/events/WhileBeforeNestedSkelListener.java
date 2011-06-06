@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.IntegerParamListener;
 import cl.niclabs.skandium.system.events.NestedSkelListener;
 import cl.niclabs.skandium.system.events.WhileListener;
 
-public interface WhileBeforeNestedSkelListener<P> extends WhileListener<P>, IntegerParamListener<P>, BeforeListener, NestedSkelListener {
+public abstract class WhileBeforeNestedSkelListener<P> extends IntegerParamListener<P> implements WhileListener<P>, BeforeListener, NestedSkelListener {
 
 }

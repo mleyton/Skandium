@@ -17,6 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-public interface ConditionListener extends ComparableEventListener {
+public interface ConditionListener extends SkandiumEventListener {
 
 }

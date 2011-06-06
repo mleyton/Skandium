@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.ConditionListener;
 import cl.niclabs.skandium.system.events.IfListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
 
-public interface IfBeforeConditionListener<P,R> extends IfListener<P,R>, NoParamListener<P>, BeforeListener, ConditionListener {
+public abstract class IfBeforeConditionListener<P,R> extends NoParamListener<P> implements IfListener<P,R>, BeforeListener, ConditionListener {
 
 }

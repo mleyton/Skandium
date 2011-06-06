@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.ConditionListener;
 import cl.niclabs.skandium.system.events.DaCListener;
 import cl.niclabs.skandium.system.events.RBranchBooleanParamListener;
 
-public interface DaCAfterConditionListener<P,X,Y,R> extends DaCListener<P,X,Y,R>, RBranchBooleanParamListener<P>, AfterListener, ConditionListener {
+public abstract class DaCAfterConditionListener<P,X,Y,R> extends RBranchBooleanParamListener<P> implements DaCListener<P,X,Y,R>, AfterListener, ConditionListener {
 
 }

@@ -19,12 +19,21 @@ package cl.niclabs.skandium.system.events;
 
 import cl.niclabs.skandium.skeletons.Skeleton;
 
-public interface BooleanParamListener<P> extends ComparableEventListener {
+public abstract class BooleanParamListener<P> implements SkandiumEventListener {
+
+	@Override
+	public int compareTo(SkandiumEventListener o) {
+		return Integer.MAX_VALUE;
+	}
 
 	@SuppressWarnings("rawtypes")
-	public boolean guard(P param, Skeleton[] strace, boolean cond);
+	public boolean guard(P param, Skeleton[] strace, boolean cond) {
+		return true;
+	}
 
 	@SuppressWarnings("rawtypes")
-	public P handler(P param, Skeleton[] strace, boolean cond);
+	public abstract P handler(P param, Skeleton[] strace, boolean cond);
+	
+	
 
 }

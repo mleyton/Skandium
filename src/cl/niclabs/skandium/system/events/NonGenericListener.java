@@ -17,6 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-public interface NonGenericListener extends ComparableEventListener {
+public interface NonGenericListener extends SkandiumEventListener {
 
 }

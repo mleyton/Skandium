@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.DaCListener;
 import cl.niclabs.skandium.system.events.RBranchParamListener;
 import cl.niclabs.skandium.system.events.SplitListener;
 
-public interface DaCBeforeSplitListener<P,X,Y,R> extends DaCListener<P,X,Y,R>, RBranchParamListener<P>, BeforeListener, SplitListener {
+public abstract class DaCBeforeSplitListener<P,X,Y,R> extends RBranchParamListener<P> implements DaCListener<P,X,Y,R>, BeforeListener, SplitListener {
 
 }

@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.MapListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.SplitListener;
 
-public interface MapAfterSplitListener<P,X,Y,R> extends MapListener<P,X,Y,R>, NoParamListener<X[]>, AfterListener, SplitListener {
+public abstract class MapAfterSplitListener<P,X,Y,R> extends NoParamListener<X[]> implements MapListener<P,X,Y,R>, AfterListener, SplitListener {
 
 }

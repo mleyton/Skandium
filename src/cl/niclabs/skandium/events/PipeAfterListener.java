@@ -22,6 +22,6 @@ import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.PipeListener;
 import cl.niclabs.skandium.system.events.SkeletonListener;
 
-public interface PipeAfterListener<P,R> extends PipeListener<P,R>, NoParamListener<R>, AfterListener, SkeletonListener {
+public abstract class PipeAfterListener<P,R> extends NoParamListener<R> implements PipeListener<P,R>, AfterListener, SkeletonListener {
 
 }
