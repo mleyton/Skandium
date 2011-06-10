@@ -2,7 +2,7 @@ package cl.niclabs.skandium.trace;
 
 import com.mxgraph.model.mxCell;
 
-public class TraceElement {
+class TraceElement {
 	private mxCell traceVert;
 	private long invokes;
 	private long execTime;

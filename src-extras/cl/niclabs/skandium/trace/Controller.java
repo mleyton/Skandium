@@ -17,13 +17,6 @@ class Controller {
 	private SkeletonListener listener;
 	private VisualHandler handler;
 	private boolean open;
-	/*
-	 * muscleTraces is the data structure to store the performance information
-	 * It allocates an Skeleton trace and for each Where event stores tree Long values:
-	 * The first one is the invoke counter, and the second one is the accumulated wallclock
-	 * time execution. The third long value corresponds to the timestamp of the last invocation
-	 * used as base for the accumulated time.
-	 */
 	private Map<String,TraceElement> traces;
 	private SkelFrame frame;
 	
@@ -64,7 +57,6 @@ class Controller {
 				long execTime = 0;
 				mxCell traceVert = traceVertMap.get(where);
 				String hashKey = skelHashKey + where.hashCode();
-				System.out.println("I:" + hashKey);
 				traces.put(hashKey, 
 						new TraceElement(traceVert,invokes,execTime,0));
 				frame.updateTrace(traceVert, invokes, execTime);
@@ -78,7 +70,6 @@ class Controller {
 			skelHashKey += s.hashCode() + ":";
 		}
 		String hashKey = skelHashKey + where.hashCode();
-		System.out.println("R:" + hashKey);
 		if (!traces.containsKey(hashKey))
 			return;
 		TraceElement e = traces.get(hashKey);			
