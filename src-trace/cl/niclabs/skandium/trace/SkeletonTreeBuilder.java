@@ -1,12 +1,10 @@
 package cl.niclabs.skandium.trace;
 
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Stack;
 
-import com.mxgraph.model.mxCell;
-import com.mxgraph.util.mxConstants;
-import com.mxgraph.view.mxGraph;
-import com.mxgraph.view.mxStylesheet;
-
+import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.skeletons.AbstractSkeleton;
 import cl.niclabs.skandium.skeletons.DaC;
 import cl.niclabs.skandium.skeletons.Farm;
@@ -20,14 +18,19 @@ import cl.niclabs.skandium.skeletons.Skeleton;
 import cl.niclabs.skandium.skeletons.SkeletonVisitor;
 import cl.niclabs.skandium.skeletons.While;
 
+import com.mxgraph.model.mxCell;
+import com.mxgraph.util.mxConstants;
+import com.mxgraph.view.mxGraph;
+import com.mxgraph.view.mxStylesheet;
+
 class SkeletonTreeBuilder implements SkeletonVisitor {
 	
 	private static final double SKEL_SIDE = 50;
 	private static final double MUS_SIDE = SKEL_SIDE/2;
 	private static final String STYLE_SKEL = "defaultVertex;shape=triangle;direction=north;verticalAlign=bottom";
 	private static final String STYLE_MUS = "defaultVertex;shape=ellipse;direction=north;verticalAlign=bottom;fillColor=white";
-	private static final String STYLE_EDGE = "MYEDGE";//"endArrow=none";
-	private static final String STYLE_NOSHAPE = "shape=none;foldable=0";
+	private static final String STYLE_EDGE = "MYEDGE";
+	static final String STYLE_NOSHAPE = "shape=none;foldable=0;verticalAlign=top;align=right;fontSize=9;fontColor=black";
 	private static final String CONDITION = "C";
 	private static final String SPLIT = "S";
 	private static final String MERGE = "M";
@@ -37,7 +40,10 @@ class SkeletonTreeBuilder implements SkeletonVisitor {
 	private mxCell parent;
 	private mxCell skelVert;
 	
-	SkeletonTreeBuilder(mxGraph graph, mxCell parent) {
+	public Stack<Skeleton<?, ?>> strace;
+	private Controller controller;
+	
+	SkeletonTreeBuilder(Controller controller, mxGraph graph, mxCell parent) {
 		super();
 		this.graph = graph;
 		mxStylesheet stylesheet = graph.getStylesheet();
@@ -48,27 +54,52 @@ class SkeletonTreeBuilder implements SkeletonVisitor {
 		stylesheet.putCellStyle("MYEDGE", style);
 
 		this.parent = parent;
+		
+		this.strace = new Stack<Skeleton<?, ?>>();
+		this.controller = controller;
 	}
 	
+	private SkeletonTreeBuilder(Controller c, mxGraph graph, mxCell parent, Stack<Skeleton<?, ?>> trace) {
+		this(c, graph, parent);
+		this.strace.addAll(trace);
+	}
+
 	mxCell getSkelVert() {
 		return skelVert;
 	}
 
 	@Override
 	public <P, R> void visit(Seq<P, R> skeleton) {
+		strace.add(skeleton);
+
 		skelVert = (mxCell) graph.insertVertex(parent,null,"Seq",0,0,SKEL_SIDE,SKEL_SIDE,STYLE_SKEL);
 		skelVert.setConnectable(false);
 		mxCell exeVert = (mxCell) graph.insertVertex(parent,null,EXECUTE,MUS_SIDE/2,SKEL_SIDE*1.5,MUS_SIDE-2,MUS_SIDE-2,STYLE_MUS);
 		exeVert.setConnectable(false);
 		graph.insertEdge(parent, null, "", skelVert, exeVert, STYLE_EDGE);
+
+		Skeleton<?,?>[] straceArray = getStraceAsArray();
+		HashMap<Where,mxCell> traceMap = new HashMap<Where,mxCell>();
+
+//		mxCell skelTraceVert = (mxCell) graph.insertVertex(parent,null,"",0,0,1.25*SKEL_SIDE,SKEL_SIDE,STYLE_NOSHAPE);
+//		skelTraceVert.setConnectable(false);
+//		traceMap.put(Where.SKELETON, skelTraceVert);
+		
+		mxCell exeTraceVert = (mxCell) graph.insertVertex(parent,null,"",MUS_SIDE/2,SKEL_SIDE*1.5+MUS_SIDE,MUS_SIDE-2,SKEL_SIDE,STYLE_NOSHAPE);
+		exeTraceVert.setConnectable(false);
+		traceMap.put(Where.SKELETON, exeTraceVert);
+
+		controller.initTrace(straceArray,traceMap);
 	}
 
 	@Override
 	public <P, R> void visit(Farm<P, R> skeleton) {
+		strace.add(skeleton);
+
 		mxCell subSkelGroup = (mxCell) graph.insertVertex(parent,null,"",0,SKEL_SIDE*1.5,0,0,STYLE_NOSHAPE);
 		subSkelGroup.setConnectable(false);
 
-		SkeletonTreeBuilder subSkelBuilder = new SkeletonTreeBuilder(graph,subSkelGroup);
+		SkeletonTreeBuilder subSkelBuilder = new SkeletonTreeBuilder(controller, graph,subSkelGroup,strace);
 		skeleton.getSubskel().accept(subSkelBuilder);
 		mxCell subSkelVert = subSkelBuilder.getSkelVert();
 		
@@ -77,14 +108,25 @@ class SkeletonTreeBuilder implements SkeletonVisitor {
 		skelVert = (mxCell) graph.insertVertex(parent,null,"Farm",x,0,SKEL_SIDE,SKEL_SIDE,STYLE_SKEL);
 		skelVert.setConnectable(false);
 		graph.insertEdge(parent, null, "", skelVert, subSkelVert, STYLE_EDGE);		
+
+		Skeleton<?,?>[] straceArray = getStraceAsArray();
+		HashMap<Where,mxCell> traceMap = new HashMap<Where,mxCell>();
+
+		mxCell skelTraceVert = (mxCell) graph.insertVertex(parent,null,"",x,0,1.25*SKEL_SIDE,SKEL_SIDE,STYLE_NOSHAPE);
+		skelTraceVert.setConnectable(false);
+		traceMap.put(Where.SKELETON, skelTraceVert);
+		
+		controller.initTrace(straceArray,traceMap);
 	}
 
 	@Override
 	public <P, R> void visit(Pipe<P, R> skeleton) {
+		strace.add(skeleton);
+
 		mxCell stage1Group = (mxCell) graph.insertVertex(parent,null,"",0,SKEL_SIDE*1.5,0,0,STYLE_NOSHAPE);
 		stage1Group.setConnectable(false);
 
-		SkeletonTreeBuilder stage1Builder = new SkeletonTreeBuilder(graph,stage1Group);
+		SkeletonTreeBuilder stage1Builder = new SkeletonTreeBuilder(controller, graph,stage1Group,strace);
 		skeleton.getStage1().accept(stage1Builder);
 		mxCell stage1Vert = stage1Builder.getSkelVert(); 
 		
@@ -94,7 +136,7 @@ class SkeletonTreeBuilder implements SkeletonVisitor {
 		mxCell stage2Group = (mxCell) graph.insertVertex(parent,null,"",w1,SKEL_SIDE*1.5,0,0,STYLE_NOSHAPE);
 		stage2Group.setConnectable(false);
 
-		SkeletonTreeBuilder stage2Builder = new SkeletonTreeBuilder(graph,stage2Group);
+		SkeletonTreeBuilder stage2Builder = new SkeletonTreeBuilder(controller, graph,stage2Group,strace);
 		skeleton.getStage2().accept(stage2Builder);		
 		mxCell stage2Vert = stage2Builder.getSkelVert();
 		
@@ -106,14 +148,25 @@ class SkeletonTreeBuilder implements SkeletonVisitor {
 		skelVert.setConnectable(false);
 		graph.insertEdge(parent, null, "", skelVert, stage1Vert, STYLE_EDGE);		
 		graph.insertEdge(parent, null, "", skelVert, stage2Vert, STYLE_EDGE);		
+
+		Skeleton<?,?>[] straceArray = getStraceAsArray();
+		HashMap<Where,mxCell> traceMap = new HashMap<Where,mxCell>();
+
+		mxCell skelTraceVert = (mxCell) graph.insertVertex(parent,null,"",x,0,1.25*SKEL_SIDE,SKEL_SIDE,STYLE_NOSHAPE);
+		skelTraceVert.setConnectable(false);
+		traceMap.put(Where.SKELETON, skelTraceVert);
+		
+		controller.initTrace(straceArray,traceMap);
 	}
 
 	@Override
 	public <P> void visit(For<P> skeleton) {
+		strace.add(skeleton);
+
 		mxCell subSkelGroup = (mxCell) graph.insertVertex(parent,null,"",0,SKEL_SIDE*1.5,0,0,STYLE_NOSHAPE);
 		subSkelGroup.setConnectable(false);
 
-		SkeletonTreeBuilder subSkelBuilder = new SkeletonTreeBuilder(graph,subSkelGroup);
+		SkeletonTreeBuilder subSkelBuilder = new SkeletonTreeBuilder(controller, graph,subSkelGroup,strace);
 		skeleton.getSubskel().accept(subSkelBuilder);
 		mxCell subSkelVert = subSkelBuilder.getSkelVert();
 		
@@ -122,17 +175,28 @@ class SkeletonTreeBuilder implements SkeletonVisitor {
 		skelVert = (mxCell) graph.insertVertex(parent,null,"For",x,0,SKEL_SIDE,SKEL_SIDE,STYLE_SKEL);
 		skelVert.setConnectable(false);
 		graph.insertEdge(parent, null, "", skelVert, subSkelVert, STYLE_EDGE);		
+
+		Skeleton<?,?>[] straceArray = getStraceAsArray();
+		HashMap<Where,mxCell> traceMap = new HashMap<Where,mxCell>();
+
+		mxCell skelTraceVert = (mxCell) graph.insertVertex(parent,null,"",x,0,1.25*SKEL_SIDE,SKEL_SIDE,STYLE_NOSHAPE);
+		skelTraceVert.setConnectable(false);
+		traceMap.put(Where.SKELETON, skelTraceVert);
+		
+		controller.initTrace(straceArray,traceMap);
 	}
 	
 	@Override
 	public <P, R> void visit(If<P, R> skeleton) {
+		strace.add(skeleton);
+
 		mxCell conVert = (mxCell) graph.insertVertex(parent,null,CONDITION,0,SKEL_SIDE*1.5,MUS_SIDE-2,MUS_SIDE-2,STYLE_MUS);
 		conVert.setConnectable(false);
 
 		mxCell trueCaseGroup = (mxCell) graph.insertVertex(parent,null,"",MUS_SIDE,SKEL_SIDE*1.5,0,0,STYLE_NOSHAPE);
 		trueCaseGroup.setConnectable(false);
 
-		SkeletonTreeBuilder trueCaseBuilder = new SkeletonTreeBuilder(graph,trueCaseGroup);
+		SkeletonTreeBuilder trueCaseBuilder = new SkeletonTreeBuilder(controller,graph,trueCaseGroup,strace);
 		skeleton.getTrueCase().accept(trueCaseBuilder);
 		mxCell trueCaseVert = trueCaseBuilder.getSkelVert();
 		
@@ -141,7 +205,7 @@ class SkeletonTreeBuilder implements SkeletonVisitor {
 		mxCell falseCaseGroup = (mxCell) graph.insertVertex(parent,null,"",MUS_SIDE+wT,SKEL_SIDE*1.5,0,0,STYLE_NOSHAPE);
 		falseCaseGroup.setConnectable(false);
 
-		SkeletonTreeBuilder falseCaseBuilder = new SkeletonTreeBuilder(graph,falseCaseGroup);
+		SkeletonTreeBuilder falseCaseBuilder = new SkeletonTreeBuilder(controller,graph,falseCaseGroup,strace);
 		skeleton.getFalseCase().accept(falseCaseBuilder);
 		mxCell falseCaseVert = falseCaseBuilder.getSkelVert();
 		
@@ -153,17 +217,32 @@ class SkeletonTreeBuilder implements SkeletonVisitor {
 		graph.insertEdge(parent, null, "", skelVert, conVert, STYLE_EDGE);		
 		graph.insertEdge(parent, null, "", skelVert, trueCaseVert, STYLE_EDGE);		
 		graph.insertEdge(parent, null, "", skelVert, falseCaseVert, STYLE_EDGE);		
+
+		Skeleton<?,?>[] straceArray = getStraceAsArray();
+		HashMap<Where,mxCell> traceMap = new HashMap<Where,mxCell>();
+
+		mxCell skelTraceVert = (mxCell) graph.insertVertex(parent,null,"",x,0,1.25*SKEL_SIDE,SKEL_SIDE,STYLE_NOSHAPE);
+		skelTraceVert.setConnectable(false);
+		traceMap.put(Where.SKELETON, skelTraceVert);
+		
+		mxCell condTraceVert = (mxCell) graph.insertVertex(parent,null,"",0,SKEL_SIDE*1.5+MUS_SIDE,MUS_SIDE-2,SKEL_SIDE,STYLE_NOSHAPE);
+		condTraceVert.setConnectable(false);
+		traceMap.put(Where.CONDITION, condTraceVert);
+
+		controller.initTrace(straceArray,traceMap);
 	}
 
 	@Override
 	public <P> void visit(While<P> skeleton) {
+		strace.add(skeleton);
+
 		mxCell conVert = (mxCell) graph.insertVertex(parent,null,CONDITION,0,SKEL_SIDE*1.5,MUS_SIDE-2,MUS_SIDE-2,STYLE_MUS);
 		conVert.setConnectable(false);
 
 		mxCell subSkelGroup = (mxCell) graph.insertVertex(parent,null,"",MUS_SIDE,SKEL_SIDE*1.5,0,0,STYLE_NOSHAPE);
 		subSkelGroup.setConnectable(false);
 
-		SkeletonTreeBuilder subSkelBuilder = new SkeletonTreeBuilder(graph,subSkelGroup);
+		SkeletonTreeBuilder subSkelBuilder = new SkeletonTreeBuilder(controller,graph,subSkelGroup,strace);
 		skeleton.getSubskel().accept(subSkelBuilder);
 		mxCell subSkelVert = subSkelBuilder.getSkelVert();
 
@@ -174,17 +253,32 @@ class SkeletonTreeBuilder implements SkeletonVisitor {
 		skelVert.setConnectable(false);
 		graph.insertEdge(parent, null, "", skelVert, conVert, STYLE_EDGE);		
 		graph.insertEdge(parent, null, "", skelVert, subSkelVert, STYLE_EDGE);		
+
+		Skeleton<?,?>[] straceArray = getStraceAsArray();
+		HashMap<Where,mxCell> traceMap = new HashMap<Where,mxCell>();
+
+		mxCell skelTraceVert = (mxCell) graph.insertVertex(parent,null,"",x,0,1.25*SKEL_SIDE,SKEL_SIDE,STYLE_NOSHAPE);
+		skelTraceVert.setConnectable(false);
+		traceMap.put(Where.SKELETON, skelTraceVert);
+		
+		mxCell condTraceVert = (mxCell) graph.insertVertex(parent,null,"",0,SKEL_SIDE*1.5+MUS_SIDE,MUS_SIDE-2,SKEL_SIDE,STYLE_NOSHAPE);
+		condTraceVert.setConnectable(false);
+		traceMap.put(Where.CONDITION, condTraceVert);
+
+		controller.initTrace(straceArray,traceMap);
 	}
 
 	@Override
 	public <P, R> void visit(Map<P, R> skeleton) {
+		strace.add(skeleton);
+
 		mxCell splVert = (mxCell) graph.insertVertex(parent,null,SPLIT,0,SKEL_SIDE*1.5,MUS_SIDE-2,MUS_SIDE-2,STYLE_MUS);
 		splVert.setConnectable(false);
 
 		mxCell subSkelGroup = (mxCell) graph.insertVertex(parent,null,"",MUS_SIDE,SKEL_SIDE*1.5,0,0,STYLE_NOSHAPE);
 		subSkelGroup.setConnectable(false);
 
-		SkeletonTreeBuilder subSkelBuilder = new SkeletonTreeBuilder(graph,subSkelGroup);
+		SkeletonTreeBuilder subSkelBuilder = new SkeletonTreeBuilder(controller,graph,subSkelGroup,strace);
 		skeleton.getSkeleton().accept(subSkelBuilder);		
 		mxCell subSkelVert = subSkelBuilder.getSkelVert();
 		
@@ -200,10 +294,29 @@ class SkeletonTreeBuilder implements SkeletonVisitor {
 		graph.insertEdge(parent, null, "", skelVert, splVert, STYLE_EDGE);		
 		graph.insertEdge(parent, null, "", skelVert, subSkelVert, STYLE_EDGE);		
 		graph.insertEdge(parent, null, "", skelVert, merVert, STYLE_EDGE);		
+
+		Skeleton<?,?>[] straceArray = getStraceAsArray();
+		HashMap<Where,mxCell> traceMap = new HashMap<Where,mxCell>();
+
+		mxCell skelTraceVert = (mxCell) graph.insertVertex(parent,null,"",x,0,1.25*SKEL_SIDE,SKEL_SIDE,STYLE_NOSHAPE);
+		skelTraceVert.setConnectable(false);
+		traceMap.put(Where.SKELETON, skelTraceVert);
+		
+		mxCell splTraceVert = (mxCell) graph.insertVertex(parent,null,"",0,SKEL_SIDE*1.5+MUS_SIDE,MUS_SIDE-2,SKEL_SIDE,STYLE_NOSHAPE);
+		splTraceVert.setConnectable(false);
+		traceMap.put(Where.SPLIT, splTraceVert);
+
+		mxCell merTraceVert = (mxCell) graph.insertVertex(parent,null,"",MUS_SIDE+w,SKEL_SIDE*1.5+MUS_SIDE,MUS_SIDE-2,SKEL_SIDE,STYLE_NOSHAPE);
+		merTraceVert.setConnectable(false);
+		traceMap.put(Where.MERGE, merTraceVert);
+
+		controller.initTrace(straceArray,traceMap);
 	}
 
 	@Override
 	public <P, R> void visit(Fork<P, R> skeleton) {
+		strace.add(skeleton);
+
 		mxCell splVert = (mxCell) graph.insertVertex(parent,null,SPLIT,0,SKEL_SIDE*1.5,MUS_SIDE-2,MUS_SIDE-2,STYLE_MUS);
 		splVert.setConnectable(false);
 
@@ -217,7 +330,7 @@ class SkeletonTreeBuilder implements SkeletonVisitor {
 		for (int i=0; i<skels.length; i++) {
 			mxCell subSkelGroup = (mxCell) graph.insertVertex(parent,null,"",MUS_SIDE+w,SKEL_SIDE*1.5,0,0,STYLE_NOSHAPE);
 			subSkelGroup.setConnectable(false);
-			SkeletonTreeBuilder subSkelBuilder = new SkeletonTreeBuilder(graph,subSkelGroup);
+			SkeletonTreeBuilder subSkelBuilder = new SkeletonTreeBuilder(controller,graph,subSkelGroup,strace);
 			skels[i].accept(subSkelBuilder);
 			mxCell subSkelVert = subSkelBuilder.getSkelVert();
 			graph.insertEdge(parent, null, "", skelVert, subSkelVert, STYLE_EDGE);					
@@ -232,11 +345,30 @@ class SkeletonTreeBuilder implements SkeletonVisitor {
 		
 		graph.insertEdge(parent, null, "", skelVert, splVert, STYLE_EDGE);		
 		graph.insertEdge(parent, null, "", skelVert, merVert, STYLE_EDGE);		
+
+		Skeleton<?,?>[] straceArray = getStraceAsArray();
+		HashMap<Where,mxCell> traceMap = new HashMap<Where,mxCell>();
+
+		mxCell skelTraceVert = (mxCell) graph.insertVertex(parent,null,"",x,0,1.25*SKEL_SIDE,SKEL_SIDE,STYLE_NOSHAPE);
+		skelTraceVert.setConnectable(false);
+		traceMap.put(Where.SKELETON, skelTraceVert);
+		
+		mxCell splTraceVert = (mxCell) graph.insertVertex(parent,null,"",0,SKEL_SIDE*1.5+MUS_SIDE,MUS_SIDE-2,SKEL_SIDE,STYLE_NOSHAPE);
+		splTraceVert.setConnectable(false);
+		traceMap.put(Where.SPLIT, splTraceVert);
+
+		mxCell merTraceVert = (mxCell) graph.insertVertex(parent,null,"",MUS_SIDE+w,SKEL_SIDE*1.5+MUS_SIDE,MUS_SIDE-2,SKEL_SIDE,STYLE_NOSHAPE);
+		merTraceVert.setConnectable(false);
+		traceMap.put(Where.MERGE, merTraceVert);
+
+		controller.initTrace(straceArray,traceMap);
 	}
 
 	@Override
 	public <P, R> void visit(DaC<P, R> skeleton) {
-		mxCell conVert = (mxCell) graph.insertVertex(parent,null,SPLIT,0,SKEL_SIDE*1.5,MUS_SIDE-2,MUS_SIDE-2,STYLE_MUS);
+		strace.add(skeleton);
+
+		mxCell conVert = (mxCell) graph.insertVertex(parent,null,CONDITION,0,SKEL_SIDE*1.5,MUS_SIDE-2,MUS_SIDE-2,STYLE_MUS);
 		conVert.setConnectable(false);
 
 		mxCell splVert = (mxCell) graph.insertVertex(parent,null,SPLIT,MUS_SIDE,SKEL_SIDE*1.5,MUS_SIDE-2,MUS_SIDE-2,STYLE_MUS);
@@ -245,7 +377,7 @@ class SkeletonTreeBuilder implements SkeletonVisitor {
 		mxCell subSkelGroup = (mxCell) graph.insertVertex(parent,null,"",MUS_SIDE*2,SKEL_SIDE*1.5,0,0,STYLE_NOSHAPE);
 		subSkelGroup.setConnectable(false);
 
-		SkeletonTreeBuilder subSkelBuilder = new SkeletonTreeBuilder(graph,subSkelGroup);
+		SkeletonTreeBuilder subSkelBuilder = new SkeletonTreeBuilder(controller,graph,subSkelGroup,strace);
 		skeleton.getSkeleton().accept(subSkelBuilder);
 		mxCell subSkelVert = subSkelBuilder.getSkelVert();
 		
@@ -263,10 +395,34 @@ class SkeletonTreeBuilder implements SkeletonVisitor {
 		graph.insertEdge(parent, null, "", skelVert, subSkelVert, STYLE_EDGE);		
 		graph.insertEdge(parent, null, "", skelVert, merVert, STYLE_EDGE);		
 
+		Skeleton<?,?>[] straceArray = getStraceAsArray();
+		HashMap<Where,mxCell> traceMap = new HashMap<Where,mxCell>();
+
+		mxCell skelTraceVert = (mxCell) graph.insertVertex(parent,null,"",x,0,1.25*SKEL_SIDE,SKEL_SIDE,STYLE_NOSHAPE);
+		skelTraceVert.setConnectable(false);
+		traceMap.put(Where.SKELETON, skelTraceVert);
+		
+		mxCell conTraceVert = (mxCell) graph.insertVertex(parent,null,"",0,SKEL_SIDE*1.5+MUS_SIDE,MUS_SIDE-2,SKEL_SIDE,STYLE_NOSHAPE);
+		conTraceVert.setConnectable(false);
+		traceMap.put(Where.CONDITION, conTraceVert);
+
+		mxCell splTraceVert = (mxCell) graph.insertVertex(parent,null,"",MUS_SIDE,SKEL_SIDE*1.5+MUS_SIDE,MUS_SIDE-2,SKEL_SIDE,STYLE_NOSHAPE);
+		splTraceVert.setConnectable(false);
+		traceMap.put(Where.SPLIT, splTraceVert);
+
+		mxCell merTraceVert = (mxCell) graph.insertVertex(parent,null,"",(MUS_SIDE*2)+w,SKEL_SIDE*1.5+MUS_SIDE,MUS_SIDE-2,SKEL_SIDE,STYLE_NOSHAPE);
+		merTraceVert.setConnectable(false);
+		traceMap.put(Where.MERGE, merTraceVert);
+
+		controller.initTrace(straceArray,traceMap);
 	}
 
 	@Override
 	public <P, R> void visit(AbstractSkeleton<P, R> skeleton) {
 		throw new RuntimeException("Should not be here!");
+	}
+
+	private Skeleton<?, ?>[] getStraceAsArray() {
+		return strace.toArray(new Skeleton[strace.size()]);
 	}
 }

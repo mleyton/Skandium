@@ -1,48 +1,49 @@
 package cl.niclabs.skandium.trace;
 
-import cl.niclabs.skandium.events.When;
-import cl.niclabs.skandium.events.Where;
-import cl.niclabs.skandium.skeletons.Skeleton;
+import com.mxgraph.model.mxCell;
 
-class TraceElement {
+public class TraceElement {
+	private mxCell traceVert;
+	private long invokes;
+	private long execTime;
+	private long startTime;
 	
-	Object param; 
-	@SuppressWarnings("rawtypes")
-	Skeleton[] strace; 
-	When when;
-	Where where; 
-	Object[] params;
 	
-	@SuppressWarnings("rawtypes")
-	TraceElement(Object param, Skeleton[] strace, When when,
-			Where where, Object[] params) {
+	
+	TraceElement(mxCell traceVert, long invokes, long execTime, long startTime) {
 		super();
-		this.param = param;
-		this.strace = strace;
-		this.when = when;
-		this.where = where;
-		this.params = params;
+		this.traceVert = traceVert;
+		this.invokes = invokes;
+		this.execTime = execTime;
+		this.startTime = startTime;
 	}
-
-	Object getParam() {
-		return param;
+	
+	mxCell getTraceVert() {
+		return traceVert;
+	}	
+	void setTraceVert(mxCell traceVert) {
+		this.traceVert = traceVert;
 	}
-
-	@SuppressWarnings("rawtypes")
-	Skeleton[] getStrace() {
-		return strace;
+	
+	long getInvokes() {
+		return invokes;
 	}
-
-	When getWhen() {
-		return when;
+	void setInvokes(long invokes) {
+		this.invokes = invokes;
 	}
-
-	Where getWhere() {
-		return where;
+	
+	long getExecTime() {
+		return execTime;
 	}
-
-	Object[] getParams() {
-		return params;
+	void setExecTime(long execTime) {
+		this.execTime = execTime;
 	}
-
+	
+	long getStartTime() {
+		return startTime;
+	}
+	void setStartTime(long startTime) {
+		this.startTime = startTime;
+	}
+	
 }

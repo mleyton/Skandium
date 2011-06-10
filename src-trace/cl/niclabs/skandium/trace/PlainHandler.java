@@ -11,11 +11,6 @@ class PlainHandler implements EventHandler{
 		super();
 	}
 	
-	@Override
-	public void handler(int maxThreadPoolSize) {
-		System.out.println(System.currentTimeMillis() + " maxThreadPoolSize:" + maxThreadPoolSize);
-	}
-		
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Object handler(Object param, Skeleton[] strace, When when,

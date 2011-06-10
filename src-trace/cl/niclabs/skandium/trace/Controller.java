@@ -1,87 +1,96 @@
 package cl.niclabs.skandium.trace;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import javax.swing.JFrame;
+import com.mxgraph.model.mxCell;
 
-import cl.niclabs.skandium.Skandium;
+import cl.niclabs.skandium.events.When;
+import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.skeletons.AbstractSkeleton;
 import cl.niclabs.skandium.skeletons.Skeleton;
 
 class Controller {
 
-	private Skandium skandium;
 	private AbstractSkeleton<?,?> skeleton;
 	private SkeletonListener listener;
 	private VisualHandler handler;
-	private boolean tracing;
 	private boolean open;
-	private Map<Long,List<TraceElement>> threadTraces;
-	private int maxThreadPoolSize;
+	/*
+	 * muscleTraces is the data structure to store the performance information
+	 * It allocates an Skeleton trace and for each Where event stores tree Long values:
+	 * The first one is the invoke counter, and the second one is the accumulated wallclock
+	 * time execution. The third long value corresponds to the timestamp of the last invocation
+	 * used as base for the accumulated time.
+	 */
+	private Map<String,TraceElement> traces;
+	private SkelFrame frame;
 	
-	Controller(Skandium skandium, AbstractSkeleton<?, ?> skeleton) {
+	Controller(AbstractSkeleton<?, ?> skeleton) {
 		super();
-		this.skandium = skandium;
 		this.skeleton = skeleton;
-		this.tracing = false;
 		this.handler = new VisualHandler(this);
 		this.listener = new SkeletonListener(handler);
 		this.open = false;
-		threadTraces = Collections.synchronizedMap(new HashMap<Long,List<TraceElement>>());
-	}
-	
-	boolean startTrace() {
-		if (!tracing) {
-			threadTraces = Collections.synchronizedMap(new HashMap<Long,List<TraceElement>>());
-			skandium.addListener(new MaxThreadPoolListener(handler));
-			tracing = skeleton.addListener(listener, Skeleton.class, null, null);
-		}
-		return tracing;
-	}
-	
-	boolean stopTrace() {
-		if (tracing) {
-			tracing = !skeleton.removeListener(listener, Skeleton.class, null, null);
-		}
-		return !tracing;
 	}
 	
 	boolean open() {
 		if (!open) {
-			open = true;
-			SkelFrame frame = new SkelFrame(skeleton);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.setSize(400, 320);
-			frame.setVisible(true);
+			traces = Collections.synchronizedMap(new HashMap<String,TraceElement>());
+			open = skeleton.addListener(listener, Skeleton.class, null, null);
+			frame = new SkelFrame(this);
+			frame.initSkelFrame(skeleton);
 		}
 		return open;
 	}
 	
 	boolean close() {
 		if (open) {
-			open = false;
-			// TODO
+			open = !skeleton.removeListener(listener, Skeleton.class, null, null);
+			frame.close();
 		}
 		return !open;
 	}
 
-	void setMaxThreadPoolSize(int maxThreadPoolSize) {
-		this.maxThreadPoolSize = maxThreadPoolSize;
+	void initTrace(Skeleton<?,?>[] strace, Map<Where,mxCell> traceVertMap) {
+		String skelHashKey = new String();
+		for (Skeleton<?,?> s : strace) {
+			skelHashKey += s.hashCode() + ":";
+		}
+		for (Where where :Where.values()) {
+			if (traceVertMap.containsKey(where)) {
+				long invokes = 0;
+				long execTime = 0;
+				mxCell traceVert = traceVertMap.get(where);
+				String hashKey = skelHashKey + where.hashCode();
+				System.out.println("I:" + hashKey);
+				traces.put(hashKey, 
+						new TraceElement(traceVert,invokes,execTime,0));
+				frame.updateTrace(traceVert, invokes, execTime);
+			}
+		}
 	}
 	
-	void addTraceElement(long threadId, TraceElement e) {
-		List<TraceElement> threadTrace;
-		if (threadTraces.containsKey(threadId)) {
-			threadTrace = threadTraces.get(threadId);
-		} else {
-			threadTrace = Collections.synchronizedList(new ArrayList<TraceElement>());
-			threadTraces.put(threadId, threadTrace);
+	void addTraceElement(Skeleton<?,?>[] strace, Where where, When when) {
+		String skelHashKey = new String();
+		for (Skeleton<?,?> s : strace) {
+			skelHashKey += s.hashCode() + ":";
 		}
-		threadTrace.add(e);		
+		String hashKey = skelHashKey + where.hashCode();
+		System.out.println("R:" + hashKey);
+		if (!traces.containsKey(hashKey))
+			return;
+		TraceElement e = traces.get(hashKey);			
+		if (when.equals(When.BEFORE)) {	
+			e.setInvokes(e.getInvokes()+1);
+			e.setStartTime(System.currentTimeMillis());
+		} else {
+			long currTime = System.currentTimeMillis();
+			e.setExecTime(e.getExecTime() + (currTime - e.getStartTime()));
+			e.setStartTime(0);
+		}
+		frame.updateTrace(e.getTraceVert(), e.getInvokes(), e.getExecTime());
 	}
 	
 }

@@ -11,7 +11,7 @@ public class Visualizer {
 	
 	public Visualizer(Skandium skandium, Skeleton<?, ?> skeleton) {
 		super();
-		controller = new Controller(skandium, (AbstractSkeleton<?,?>)skeleton);
+		controller = new Controller((AbstractSkeleton<?,?>) skeleton);
 	}
 
 	public boolean open() {
