@@ -22,6 +22,13 @@ import cl.niclabs.skandium.system.events.FarmListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.SkeletonListener;
 
+/**
+ * Abstract class intended to be extended in order to include a Listener to the
+ * before {@link Farm} event.
+ * 
+ * @param <P> <code>param</code> type before {@link Farm} is executed
+ * @param <R> <code>param</code> type after {@link Farm} is executed
+ */
 public abstract class FarmBeforeListener<P,R> extends NoParamListener<P> implements FarmListener<P,R>, BeforeListener, SkeletonListener {
 
 }

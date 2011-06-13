@@ -22,6 +22,15 @@ import cl.niclabs.skandium.system.events.IntegerParamListener;
 import cl.niclabs.skandium.system.events.MapListener;
 import cl.niclabs.skandium.system.events.NestedSkelListener;
 
+/**
+ * Abstract class intended to be extended in order to include a Listener to the
+ * {@link Map} before nested skeleton event.
+ * 
+ * @param <P> <code>param</code> type before {@link Map} is executed
+ * @param <X> Type of the <code>param</code> after {@link Split}
+ * @param <Y> Type of the <code>param</code> before {@link Merge}
+ * @param <R> <code>param</code> type after {@link Map} is executed
+ */
 public abstract class MapBeforeNestedSkelListener<P,X,Y,R> extends IntegerParamListener<X> implements MapListener<P,X,Y,R>, BeforeListener, NestedSkelListener {
 
 }

@@ -22,6 +22,15 @@ import cl.niclabs.skandium.system.events.ConditionListener;
 import cl.niclabs.skandium.system.events.DaCListener;
 import cl.niclabs.skandium.system.events.RBranchBooleanParamListener;
 
+/**
+ * Abstract class intended to be extended in order to include a Listener to the
+ * {@link DaC} after condition event.
+ * 
+ * @param <P> <code>param</code> type before {@link DaC} is executed
+ * @param <X> Type of the <code>param</code> after {@link Split}
+ * @param <Y> Type of the <code>param</code> before {@link Merge}
+ * @param <R> <code>param</code> type after {@link DaC} is executed
+ */
 public abstract class DaCAfterConditionListener<P,X,Y,R> extends RBranchBooleanParamListener<P> implements DaCListener<P,X,Y,R>, AfterListener, ConditionListener {
 
 }

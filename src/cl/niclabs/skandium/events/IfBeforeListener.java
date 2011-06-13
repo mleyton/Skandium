@@ -22,6 +22,13 @@ import cl.niclabs.skandium.system.events.IfListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.SkeletonListener;
 
+/**
+ * Abstract class intended to be extended in order to include a Listener to the
+ * before {@link If} event.
+ * 
+ * @param <P> <code>param</code> type before {@link If} is executed
+ * @param <R> <code>param</code> type after {@link If} is executed
+ */
 public abstract class IfBeforeListener<P,R> extends NoParamListener<P> implements IfListener<P,R>, BeforeListener, SkeletonListener {
 
 }

@@ -22,6 +22,15 @@ import cl.niclabs.skandium.system.events.MapListener;
 import cl.niclabs.skandium.system.events.MergeListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
 
+/**
+ * Abstract class intended to be extended in order to include a Listener to the
+ * {@link Map} before merge event.
+ * 
+ * @param <P> <code>param</code> type before {@link Map} is executed
+ * @param <X> Type of the <code>param</code> after {@link Split}
+ * @param <Y> Type of the <code>param</code> before {@link Merge}
+ * @param <R> <code>param</code> type after {@link Map} is executed
+ */
 public abstract class MapBeforeMergeListener<P,X,Y,R> extends NoParamListener<Y[]> implements MapListener<P,X,Y,R>, BeforeListener, MergeListener {
 
 }

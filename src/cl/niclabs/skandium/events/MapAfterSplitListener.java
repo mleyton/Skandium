@@ -22,6 +22,15 @@ import cl.niclabs.skandium.system.events.MapListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.SplitListener;
 
+/**
+ * Abstract class intended to be extended in order to include a Listener to the
+ * {@link Map} after split event.
+ * 
+ * @param <P> <code>param</code> type before {@link Map} is executed
+ * @param <X> Type of the <code>param</code> after {@link Split}
+ * @param <Y> Type of the <code>param</code> before {@link Merge}
+ * @param <R> <code>param</code> type after {@link Map} is executed
+ */
 public abstract class MapAfterSplitListener<P,X,Y,R> extends NoParamListener<X[]> implements MapListener<P,X,Y,R>, AfterListener, SplitListener {
 
 }

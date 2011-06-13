@@ -19,17 +19,41 @@ package cl.niclabs.skandium.events;
 
 import cl.niclabs.skandium.system.events.SkandiumEventListener;
 
+/**
+ * Abstract class intended to be extended in order to include a Listener to
+ * get the MaxThreadPool parameter defined to the current {@link Skandium} instance
+ */
 public abstract class MaxThreadPoolListener implements SkandiumEventListener {
 
+	/**
+	 * Default implementation of compareTo method inherited from Comparable interface
+	 * of {@link SkandiumEventListener#compareTo(SkandiumEventListener)} where the {@link Integer.MAX_VALUE} is returned.
+	 * {@inheritDoc}
+	 * 
+	 * @param o {@link SkandiumEventListener} to be compared to 
+	 */
 	@Override
 	public int compareTo(SkandiumEventListener o) {
 		return Integer.MAX_VALUE;
 	}
 
+	/**
+	 * When the event related to this Listener is fired, for each Listener registered,
+	 * it executes listener's guard, and if true is returned, then calls the handler.
+	 * 
+	 * This is the default implementation when true is returned.
+	 * @param maxThreadPoolSize the guard is called sending the maxThreadPoolSize as parameter
+	 */
 	public boolean guard(int maxThreadPoolSize) {
 		return true;
 	}
 
+	/**
+	 * When the event related to this Lostener is fired and the guard returned true, the handler
+	 * is called.
+	 * 
+	 * @param maxThreadPoolSize the handler is called sending the maxThreadPoolSize as parameter
+	 */
 	public abstract void handler(int maxThreadPoolSize);
 
 }

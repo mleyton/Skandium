@@ -22,6 +22,13 @@ import cl.niclabs.skandium.system.events.BooleanParamListener;
 import cl.niclabs.skandium.system.events.ConditionListener;
 import cl.niclabs.skandium.system.events.IfListener;
 
+/**
+ * Abstract class intended to be extended in order to include a Listener to the
+ * {@link If} after condition event.
+ * 
+ * @param <P> <code>param</code> type before {@link If} is executed
+ * @param <R> <code>param</code> type after {@link If} is executed
+ */
 public abstract class IfAfterConditionListener<P,R> extends BooleanParamListener<P> implements IfListener<P,R>, AfterListener, ConditionListener {
 
 }

@@ -22,6 +22,12 @@ import cl.niclabs.skandium.system.events.ForListener;
 import cl.niclabs.skandium.system.events.IntegerParamListener;
 import cl.niclabs.skandium.system.events.NestedSkelListener;
 
+/**
+ * Abstract class intended to be extended in order to include a Listener to the
+ * {@link For} after event.
+ * 
+ * @param <P> <code>param</code> type during {@link For} execution
+ */
 public abstract class ForBeforeNestedSkelListener<P> extends IntegerParamListener<P> implements ForListener<P>, BeforeListener, NestedSkelListener {
 
 }
