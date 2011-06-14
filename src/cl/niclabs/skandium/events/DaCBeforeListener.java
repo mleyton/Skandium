@@ -23,8 +23,8 @@ import cl.niclabs.skandium.system.events.RBranchParamListener;
 import cl.niclabs.skandium.system.events.SkeletonListener;
 
 /**
- * Abstract class intended to be extended in order to include a Listener to the
- * before {@link DaC} event.
+ * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
+ * {@link When#BEFORE} {@link DaC} event.
  * 
  * @param <P> <code>param</code> type before {@link DaC} is executed
  * @param <X> Type of the <code>param</code> after {@link Split}

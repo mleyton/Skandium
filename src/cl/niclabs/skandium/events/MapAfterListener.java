@@ -23,8 +23,8 @@ import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.SkeletonListener;
 
 /**
- * Abstract class intended to be extended in order to include a Listener to the
- * after {@link Map} event.
+ * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
+ * {@link When#AFTER} {@link Map} event.
  * 
  * @param <P> <code>param</code> type before {@link Map} is executed
  * @param <X> Type of the <code>param</code> after {@link Split}

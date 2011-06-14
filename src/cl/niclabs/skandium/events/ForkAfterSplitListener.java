@@ -23,8 +23,8 @@ import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.SplitListener;
 
 /**
- * Abstract class intended to be extended in order to include a Listener to the
- * {@link Fork} after split event.
+ * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
+ * {@link Fork} {@link When#AFTER} {@link Where#SPLIT} event.
  * 
  * @param <P> <code>param</code> type before {@link Fork} is executed
  * @param <X> Type of the <code>param</code> after {@link Split}

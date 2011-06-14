@@ -64,10 +64,22 @@ public class For<P> extends AbstractSkeleton<P,P> {
         visitor.visit(this);
     }
 
+    /**
+     * Register an event listener
+     * @param l Event listener to register
+     * @return true if the event listener registration was successful, false otherwise.
+     * @throws BadListenerException
+     */
     public boolean addListener(ForListener<P> l) throws BadListenerException {
     	return eregis.addListener(l);
     }
 
+    /**
+     * Remove an event listener
+     * @param l Event listener to remove
+     * @return true if the event listener removal was successful, false otherwise.
+     * @throws BadListenerException
+     */
     public boolean removeListener(ForListener<P> l) throws BadListenerException {
     	return eregis.removeListener(l);
     }

@@ -17,4 +17,19 @@
  */
 package cl.niclabs.skandium.events;
 
-public enum When { BEFORE, AFTER }
+/**
+ * Enumeration that define constants to specify the temporal dimension of events.
+ * An event can be uniquely identified by {@link Skeleton}, {@link Where} dimension, 
+ * and {@link When} dimension.  For example DaC, Condition, After; or Seq, Nested Skeleton, 
+ * Before.
+ */
+public enum When {
+	/**
+	 * Constant that defines a Before Event
+	 */
+	BEFORE, 
+
+	/**
+	 * Constant that defines an After Event
+	 */
+	AFTER }

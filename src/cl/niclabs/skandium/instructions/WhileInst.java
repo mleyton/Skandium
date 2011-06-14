@@ -42,7 +42,7 @@ public class WhileInst extends AbstractInstruction {
 	 * The main constructor
 	 * @param condition The condition to evaluate.
 	 * @param stack The code to execute while the condition holds true.
-	 * @param strace 
+	 * @param strace nested skeleton tree branch of the current execution.
 	 */
 	public WhileInst(Condition<?> condition, Stack<Instruction> stack, Skeleton<?,?>[] strace) {
 		super(strace);

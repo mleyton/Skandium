@@ -23,8 +23,8 @@ import cl.niclabs.skandium.system.events.IfListener;
 import cl.niclabs.skandium.system.events.NestedSkelListener;
 
 /**
- * Abstract class intended to be extended in order to include a Listener to the
- * {@link If} before nested skeleton event.
+ * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
+ * {@link If} {@link When#BEFORE} {@link Where#NESTED_SKELETON} event.
  * 
  * @param <P> <code>param</code> type before {@link If} is executed
  * @param <R> <code>param</code> type after {@link If} is executed

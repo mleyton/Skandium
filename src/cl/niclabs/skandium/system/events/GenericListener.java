@@ -17,6 +17,9 @@
  */
 package cl.niclabs.skandium.system.events;
 
+/**
+ * A <code>GenericListener</code> is a listener not associated to a specific event.
+ */
 public abstract class GenericListener extends UndefinedParamListener {
 
 }

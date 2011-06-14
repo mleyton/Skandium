@@ -21,18 +21,48 @@ import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.skeletons.Skeleton;
 
+/**
+ * A <code>UndefinedParamListener</code> is a listener for events that passes undefined set of 
+ * parameters as in the case of generic listeners. 
+ */
 public abstract class UndefinedParamListener implements SkandiumEventListener {
 
+	/**
+	 * Default implementation of compareTo method inherited from Comparable interface
+	 * of {@link SkandiumEventListener#compareTo(SkandiumEventListener)} where the 
+	 * {@link Integer.MAX_VALUE} is returned.
+	 * 
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int compareTo(SkandiumEventListener o) {
 		return Integer.MAX_VALUE;
 	}
 
+	/**
+	 * When the event related to this Listener is fired, for each Listener registered,
+	 * it executes listener's guard, and if true is returned, then the handler is called.
+	 * 
+	 * This is the default implementation when true is returned.
+	 * @param param Current <code>param</code> value
+	 * @param strace Nested skeleton tree branch of the current execution.
+	 * @param params event parameters
+	 * @return true if the handler must be executed, false otherwise. 
+	 */
 	@SuppressWarnings("rawtypes")
 	public boolean guard(Object param, Skeleton[] strace, When when, Where where, Object... params) {
 		return true;
 	}
 
+	/**
+	 * When the event related to this Listener is fired and the guard returned true, the handler
+	 * is called.
+	 * 
+	 * @param param Current <code>param</code> value
+	 * @param strace Nested skeleton tree branch of the current execution.
+	 * @param params event parameters
+	 * @return New <code>param</code> value. 
+	 */
 	@SuppressWarnings("rawtypes")
 	public abstract Object handler(Object param, Skeleton[] strace,  When when, Where where, Object... params);
 

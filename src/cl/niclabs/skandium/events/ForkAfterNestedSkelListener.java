@@ -23,8 +23,8 @@ import cl.niclabs.skandium.system.events.IntegerParamListener;
 import cl.niclabs.skandium.system.events.NestedSkelListener;
 
 /**
- * Abstract class intended to be extended in order to include a Listener to the
- * {@link Fork} after nested skeleton event.
+ * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
+ * {@link Fork} {@link When#AFTER} {@link Where#NESTED_SKELETON} event.
  * 
  * @param <P> <code>param</code> type before {@link Fork} is executed
  * @param <X> Type of the <code>param</code> after {@link Split}

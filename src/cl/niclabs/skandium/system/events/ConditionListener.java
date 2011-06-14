@@ -17,6 +17,9 @@
  */
 package cl.niclabs.skandium.system.events;
 
+/**
+ * A <code>ConditionListener</code> is a listener associated to condition muscle events (e.g. before execute condition muscle of a DaC skeleton)
+ */
 public interface ConditionListener extends SkandiumEventListener {
 
 }

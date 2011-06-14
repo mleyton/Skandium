@@ -17,6 +17,9 @@
  */
 package cl.niclabs.skandium.system.events;
 
+/**
+ * A <code>SeqListener</code> is a listener associated to Seq events (e.g. before execute Seq skeleton)
+ */
 public interface SeqListener<P,R> extends NonGenericListener {
 
 }

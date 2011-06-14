@@ -35,8 +35,7 @@ import cl.niclabs.skandium.system.events.UndefinedParamListener;
 
 
 /**
- * 
- * @author gpabon
+ * Instruction that fires an Event
  */
 
 public class EventInst extends AbstractInstruction {
@@ -46,7 +45,11 @@ public class EventInst extends AbstractInstruction {
 	Object[] params;
 
 	/**
-	 * The main constructor.
+	 * The constructor
+	 * @param when Defines the event {@link When} dimension, it could be {@link When#BEFORE} or {@link When#AFTER} 
+	 * @param where Defines the event {@link Where} dimension, it could be {@link Where#SKELETON}, {@link Where#CONDITION}, {@link Where#SPLIT}, {@link Where#NESTED_SKELETON} or {@link Where#MERGE}
+	 * @param strace nested skeleton tree branch of the current execution.
+	 * @param params specific event parameters
 	 */
 	public EventInst(When when, Where where, Skeleton<?,?>[] strace, Object... params){
 		super(strace);
@@ -100,6 +103,9 @@ public class EventInst extends AbstractInstruction {
 		return param;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Instruction copy() {
 		return new EventInst(when, where, strace, params);

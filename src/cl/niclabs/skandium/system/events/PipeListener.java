@@ -17,6 +17,9 @@
  */
 package cl.niclabs.skandium.system.events;
 
+/**
+ * A <code>PipeListener</code> is a listener associated to Pipe events (e.g. before execute Pipe skeleton)
+ */
 public interface PipeListener<P,R> extends NonGenericListener {
 
 }

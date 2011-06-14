@@ -71,10 +71,26 @@ public class Map<P,R> extends AbstractSkeleton<P,R> {
         visitor.visit(this);
     }
 
+    /**
+     * Register an event listener
+     * @param <X> Type of the <code>param</code> after {@link Split}
+     * @param <Y> Type of the <code>param</code> before {@link Merge}
+     * @param l Event listener to register
+     * @return true if the event listener registration was successful, false otherwise.
+     * @throws BadListenerException
+     */
     public <X,Y> boolean addListener(MapListener<P,X,Y,R> l) throws BadListenerException {
     	return eregis.addListener(l);
     }
 
+    /**
+     * Remove an event listener
+     * @param <X> Type of the <code>param</code> after {@link Split}
+     * @param <Y> Type of the <code>param</code> before {@link Merge}
+     * @param l Event listener to remove
+     * @return true if the event listener removal was successful, false otherwise.
+     * @throws BadListenerException
+     */
     public <X,Y> boolean removeListener(MapListener<P,X,Y,R> l) throws BadListenerException {
     	return eregis.removeListener(l);
     }

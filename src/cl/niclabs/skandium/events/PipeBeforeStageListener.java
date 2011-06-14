@@ -22,6 +22,10 @@ import cl.niclabs.skandium.system.events.IntegerParamListener;
 import cl.niclabs.skandium.system.events.NestedSkelListener;
 import cl.niclabs.skandium.system.events.PipeListener;
 
+/**
+ * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
+ * {@link Pipe} {@link When#BEFORE} stage event.
+ */
 @SuppressWarnings("rawtypes")
 public abstract class PipeBeforeStageListener extends IntegerParamListener implements PipeListener, BeforeListener, NestedSkelListener {
 

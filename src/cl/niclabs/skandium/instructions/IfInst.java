@@ -42,7 +42,7 @@ public class IfInst extends AbstractInstruction {
 	 * @param condition Used to decide on the instruction. 
 	 * @param trueCaseStack Code to execute in the true case.
 	 * @param falseCaseStack Code to execute in the false case.
-	 * @param strace 
+	 * @param strace nested skeleton tree branch of the current execution.
 	 */
 	public IfInst(Condition<?> condition, Stack<Instruction> trueCaseStack, Stack<Instruction> falseCaseStack, Skeleton<?,?>[] strace) {
 		super(strace);

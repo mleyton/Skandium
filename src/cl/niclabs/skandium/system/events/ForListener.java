@@ -17,6 +17,9 @@
  */
 package cl.niclabs.skandium.system.events;
 
+/**
+ * A <code>ForListener</code> is a listener associated to For events (e.g. before execute For skeleton)
+ */
 public interface ForListener<P> extends NonGenericListener {
 
 }

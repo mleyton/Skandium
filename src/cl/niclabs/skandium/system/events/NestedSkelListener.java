@@ -17,6 +17,9 @@
  */
 package cl.niclabs.skandium.system.events;
 
+/**
+* A <code>NestedSkelListener</code> is a listener associated to nested skeleton events (e.g. before execute nested skeleton of a DaC skeleton)
+*/
 public interface NestedSkelListener extends SkandiumEventListener {
 
 }

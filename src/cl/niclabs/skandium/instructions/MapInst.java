@@ -46,7 +46,7 @@ public class MapInst extends  AbstractInstruction {
 	 * @param split The muscle to divide a param.
 	 * @param stack The code to execute for each subparam.
 	 * @param merge The code to merge the results of the execution of each subparam.
-	 * @param strace 
+	 * @param strace nested skeleton tree branch of the current execution.
 	 */
 	public MapInst(Split<?, ?> split, Stack<Instruction> stack, Merge<?, ?> merge, Skeleton<?,?>[] strace) {
 		super(strace);

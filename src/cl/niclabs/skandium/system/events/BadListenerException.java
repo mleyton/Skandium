@@ -20,7 +20,7 @@ package cl.niclabs.skandium.system.events;
 public class BadListenerException extends Exception {
 
 	/**
-	 * 
+	 * An abstract listener is intended to be registered or removed
 	 */
 	private static final long serialVersionUID = 1L;
 

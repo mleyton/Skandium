@@ -17,6 +17,9 @@
  */
 package cl.niclabs.skandium.system.events;
 
+/**
+ * A <code>MapListener</code> is a listener associated to Map events (e.g. before execute Map skeleton)
+ */
 public interface MapListener<P,X,Y,R> extends NonGenericListener {
 
 }

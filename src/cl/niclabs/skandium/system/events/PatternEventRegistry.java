@@ -24,18 +24,37 @@ import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 
 
+/**
+ * This class is used by each pattern(Skeleton) class in order to register and remove event
+ * listeners
+ */
 public class PatternEventRegistry {
 	private Hashtable<Integer,PriorityBlockingQueue<SkandiumEventListener>> listeners;
 
-	
+	/**
+	 * The constructor
+	 */
 	public PatternEventRegistry() {
 		listeners = new Hashtable<Integer,PriorityBlockingQueue<SkandiumEventListener>>(Where.values().length * When.values().length);
 	}
 
+	/**
+	 * Adds a non generic event listener
+	 * @param e event listener to register
+	 * @return true if the listener was registered successfully, and false otherwise
+	 * @throws BadListenerException
+	 */
 	public boolean addListener(NonGenericListener e) throws BadListenerException {
 		return addListener(getWhen(e), getWhere(e), e);
 	}
 	
+	/**
+	 * Adds an event listener
+	 * @param when Defines the event {@link When} dimension, it could be {@link When#BEFORE} or {@link When#AFTER}
+	 * @param where Defines the event {@link Where} dimension, it could be {@link Where#SKELETON}, {@link Where#CONDITION}, {@link Where#SPLIT}, {@link Where#NESTED_SKELETON} or {@link Where#MERGE}
+	 * @param e event listener to register
+	 * @return true if the listener was registered successfully, and false otherwise
+	 */
 	public boolean addListener(When when, Where where, SkandiumEventListener e) {
 		int hashCode = getHashCode(when, where);
 		PriorityBlockingQueue<SkandiumEventListener> q;
@@ -48,14 +67,33 @@ public class PatternEventRegistry {
 		return q.add(e);
 	}
 	
+	/**
+	 * Removes a non generic event listener
+	 * @param e event listener to remove
+	 * @return true if the listener was removed successfully, and false otherwise
+	 * @throws BadListenerException
+	 */
 	public boolean removeListener(NonGenericListener e) throws BadListenerException {
 		return removeListener(getWhen(e), getWhere(e),e);
 	}
 
+	/**
+	 * Removes an event listener
+	 * @param when Defines the event {@link When} dimension, it could be {@link When#BEFORE} or {@link When#AFTER}
+	 * @param where Defines the event {@link Where} dimension, it could be {@link Where#SKELETON}, {@link Where#CONDITION}, {@link Where#SPLIT}, {@link Where#NESTED_SKELETON} or {@link Where#MERGE}
+	 * @param e event listener to remove
+	 * @return true if the listener was removed successfully, and false otherwise
+	 */
 	public boolean removeListener(When when, Where where, SkandiumEventListener e) {
 		return listeners.get(getHashCode(when, where)).remove(e);
 	}
 
+	/**
+	 * Given a when and where parameters, returns the list of listeners registered.
+	 * @param when Defines the event {@link When} dimension, it could be {@link When#BEFORE} or {@link When#AFTER}
+	 * @param where Defines the event {@link Where} dimension, it could be {@link Where#SKELETON}, {@link Where#CONDITION}, {@link Where#SPLIT}, {@link Where#NESTED_SKELETON} or {@link Where#MERGE}
+	 * @return list of listeners registered.
+	 */
 	public SkandiumEventListener[] getListeners(When when, Where where) {
 		int hashCode = getHashCode(when, where);
 		if (!listeners.containsKey(hashCode)) {

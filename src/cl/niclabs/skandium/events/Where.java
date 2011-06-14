@@ -17,4 +17,35 @@
  */
 package cl.niclabs.skandium.events;
 
-public enum Where { SKELETON, NESTED_SKELETON, CONDITION, SPLIT, MERGE }
+/**
+ * Enumeration that define constants to specify the spatial dimension of events.
+ * An event can be uniquely identified by {@link Skeleton}, {@link Where} dimension, 
+ * and {@link When} dimension.  For example DaC, Condition, After; or Seq, Nested Skeleton, 
+ * Before.
+ */
+public enum Where { 
+
+	/**
+	 * Constant that defines an event related to the skeleton execution
+	 */
+	SKELETON, 
+
+	/**
+	 * Constant that defines an event related to the nested skeleton execution
+	 */
+	NESTED_SKELETON, 
+
+	/**
+	 * Constant that defines an event related to the condition execution
+	 */
+	CONDITION, 
+	
+	/**
+	 * Constant that defines an event related to the split execution
+	 */
+	SPLIT, 
+	
+	/**
+	 * Constant that defines an event related to the merge execution
+	 */
+	MERGE }

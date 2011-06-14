@@ -17,6 +17,9 @@
  */
 package cl.niclabs.skandium.system.events;
 
+/**
+ * A <code>SplitListener</code> is a listener associated to split muscle events (e.g. before execute split muscle of a DaC skeleton)
+ */
 public interface SplitListener extends SkandiumEventListener {
 
 }

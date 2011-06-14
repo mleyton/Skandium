@@ -23,8 +23,8 @@ import cl.niclabs.skandium.system.events.DaCListener;
 import cl.niclabs.skandium.system.events.RBranchBooleanParamListener;
 
 /**
- * Abstract class intended to be extended in order to include a Listener to the
- * {@link DaC} after condition event.
+ * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
+ * {@link DaC} {@link When#AFTER} {@link Where#CONDITION} event.
  * 
  * @param <P> <code>param</code> type before {@link DaC} is executed
  * @param <X> Type of the <code>param</code> after {@link Split}

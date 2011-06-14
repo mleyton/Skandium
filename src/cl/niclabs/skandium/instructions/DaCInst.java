@@ -50,8 +50,8 @@ public class DaCInst extends  AbstractInstruction {
 	 * @param split the code to subdivide.
 	 * @param stack the stack of instructions to execute when the base case is reached.
 	 * @param merge the code to merge the results of a subdivision.
-	 * @param rbranch
-	 * @param strace 
+	 * @param rbranch current recursive branch.
+	 * @param strace nested skeleton tree branch of the current execution.
 	 */
 	public DaCInst(Condition<?> condition, Split<?, ?> split, Stack<Instruction> stack, Merge<?, ?> merge, 
 			Stack<Integer> rbranch, Skeleton<?,?>[] strace) {

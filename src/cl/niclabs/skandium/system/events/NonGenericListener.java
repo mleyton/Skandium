@@ -17,6 +17,9 @@
  */
 package cl.niclabs.skandium.system.events;
 
+/**
+ * A <code>NongenericListener</code> is a listener associated to a specific event.
+ */
 public interface NonGenericListener extends SkandiumEventListener {
 
 }

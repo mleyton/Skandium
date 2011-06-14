@@ -17,6 +17,9 @@
  */
 package cl.niclabs.skandium.system.events;
 
+/**
+ * A <code>DaCListener</code> is a listener associated to DaC events (e.g. before execute condition muscle of a DaC skeleton)
+ */
 public interface DaCListener<P,X,Y,R> extends NonGenericListener {
 
 }

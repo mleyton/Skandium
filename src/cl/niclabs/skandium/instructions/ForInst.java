@@ -40,7 +40,7 @@ public class ForInst extends AbstractInstruction{
 	 * The main constructor.
 	 * @param substack  The stack to execute on every iteration.
 	 * @param times The number of times to iterate.
-	 * @param strace 
+	 * @param strace nested skeleton tree branch of the current execution.
 	 */
 	public ForInst(Stack<Instruction> substack, int times, Skeleton<?,?>[] strace) {
 		super(strace);

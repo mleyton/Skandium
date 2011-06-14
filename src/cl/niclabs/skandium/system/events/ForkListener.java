@@ -17,6 +17,9 @@
  */
 package cl.niclabs.skandium.system.events;
 
+/**
+ * A <code>ForkListener</code> is a listener associated to Fork events (e.g. before execute split muscle of a Fork skeleton)
+ */
 public interface ForkListener<P,X,Y,R> extends NonGenericListener {
 
 }

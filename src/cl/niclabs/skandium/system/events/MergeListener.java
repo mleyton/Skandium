@@ -17,6 +17,9 @@
  */
 package cl.niclabs.skandium.system.events;
 
+/**
+ * A <code>MergeListener</code> is a listener associated to merge muscle events (e.g. before execute merge muscle of a DaC skeleton)
+ */
 public interface MergeListener extends SkandiumEventListener {
 
 }

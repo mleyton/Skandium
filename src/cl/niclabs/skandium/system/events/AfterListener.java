@@ -19,7 +19,6 @@ package cl.niclabs.skandium.system.events;
 
 /**
  * An <code>AfterListener</code> is a listener associated to after events (e.g. after execute condition muscle of a DaC skeleton)
- * 
  */
 public interface AfterListener extends SkandiumEventListener {
 

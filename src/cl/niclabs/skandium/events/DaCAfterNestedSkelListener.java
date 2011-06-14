@@ -23,8 +23,8 @@ import cl.niclabs.skandium.system.events.NestedSkelListener;
 import cl.niclabs.skandium.system.events.RBranchParamListener;
 
 /**
- * Abstract class intended to be extended in order to include a Listener to the
- * {@link DaC} after nested skeleton event.
+ * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
+ * {@link DaC} {@link When#AFTER} {@link Where#NESTED_SKELETON} event.
  * 
  * @param <P> <code>param</code> type before {@link DaC} is executed
  * @param <X> Type of the <code>param</code> after {@link Split}

@@ -24,8 +24,7 @@ import cl.niclabs.skandium.skeletons.Skeleton;
 
 
 /**
- * 
- * @author gpabon
+ * Given a condition result, this instruction choices which sub-stack should be executed
  */
 
 public class ChoiceInst extends AbstractInstruction {
@@ -34,7 +33,11 @@ public class ChoiceInst extends AbstractInstruction {
 	Stack<Instruction> trueCaseStack, falseCaseStack;
 
 	/**
-	 * The main constructor.
+	 * The Constructor
+	 * @param cond the result of a {@link Condition} evaluation
+	 * @param trueCaseStack sub-stack to be executed if <code>cond</code> is true.
+	 * @param falseCaseStack sub-stack to be executed if <code>cond</code> is true.
+	 * @param strace nested skeleton tree branch of the current execution.
 	 */
 	public ChoiceInst(boolean cond, Stack<Instruction> trueCaseStack, Stack<Instruction> falseCaseStack, Skeleton<?,?>[] strace){
 		super(strace);
@@ -57,6 +60,9 @@ public class ChoiceInst extends AbstractInstruction {
 		return param;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Instruction copy() {
 		return new ChoiceInst(cond, copyStack(trueCaseStack), copyStack(falseCaseStack), strace);

@@ -17,6 +17,9 @@
  */
 package cl.niclabs.skandium.system.events;
 
+/**
+ * A <code>BeforeListener</code> is a listener associated to before events (e.g. before execute condition muscle of a DaC skeleton)
+ */
 public interface BeforeListener extends SkandiumEventListener {
 
 }

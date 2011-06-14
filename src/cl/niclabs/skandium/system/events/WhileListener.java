@@ -17,6 +17,9 @@
  */
 package cl.niclabs.skandium.system.events;
 
+/**
+ * A <code>WhileListener</code> is a listener associated to While events (e.g. before execute While skeleton)
+ */
 public interface WhileListener<P> extends NonGenericListener {
 
 }

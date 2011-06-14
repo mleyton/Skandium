@@ -15,12 +15,27 @@
  *   You should have received a copy of the GNU General Public License
  *   along with Skandium.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cl.niclabs.skandium.skeletons;
+package cl.niclabs.skandium.system.events;
 
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
-import cl.niclabs.skandium.system.events.GenericListener;
+import cl.niclabs.skandium.skeletons.AbstractSkeleton;
+import cl.niclabs.skandium.skeletons.DaC;
+import cl.niclabs.skandium.skeletons.Farm;
+import cl.niclabs.skandium.skeletons.For;
+import cl.niclabs.skandium.skeletons.Fork;
+import cl.niclabs.skandium.skeletons.If;
+import cl.niclabs.skandium.skeletons.Map;
+import cl.niclabs.skandium.skeletons.Pipe;
+import cl.niclabs.skandium.skeletons.Seq;
+import cl.niclabs.skandium.skeletons.Skeleton;
+import cl.niclabs.skandium.skeletons.SkeletonVisitor;
+import cl.niclabs.skandium.skeletons.While;
 
+/**
+ * Using the visitor pattern, this class navigates a skeleton structure (ie
+ * nested skeletons), and register or remove generic event listeners.
+ */
 public class GenericListenerRegistry implements SkeletonVisitor {
 	
 	private boolean remove;
@@ -47,15 +62,15 @@ public class GenericListenerRegistry implements SkeletonVisitor {
 	public <P, R> void visit(Farm<P, R> skeleton) {
 		boolean ret = listenerRegistry(skeleton); 
 		r = r || ret;
-		skeleton.subskel.accept(this);
+		skeleton.getSubskel().accept(this);
 	}
 	
 	@Override
 	public <P, R> void visit(Pipe<P, R> skeleton) {
 		boolean ret = listenerRegistry(skeleton); 
 		r = r || ret;
-		skeleton.stage1.accept(this);		
-		skeleton.stage2.accept(this);		
+		skeleton.getStage1().accept(this);		
+		skeleton.getStage2().accept(this);		
 	}
 
 
@@ -69,36 +84,36 @@ public class GenericListenerRegistry implements SkeletonVisitor {
 	public <P, R> void visit(If<P, R> skeleton) {
 		boolean ret = listenerRegistry(skeleton); 
 		r = r || ret;
-		skeleton.trueCase.accept(this);		
-		skeleton.falseCase.accept(this);		
+		skeleton.getTrueCase().accept(this);		
+		skeleton.getFalseCase().accept(this);		
 	}
 
 	@Override
 	public <P> void visit(While<P> skeleton) {
 		boolean ret = listenerRegistry(skeleton); 
 		r = r || ret;
-		skeleton.subskel.accept(this);		
+		skeleton.getSubskel().accept(this);		
 	}
 
 	@Override
 	public <P> void visit(For<P> skeleton) {
 		boolean ret = listenerRegistry(skeleton); 
 		r = r || ret;
-		skeleton.subskel.accept(this);		
+		skeleton.getSubskel().accept(this);		
 	}
 
 	@Override
 	public <P, R> void visit(Map<P, R> skeleton) {
 		boolean ret = listenerRegistry(skeleton); 
 		r = r || ret;
-		skeleton.skeleton.accept(this);		
+		skeleton.getSkeleton().accept(this);		
 	}
 
 	@Override
 	public <P, R> void visit(Fork<P, R> skeleton) {
 		boolean ret = listenerRegistry(skeleton); 
 		r = r || ret;
-		for (Skeleton<?,?> s: skeleton.skeletons) {
+		for (Skeleton<?,?> s: skeleton.getSkeletons()) {
 			s.accept(this);
 		}		
 	}
@@ -107,7 +122,7 @@ public class GenericListenerRegistry implements SkeletonVisitor {
 	public <P, R> void visit(DaC<P, R> skeleton) {
 		boolean ret = listenerRegistry(skeleton); 
 		r = r || ret;
-		skeleton.skeleton.accept(this);		
+		skeleton.getSkeleton().accept(this);		
 	}
 
 	@SuppressWarnings("unchecked")
@@ -121,11 +136,11 @@ public class GenericListenerRegistry implements SkeletonVisitor {
 			for (When n: narray) {
 				for (Where r: rarray) {
 					if (remove) {
-						boolean t = ((AbstractSkeleton) skeleton).eregis.removeListener(n, r, listener);
+						boolean t = ((AbstractSkeleton) skeleton).getEregis().removeListener(n, r, listener);
 						ret = ret || t;
 					}
 					else {
-						boolean t = ((AbstractSkeleton) skeleton).eregis.addListener(n, r, listener);
+						boolean t = ((AbstractSkeleton) skeleton).getEregis().addListener(n, r, listener);
 						ret = ret || t;
 					}
 				}
@@ -140,7 +155,7 @@ public class GenericListenerRegistry implements SkeletonVisitor {
 		throw new RuntimeException("Should not be here!");
 	}
 
-	boolean getR() {
+	public boolean getR() {
 		return r;
 	}
 }

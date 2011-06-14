@@ -27,8 +27,9 @@ import cl.niclabs.skandium.skeletons.Skeleton;
 
 
 /**
- * 
- * @author gpabon
+ * This is a utility instruction and does not represent a {@link cl.niclabs.skandium.skeletons.Skeleton} in particular.
+ * Given a list of substacks and taking the array produced by the {@link Split} execution, it creates
+ * a list of child substacks to execute each element of the <code>param</code> array.
  */
 
 public class SplitInst extends AbstractInstruction {
@@ -41,6 +42,9 @@ public class SplitInst extends AbstractInstruction {
 
 	/**
 	 * The main constructor.
+	 * @param substacks list of substacks, if the list has just 1 substack, it is copied to complete the <code>param</code> size. 
+	 * @param merge The code to merge the results of the execution of each subparam.
+	 * @param strace nested skeleton tree branch of the current execution.
 	 */
 	@SuppressWarnings("rawtypes")
 	public SplitInst(List<Stack<Instruction>> substacks, Merge merge, Skeleton<?,?>[] strace){

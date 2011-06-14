@@ -35,6 +35,11 @@ public class MergeInst extends AbstractInstruction{
 	@SuppressWarnings("rawtypes")
 	Merge merge;
 	
+	/**
+	 * The constructor
+	 * @param merge The code to merge the results of the execution of each subparam.
+	 * @param strace nested skeleton tree branch of the current execution.
+	 */
 	public MergeInst(Merge<?,?> merge, Skeleton<?,?>[] strace) {
 		super(strace);
 		this.merge = merge;
@@ -42,6 +47,8 @@ public class MergeInst extends AbstractInstruction{
 
 	/**
 	 * Merges a list of subparams into a single one using a {@link Merge} muscle.
+	 * 
+	 * {@inheritDoc}
 	 */
 	@SuppressWarnings("unchecked")
 	@Override

@@ -23,8 +23,8 @@ import cl.niclabs.skandium.system.events.MergeListener;
 import cl.niclabs.skandium.system.events.RBranchParamListener;
 
 /**
- * Abstract class intended to be extended in order to include a Listener to the
- * {@link DaC} after merge event.
+ * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
+ * {@link DaC} {@link When#AFTER} {@link Where#MERGE} event.
  * 
  * @param <P> <code>param</code> type before {@link DaC} is executed
  * @param <X> Type of the <code>param</code> after {@link Split}

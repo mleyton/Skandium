@@ -45,7 +45,7 @@ public class ForkInst extends  AbstractInstruction {
 	 * @param split  The muscle used to divide the parameters.
 	 * @param stacks The code to execute for each subparam.
 	 * @param merge The code to merge the result of executing the stack on the subparam.
-	 * @param strace 
+	 * @param strace nested skeleton tree branch of the current execution.
 	 */
 	public ForkInst(Split<?, ?> split, List<Stack<Instruction>> stacks, Merge<?, ?> merge, Skeleton<?,?>[] strace) {
 		super(strace);

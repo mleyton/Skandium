@@ -33,7 +33,6 @@ abstract class AbstractInstruction implements Instruction {
 	final Skeleton<?,?>[] strace;
 	
 	AbstractInstruction(Skeleton<?,?>[] strace){
-		//this.stackTraceElements = strace.toArray(new StackTraceElement[strace.size()]);
 		this.strace = strace;
 	}
 	

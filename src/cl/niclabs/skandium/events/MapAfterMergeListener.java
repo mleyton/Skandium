@@ -23,8 +23,8 @@ import cl.niclabs.skandium.system.events.MergeListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
 
 /**
- * Abstract class intended to be extended in order to include a Listener to the
- * {@link Map} after merge event.
+ * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
+ * {@link Map} {@link When#AFTER} {@link Where#MERGE} event.
  * 
  * @param <P> <code>param</code> type before {@link Map} is executed
  * @param <X> Type of the <code>param</code> after {@link Split}

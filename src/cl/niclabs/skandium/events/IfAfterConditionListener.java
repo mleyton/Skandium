@@ -23,8 +23,8 @@ import cl.niclabs.skandium.system.events.ConditionListener;
 import cl.niclabs.skandium.system.events.IfListener;
 
 /**
- * Abstract class intended to be extended in order to include a Listener to the
- * {@link If} after condition event.
+ * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
+ * {@link If} {@link When#AFTER} {@link Where#CONDITION} event.
  * 
  * @param <P> <code>param</code> type before {@link If} is executed
  * @param <R> <code>param</code> type after {@link If} is executed

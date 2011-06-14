@@ -17,6 +17,9 @@
  */
 package cl.niclabs.skandium.system.events;
 
+/**
+ * A <code>FarmListener</code> is a listener associated to Farm events (e.g. before execute Farm skeleton)
+ */
 public interface FarmListener<P,R> extends NonGenericListener {
 
 }

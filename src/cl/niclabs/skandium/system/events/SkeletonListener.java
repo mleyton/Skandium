@@ -17,6 +17,9 @@
  */
 package cl.niclabs.skandium.system.events;
 
+/**
+ * A <code>SkeletonListener</code> is a listener associated to skeleton events (e.g. before execute DaC skeleton)
+ */
 public interface SkeletonListener extends SkandiumEventListener {
 
 }

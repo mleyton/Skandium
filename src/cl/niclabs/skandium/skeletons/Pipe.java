@@ -50,11 +50,23 @@ public class Pipe<P,R> extends AbstractSkeleton<P,R> {
         visitor.visit(this);
     }
 
-    public <X> boolean addListener(PipeListener<P,R> l) throws BadListenerException {
+    /**
+     * Register an event listener
+     * @param l Event listener to register
+     * @return true if the event listener registration was successful, false otherwise.
+     * @throws BadListenerException
+     */
+    public boolean addListener(PipeListener<P,R> l) throws BadListenerException {
     	return eregis.addListener(l);
     }
 
-    public <X> boolean removeListener(PipeListener<P,R> l) throws BadListenerException {
+    /**
+     * Remove an event listener
+     * @param l Event listener to remove
+     * @return true if the event listener removal was successful, false otherwise.
+     * @throws BadListenerException
+     */
+    public boolean removeListener(PipeListener<P,R> l) throws BadListenerException {
     	return eregis.removeListener(l);
     }
 

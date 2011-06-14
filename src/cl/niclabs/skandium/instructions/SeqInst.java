@@ -38,7 +38,7 @@ public class SeqInst extends AbstractInstruction {
 	/**
 	 * The main constructor.
 	 * @param execute The {@link cl.niclabs.skandium.muscles.Muscle} to execute. 
-	 * @param strace The logical stack trace of this instruction.
+	 * @param strace nested skeleton tree branch of the current execution.
 	 */
 	public SeqInst(Muscle<?,?> execute, Skeleton<?,?>[] strace){
 		super(strace);

@@ -22,6 +22,12 @@ import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.SkeletonListener;
 import cl.niclabs.skandium.system.events.WhileListener;
 
+/**
+ * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
+ * {@link When#BEFORE} {@link While} event.
+ * 
+ * @param <P> <code>param</code> type during {@link While} execution
+ */
 public abstract class WhileBeforeListener<P> extends NoParamListener<P> implements WhileListener<P>, BeforeListener, SkeletonListener {
 
 }

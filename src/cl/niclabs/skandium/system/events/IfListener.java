@@ -17,6 +17,9 @@
  */
 package cl.niclabs.skandium.system.events;
 
+/**
+ * A <code>IfListener</code> is a listener associated to If events (e.g. before execute if skeleton)
+ */
 public interface IfListener<P,R> extends NonGenericListener {
 
 }

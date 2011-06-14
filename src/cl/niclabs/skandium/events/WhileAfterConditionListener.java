@@ -22,6 +22,12 @@ import cl.niclabs.skandium.system.events.ConditionListener;
 import cl.niclabs.skandium.system.events.IntegerBooleanParamListener;
 import cl.niclabs.skandium.system.events.WhileListener;
 
+/**
+ * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
+ * {@link While} {@link When#AFTER} {@link Where#CONDITION} event.
+ * 
+ * @param <P> <code>param</code> type during {@link While} execution
+ */
 public abstract class WhileAfterConditionListener<P> extends IntegerBooleanParamListener<P> implements WhileListener<P>, AfterListener, ConditionListener {
 
 }
