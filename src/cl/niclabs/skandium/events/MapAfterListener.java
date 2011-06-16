@@ -23,13 +23,13 @@ import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.SkeletonListener;
 
 /**
- * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
- * {@link When#AFTER} {@link Map} event.
+ * Abstract class intended to be extended in order to include a {@link cl.niclabs.skandium.system.events.SkandiumEventListener} to the
+ * {@link When#AFTER} {@link cl.niclabs.skandium.skeletons.Map} event.
  * 
- * @param <P> <code>param</code> type before {@link Map} is executed
- * @param <X> Type of the <code>param</code> after {@link Split}
- * @param <Y> Type of the <code>param</code> before {@link Merge}
- * @param <R> <code>param</code> type after {@link Map} is executed
+ * @param <P> <code>param</code> type before {@link cl.niclabs.skandium.skeletons.Map} is executed
+ * @param <X> Type of the <code>param</code> after {@link cl.niclabs.skandium.muscles.Split}
+ * @param <Y> Type of the <code>param</code> before {@link cl.niclabs.skandium.muscles.Merge}
+ * @param <R> <code>param</code> type after {@link cl.niclabs.skandium.skeletons.Map} is executed
  */
 public abstract class MapAfterListener<P,X,Y,R> extends NoParamListener<R> implements MapListener<P,X,Y,R>, AfterListener, SkeletonListener {
 

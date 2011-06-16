@@ -23,12 +23,12 @@ import cl.niclabs.skandium.system.events.BadListenerException;
 import cl.niclabs.skandium.system.events.ForListener;
 
 /**
- * A <code>For</code> {@link Skeleton} provides a fixed iteration.
+ * A <code>For</code> {@link cl.niclabs.skandium.skeletons.Skeleton} provides a fixed iteration.
  * The nested skeleton code is executed a fixed amount of times. 
  * 
  * @author mleyton
  *
- * @param <P> The input and result type of the {@link Skeleton}.
+ * @param <P> The input and result type of the {@link cl.niclabs.skandium.skeletons.Skeleton}.
  * */
 public class For<P> extends AbstractSkeleton<P,P> {
 

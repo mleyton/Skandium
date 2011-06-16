@@ -57,7 +57,7 @@ public class MapInst extends  AbstractInstruction {
 	}
 
 	/**
-	 * Subdivides param using the {@link Split} muscle, and then a stack is copied for each subparam.
+	 * Subdivides param using the {@link cl.niclabs.skandium.muscles.Split} muscle, and then a stack is copied for each subparam.
 	 *  
 	 * {@inheritDoc} 
 	 */

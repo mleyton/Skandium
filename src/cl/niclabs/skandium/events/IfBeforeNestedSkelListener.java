@@ -23,11 +23,11 @@ import cl.niclabs.skandium.system.events.IfListener;
 import cl.niclabs.skandium.system.events.NestedSkelListener;
 
 /**
- * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
- * {@link If} {@link When#BEFORE} {@link Where#NESTED_SKELETON} event.
+ * Abstract class intended to be extended in order to include a {@link cl.niclabs.skandium.system.events.SkandiumEventListener} to the
+ * {@link cl.niclabs.skandium.skeletons.If} {@link When#BEFORE} {@link Where#NESTED_SKELETON} event.
  * 
- * @param <P> <code>param</code> type before {@link If} is executed
- * @param <R> <code>param</code> type after {@link If} is executed
+ * @param <P> <code>param</code> type before {@link cl.niclabs.skandium.skeletons.If} is executed
+ * @param <R> <code>param</code> type after {@link cl.niclabs.skandium.skeletons.If} is executed
  */
 public abstract class IfBeforeNestedSkelListener<P,R> extends BooleanParamListener<P> implements IfListener<P,R>, BeforeListener, NestedSkelListener {
 

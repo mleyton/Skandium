@@ -23,13 +23,13 @@ import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.SplitListener;
 
 /**
- * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
- * {@link Fork} {@link When#BEFORE} {@link Where#SPLIT} event.
+ * Abstract class intended to be extended in order to include a {@link cl.niclabs.skandium.system.events.SkandiumEventListener} to the
+ * {@link cl.niclabs.skandium.skeletons.Fork} {@link When#BEFORE} {@link Where#SPLIT} event.
  * 
- * @param <P> <code>param</code> type before {@link Fork} is executed
- * @param <X> Type of the <code>param</code> after {@link Split}
- * @param <Y> Type of the <code>param</code> before {@link Merge}
- * @param <R> <code>param</code> type after {@link Fork} is executed
+ * @param <P> <code>param</code> type before {@link cl.niclabs.skandium.skeletons.Fork} is executed
+ * @param <X> Type of the <code>param</code> after {@link cl.niclabs.skandium.muscles.Split}
+ * @param <Y> Type of the <code>param</code> before {@link cl.niclabs.skandium.muscles.Merge}
+ * @param <R> <code>param</code> type after {@link cl.niclabs.skandium.skeletons.Fork} is executed
  */
 public abstract class ForkBeforeSplitListener<P,X,Y,R> extends NoParamListener<P> implements ForkListener<P,X,Y,R>, BeforeListener, SplitListener {
 

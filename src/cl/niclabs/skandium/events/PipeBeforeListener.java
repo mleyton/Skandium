@@ -23,11 +23,11 @@ import cl.niclabs.skandium.system.events.PipeListener;
 import cl.niclabs.skandium.system.events.SkeletonListener;
 
 /**
- * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
- * {@link When#BEFORE} {@link Pipe} event.
+ * Abstract class intended to be extended in order to include a {@link cl.niclabs.skandium.system.events.SkandiumEventListener} to the
+ * {@link When#BEFORE} {@link cl.niclabs.skandium.skeletons.Pipe} event.
  * 
- * @param <P> <code>param</code> type before {@link Pipe} is executed
- * @param <R> <code>param</code> type after {@link Pipe} is executed
+ * @param <P> <code>param</code> type before {@link cl.niclabs.skandium.skeletons.Pipe} is executed
+ * @param <R> <code>param</code> type after {@link cl.niclabs.skandium.skeletons.Pipe} is executed
  */
 public abstract class PipeBeforeListener<P,R> extends NoParamListener<P> implements PipeListener<P,R>, BeforeListener, SkeletonListener {
 

@@ -116,11 +116,11 @@ public abstract class AbstractSkeleton<P,R> implements Skeleton<P,R> {
 	}
 
 	/**
-	 * Returns the listeners related the event: this {@link Skeleton}, {@link When} and {@link Where}.  
+	 * Returns the listeners related the event: this {@link cl.niclabs.skandium.skeletons.Skeleton}, {@link When} and {@link Where}.  
 	 * An event is uniquely identified by this tree parameters. 
 	 * @param when Defines the event {@link When} dimension, it could be {@link When#BEFORE} or {@link When#AFTER} 
 	 * @param where Defines the event {@link Where} dimension, it could be {@link Where#SKELETON}, {@link Where#CONDITION}, {@link Where#SPLIT}, {@link Where#NESTED_SKELETON} or {@link Where#MERGE}
-	 * @return Array of {@link SkandiumEventListener}s related to the event.
+	 * @return Array of {@link cl.niclabs.skandium.system.events.SkandiumEventListener}s related to the event.
 	 */
     public SkandiumEventListener[] getListeners(When when, Where where) {
 		return eregis.getListeners(when, where);
@@ -141,7 +141,7 @@ public abstract class AbstractSkeleton<P,R> implements Skeleton<P,R> {
      * {@link Where} events.  If <code>where</code> has a specific value 
      * of {@link Where} enumeration the listener is registered to all events related to that value. 
      * (i.e. All {@link Where#CONDITION} related events)
-     * @return
+     * @return true if listener <code>l</code> has been registered successfully, false otherwise
      */
     @SuppressWarnings("rawtypes")
 	public boolean addListener(GenericListener l, Class pattern, When when, Where where) {
@@ -164,7 +164,7 @@ public abstract class AbstractSkeleton<P,R> implements Skeleton<P,R> {
      * @param where If <code>null</code> is passed as value, the listener related to all 
      * {@link Where} events is removed.  If <code>where</code> has a specific value 
      * of {@link Where} enumeration, the listener related to that value is removed. 
-     * @return
+     * @return true if listener <code>l</code> has been removed successfully, false otherwise
      */
     @SuppressWarnings("rawtypes")
 	public boolean removeListener(GenericListener l, Class pattern, When when, Where where) {

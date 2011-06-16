@@ -23,14 +23,14 @@ import cl.niclabs.skandium.system.events.BadListenerException;
 import cl.niclabs.skandium.system.events.IfListener;
 
 /**
- * An <code>If</code> {@link Skeleton} represents condition branching.
+ * An <code>If</code> {@link cl.niclabs.skandium.skeletons.Skeleton} represents condition branching.
  * Depending on the evaluation of a {@link Condition}, either one or another skeleton
  * program is executed.
  * 
  * @author mleyton
  *
- * @param <P> The input type of the {@link Skeleton}.
- * @param <R> The result type of the {@link Skeleton}. 
+ * @param <P> The input type of the {@link cl.niclabs.skandium.skeletons.Skeleton}.
+ * @param <R> The result type of the {@link cl.niclabs.skandium.skeletons.Skeleton}. 
  * */
 public class If<P,R> extends AbstractSkeleton<P,R> {
 

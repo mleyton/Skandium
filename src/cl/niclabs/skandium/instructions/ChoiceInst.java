@@ -34,7 +34,7 @@ public class ChoiceInst extends AbstractInstruction {
 
 	/**
 	 * The Constructor
-	 * @param cond the result of a {@link Condition} evaluation
+	 * @param cond the result of a {@link cl.niclabs.skandium.muscles.Condition} evaluation
 	 * @param trueCaseStack sub-stack to be executed if <code>cond</code> is true.
 	 * @param falseCaseStack sub-stack to be executed if <code>cond</code> is true.
 	 * @param strace nested skeleton tree branch of the current execution.

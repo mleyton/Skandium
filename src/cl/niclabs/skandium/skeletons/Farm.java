@@ -22,14 +22,14 @@ import cl.niclabs.skandium.system.events.BadListenerException;
 import cl.niclabs.skandium.system.events.FarmListener;
 
 /**
- * A <code>Farm</code> {@link Skeleton} provides task replication or master-worker like parallelism.
+ * A <code>Farm</code> {@link cl.niclabs.skandium.skeletons.Skeleton} provides task replication or master-worker like parallelism.
  * 
  * If possible (unsynchronized muscles), parameters submitted to a <code>Farm</code> are computed in parallel with respect to each other.
  * 
  * @author mleyton
  *
- * @param <P> The input type of the {@link Skeleton}.
- * @param <R> The result type of the {@link Skeleton}. 
+ * @param <P> The input type of the {@link cl.niclabs.skandium.skeletons.Skeleton}.
+ * @param <R> The result type of the {@link cl.niclabs.skandium.skeletons.Skeleton}. 
  * */
 public class Farm<P,R> extends AbstractSkeleton<P,R> {
 

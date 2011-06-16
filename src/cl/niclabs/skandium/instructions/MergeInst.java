@@ -46,7 +46,7 @@ public class MergeInst extends AbstractInstruction{
 	}
 
 	/**
-	 * Merges a list of subparams into a single one using a {@link Merge} muscle.
+	 * Merges a list of subparams into a single one using a {@link cl.niclabs.skandium.muscles.Merge} muscle.
 	 * 
 	 * {@inheritDoc}
 	 */

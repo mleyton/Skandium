@@ -19,7 +19,7 @@ package cl.niclabs.skandium.events;
 
 /**
  * Enumeration that define constants to specify the spatial dimension of events.
- * An event can be uniquely identified by {@link Skeleton}, {@link Where} dimension, 
+ * An event can be uniquely identified by {@link cl.niclabs.skandium.skeletons.Skeleton}, {@link Where} dimension, 
  * and {@link When} dimension.  For example DaC, Condition, After; or Seq, Nested Skeleton, 
  * Before.
  */

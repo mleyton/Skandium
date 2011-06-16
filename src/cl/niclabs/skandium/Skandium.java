@@ -60,7 +60,7 @@ public class Skandium {
 	 * @param <P> The type of skeleton program's input.
 	 * @param <R> The type of the skeleton programs' result.
 	 * @param skeleton  The skeleton program which will be used to compute each parameter entered through the {@link Stream}.
-	 * @return A new {@link Stream} associated with the specified {@link Skeleton} program.
+	 * @return A new {@link Stream} associated with the specified {@link cl.niclabs.skandium.skeletons.Skeleton} program.
 	 */
 	public <P,R> Stream<P,R> newStream(Skeleton<P,R> skeleton){
 		

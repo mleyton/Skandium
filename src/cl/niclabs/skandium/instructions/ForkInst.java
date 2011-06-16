@@ -55,7 +55,7 @@ public class ForkInst extends  AbstractInstruction {
 	}
 
 	/**
-	 * Invokes the {@link Split} muscle is on param, and a creates a new stack for each subparam.
+	 * Invokes the {@link cl.niclabs.skandium.muscles.Split} muscle is on param, and a creates a new stack for each subparam.
 	 * {@inheritDoc}
 	 */
 	@SuppressWarnings("unchecked")

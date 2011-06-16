@@ -23,10 +23,10 @@ import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.SkeletonListener;
 
 /**
- * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
- * {@link For} {@link When#BEFORE} event.
+ * Abstract class intended to be extended in order to include a {@link cl.niclabs.skandium.system.events.SkandiumEventListener} to the
+ * {@link cl.niclabs.skandium.skeletons.For} {@link When#BEFORE} event.
  * 
- * @param <P> <code>param</code> type during {@link For} execution
+ * @param <P> <code>param</code> type during {@link cl.niclabs.skandium.skeletons.For} execution
  */
 public abstract class ForBeforeListener<P> extends NoParamListener<P> implements ForListener<P>, BeforeListener, SkeletonListener {
 

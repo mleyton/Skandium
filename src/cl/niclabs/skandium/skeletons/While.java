@@ -23,10 +23,10 @@ import cl.niclabs.skandium.system.events.BadListenerException;
 import cl.niclabs.skandium.system.events.WhileListener;
 
 /**
- * A <code></code> {@link Skeleton}
+ * A <code></code> {@link cl.niclabs.skandium.skeletons.Skeleton}
  * @author mleyton
  *
- * @param <P> The input and output type of the {@link Skeleton}.
+ * @param <P> The input and output type of the {@link cl.niclabs.skandium.skeletons.Skeleton}.
  * */
 public class While<P> extends AbstractSkeleton<P,P> {
 

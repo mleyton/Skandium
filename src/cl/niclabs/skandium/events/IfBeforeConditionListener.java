@@ -23,11 +23,11 @@ import cl.niclabs.skandium.system.events.IfListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
 
 /**
- * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
- * {@link If} {@link When#BEFORE} {@link Where#CONDITION} event.
+ * Abstract class intended to be extended in order to include a {@link cl.niclabs.skandium.system.events.SkandiumEventListener} to the
+ * {@link cl.niclabs.skandium.skeletons.If} {@link When#BEFORE} {@link Where#CONDITION} event.
  * 
- * @param <P> <code>param</code> type before {@link If} is executed
- * @param <R> <code>param</code> type after {@link If} is executed
+ * @param <P> <code>param</code> type before {@link cl.niclabs.skandium.skeletons.If} is executed
+ * @param <R> <code>param</code> type after {@link cl.niclabs.skandium.skeletons.If} is executed
  */
 public abstract class IfBeforeConditionListener<P,R> extends NoParamListener<P> implements IfListener<P,R>, BeforeListener, ConditionListener {
 

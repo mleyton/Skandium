@@ -23,11 +23,11 @@ import cl.niclabs.skandium.system.events.SeqListener;
 import cl.niclabs.skandium.system.events.SkeletonListener;
 
 /**
- * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
- * {@link When#AFTER} {@link Seq} event.
+ * Abstract class intended to be extended in order to include a {@link cl.niclabs.skandium.system.events.SkandiumEventListener} to the
+ * {@link When#AFTER} {@link cl.niclabs.skandium.skeletons.Seq} event.
  * 
- * @param <P> <code>param</code> type before {@link Seq} is executed
- * @param <R> <code>param</code> type after {@link Seq} is executed
+ * @param <P> <code>param</code> type before {@link cl.niclabs.skandium.skeletons.Seq} is executed
+ * @param <R> <code>param</code> type after {@link cl.niclabs.skandium.skeletons.Seq} is executed
  */
 public abstract class SeqAfterListener<P,R> extends NoParamListener<R> implements SeqListener<P,R>, AfterListener, SkeletonListener {
 

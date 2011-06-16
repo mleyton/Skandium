@@ -24,13 +24,13 @@ import cl.niclabs.skandium.system.events.BadListenerException;
 import cl.niclabs.skandium.system.events.ForkListener;
 
 /**
- * A <code>Fork</code> {@link Skeleton} divides an input parameter into a list of sub-parameters,
+ * A <code>Fork</code> {@link cl.niclabs.skandium.skeletons.Skeleton} divides an input parameter into a list of sub-parameters,
  * executes a different code on each sub-parameter in parallel, and reduces the results.
  * 
  * @author mleyton
  *
- * @param <P> The input type of the {@link Skeleton}.
- * @param <R> The result type of the {@link Skeleton}. 
+ * @param <P> The input type of the {@link cl.niclabs.skandium.skeletons.Skeleton}.
+ * @param <R> The result type of the {@link cl.niclabs.skandium.skeletons.Skeleton}. 
  * */
 public class Fork<P,R> extends AbstractSkeleton<P,R> {
 
@@ -87,8 +87,8 @@ public class Fork<P,R> extends AbstractSkeleton<P,R> {
 
     /**
      * Register an event listener
-     * @param <X> Type of the <code>param</code> after {@link Split}
-     * @param <Y> Type of the <code>param</code> before {@link Merge}
+     * @param <X> Type of the <code>param</code> after {@link cl.niclabs.skandium.muscles.Split}
+     * @param <Y> Type of the <code>param</code> before {@link cl.niclabs.skandium.muscles.Merge}
      * @param l Event listener to register
      * @return true if the event listener registration was successful, false otherwise.
      * @throws BadListenerException
@@ -99,8 +99,8 @@ public class Fork<P,R> extends AbstractSkeleton<P,R> {
 
     /**
      * Remove an event listener
-     * @param <X> Type of the <code>param</code> after {@link Split}
-     * @param <Y> Type of the <code>param</code> before {@link Merge}
+     * @param <X> Type of the <code>param</code> after {@link cl.niclabs.skandium.muscles.Split}
+     * @param <Y> Type of the <code>param</code> before {@link cl.niclabs.skandium.muscles.Merge}
      * @param l Event listener to remove
      * @return true if the event listener removal was successful, false otherwise.
      * @throws BadListenerException

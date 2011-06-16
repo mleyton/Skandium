@@ -26,8 +26,8 @@ public abstract class NoParamListener<P> implements SkandiumEventListener {
 
 	/**
 	 * Default implementation of compareTo method inherited from Comparable interface
-	 * of {@link SkandiumEventListener#compareTo(SkandiumEventListener)} where the 
-	 * {@link Integer.MAX_VALUE} is returned.
+	 * of {@link SkandiumEventListener#compareTo} where the 
+	 * {@link Integer#MAX_VALUE} is returned.
 	 * 
 	 * {@inheritDoc}
 	 */

@@ -23,10 +23,10 @@ import cl.niclabs.skandium.system.events.IntegerParamListener;
 import cl.niclabs.skandium.system.events.NestedSkelListener;
 
 /**
- * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
- * {@link For} {@link When#AFTER} {@link Where#NESTED_SKELETON} event.
+ * Abstract class intended to be extended in order to include a {@link cl.niclabs.skandium.system.events.SkandiumEventListener} to the
+ * {@link cl.niclabs.skandium.skeletons.For} {@link When#AFTER} {@link Where#NESTED_SKELETON} event.
  * 
- * @param <P> <code>param</code> type during {@link For} execution
+ * @param <P> <code>param</code> type during {@link cl.niclabs.skandium.skeletons.For} execution
  */
 public abstract class ForAfterNestedSkelListener<P> extends IntegerParamListener<P> implements ForListener<P>, AfterListener, NestedSkelListener {
 

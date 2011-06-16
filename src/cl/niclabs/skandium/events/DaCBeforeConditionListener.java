@@ -23,13 +23,13 @@ import cl.niclabs.skandium.system.events.DaCListener;
 import cl.niclabs.skandium.system.events.RBranchParamListener;
 
 /**
- * Abstract class intended to be extended in order to include a {@link SkandiumEventListener} to the
- * {@link DaC} {@link When#BEFORE} {@link Where#CONDITION} event.
+ * Abstract class intended to be extended in order to include a {@link cl.niclabs.skandium.system.events.SkandiumEventListener} to the
+ * {@link cl.niclabs.skandium.skeletons.DaC} {@link When#BEFORE} {@link Where#CONDITION} event.
  * 
- * @param <P> <code>param</code> type before {@link DaC} is executed
- * @param <X> Type of the <code>param</code> after {@link Split}
- * @param <Y> Type of the <code>param</code> before {@link Merge}
- * @param <R> <code>param</code> type after {@link DaC} is executed
+ * @param <P> <code>param</code> type before {@link cl.niclabs.skandium.skeletons.DaC} is executed
+ * @param <X> Type of the <code>param</code> after {@link cl.niclabs.skandium.muscles.Split}
+ * @param <Y> Type of the <code>param</code> before {@link cl.niclabs.skandium.muscles.Merge}
+ * @param <R> <code>param</code> type after {@link cl.niclabs.skandium.skeletons.DaC} is executed
  */
 
 public abstract class DaCBeforeConditionListener<P,X,Y,R> extends RBranchParamListener<P> implements DaCListener<P,X,Y,R>, BeforeListener, ConditionListener {

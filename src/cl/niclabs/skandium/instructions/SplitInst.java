@@ -28,7 +28,7 @@ import cl.niclabs.skandium.skeletons.Skeleton;
 
 /**
  * This is a utility instruction and does not represent a {@link cl.niclabs.skandium.skeletons.Skeleton} in particular.
- * Given a list of substacks and taking the array produced by the {@link Split} execution, it creates
+ * Given a list of substacks and taking the array produced by the {@link cl.niclabs.skandium.muscles.Split} execution, it creates
  * a list of child substacks to execute each element of the <code>param</code> array.
  */
 

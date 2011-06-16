@@ -32,7 +32,7 @@ import cl.niclabs.skandium.system.TaskExecutor;
  * To compute a different skeleton program, simply instantiate a new Stream via the
  * {@link Skandium#newStream} factory method.
  * 
- * Multiple Streams created from the same {@link Skandium} instance will share the same {@link java.util.concurrent.ExecutorService}. 
+ * Multiple Streams created from the same {@link cl.niclabs.skandium.Skandium} instance will share the same {@link java.util.concurrent.ExecutorService}. 
  * 
  * @author mleyton
  *

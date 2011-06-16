@@ -65,7 +65,7 @@ public class DaCInst extends  AbstractInstruction {
 
 	/**
 	 * This method evaluates the {@link Condition} muscle with the given <code>param</code>.
-	 * If the {@link Condition} returns true then the <code>param</code> is divided with the {@link Split} muscle,
+	 * If the {@link Condition} returns true then the <code>param</code> is divided with the {@link cl.niclabs.skandium.muscles.Split} muscle,
 	 * and new stacks are created to execute each subparam.
 	 * If the {@link Condition} returns false then this instruction's stack is added to the parameter stack.
 	 * 
