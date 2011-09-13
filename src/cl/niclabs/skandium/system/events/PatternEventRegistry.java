@@ -30,12 +30,14 @@ import cl.niclabs.skandium.events.Where;
  */
 public class PatternEventRegistry {
 	private Hashtable<Integer,PriorityBlockingQueue<SkandiumEventListener>> listeners;
+	private boolean hasListeners;
 
 	/**
 	 * The constructor
 	 */
 	public PatternEventRegistry() {
 		listeners = new Hashtable<Integer,PriorityBlockingQueue<SkandiumEventListener>>(Where.values().length * When.values().length);
+		hasListeners = false;
 	}
 
 	/**
@@ -56,6 +58,7 @@ public class PatternEventRegistry {
 	 * @return true if the listener was registered successfully, and false otherwise
 	 */
 	public boolean addListener(When when, Where where, SkandiumEventListener e) {
+		hasListeners = true;
 		int hashCode = getHashCode(when, where);
 		PriorityBlockingQueue<SkandiumEventListener> q;
 		if (!listeners.containsKey(hashCode)) {
@@ -85,7 +88,9 @@ public class PatternEventRegistry {
 	 * @return true if the listener was removed successfully, and false otherwise
 	 */
 	public boolean removeListener(When when, Where where, SkandiumEventListener e) {
-		return listeners.get(getHashCode(when, where)).remove(e);
+		boolean ret = listeners.get(getHashCode(when, where)).remove(e);
+		if (listeners.size()==0) hasListeners = false;
+		return ret;
 	}
 
 	/**
@@ -95,6 +100,9 @@ public class PatternEventRegistry {
 	 * @return list of listeners registered.
 	 */
 	public SkandiumEventListener[] getListeners(When when, Where where) {
+		if (!hasListeners) {
+			return new SkandiumEventListener[0];
+		}
 		int hashCode = getHashCode(when, where);
 		if (!listeners.containsKey(hashCode)) {
 			return new SkandiumEventListener[0];

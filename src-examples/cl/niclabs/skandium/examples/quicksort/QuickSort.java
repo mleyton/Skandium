@@ -48,7 +48,7 @@ public class QuickSort {
 		for(int i=0;i<result.array.length-2;i++){
 			if(result.array[i] > result.array[i+1]) throw new Exception("Not sorted! "+ i + " "+ (i+1));
 		}
-		
+	
 	}
 	
 	public static int[] generate(int size){
