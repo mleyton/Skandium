@@ -71,13 +71,11 @@ class Controller {
 		}
 		for (Where where :Where.values()) {
 			if (traceVertMap.containsKey(where)) {
-				long invokes = 0;
-				long execTime = 0;
 				mxCell traceVert = traceVertMap.get(where);
 				String hashKey = skelHashKey + where.hashCode();
-				traces.put(hashKey, 
-						new TraceElement(traceVert,invokes,execTime,0));
-				frame.updateTrace(traceVert, invokes, execTime);
+				TraceElement te = new TraceElement(traceVert);
+				traces.put(hashKey, te);
+				frame.updateTrace(traceVert, te.getInvokes(), te.getExecTime());
 			}
 		}
 	}
@@ -92,14 +90,12 @@ class Controller {
 			return;
 		TraceElement e = traces.get(hashKey);			
 		if (when.equals(When.BEFORE)) {	
-			e.setInvokes(e.getInvokes()+1);
-			e.setStartTime(System.currentTimeMillis());
+			e.setStartTime();
 		} else {
-			long currTime = System.currentTimeMillis();
-			e.setExecTime(e.getExecTime() + (currTime - e.getStartTime()));
-			e.setStartTime(0);
+			e.setEndTime();
 		}
 		frame.updateTrace(e.getTraceVert(), e.getInvokes(), e.getExecTime());
+		if (strace.length == 1 && where.equals(Where.SKELETON) && when.equals(When.AFTER))
+			frame.refresh();
 	}
-	
 }

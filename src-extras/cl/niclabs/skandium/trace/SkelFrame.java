@@ -73,6 +73,7 @@ class SkelFrame  extends JFrame {
 	private static final long serialVersionUID = -2707712944901661771L;
 	private final Controller controller;
 	mxGraph graph;
+	private long time;
 
 	SkelFrame(Controller cont) throws HeadlessException {
 		super("Skandium Visualizer");
@@ -111,7 +112,7 @@ class SkelFrame  extends JFrame {
 		});
 		setSize(400, 320);
 		setVisible(true);
-
+		time = System.currentTimeMillis();
 	}
 	
 	void updateTrace(mxCell traceVert, long invokes, long execTime) {
@@ -119,14 +120,23 @@ class SkelFrame  extends JFrame {
 			String value = new String();
 			if (execTime > 0 ) {
 				double segs = (float)execTime / 1000;
-				value = String.format("%d\n%.2f", invokes, segs);				
+				value = String.format("%.0g\n%.2f", (float) invokes, segs);				
 			} else 
-				value = String.format("%d", invokes);
+				value = String.format("%.0g", (float) invokes);
 			graph.getModel().beginUpdate();
 			traceVert.setValue(value);
 			graph.getModel().endUpdate();
-			graph.refresh();
+			
+			long currTime = System.currentTimeMillis(); 
+			if (currTime - time > 1000) {
+				graph.refresh();
+				time = currTime;
+			}
 		}
+	}
+	
+	void refresh() {
+		graph.refresh();
 	}
 	
 	void close() {

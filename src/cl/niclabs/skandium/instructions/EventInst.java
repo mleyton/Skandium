@@ -98,7 +98,7 @@ public class EventInst extends AbstractInstruction {
 				if (((UndefinedParamListener) l).guard(param, strace, when, where, params)) {
 					param = (P) ((UndefinedParamListener) l).handler(param, strace, when, where, params);
 				}
-			} else throw new RuntimeException("Should not be here!");;
+			} else throw new RuntimeException("Should not be here!");
 		}
 		return param;
 	}

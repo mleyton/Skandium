@@ -64,43 +64,46 @@ class TraceElement {
 	private long invokes;
 	private long execTime;
 	private long startTime;
+	private int parCtr;
 	
 	
 	
-	TraceElement(mxCell traceVert, long invokes, long execTime, long startTime) {
+	TraceElement(mxCell traceVert) {
 		super();
 		this.traceVert = traceVert;
-		this.invokes = invokes;
-		this.execTime = execTime;
-		this.startTime = startTime;
+		this.invokes = 0;
+		this.execTime = 0;
+		this.startTime = 0;
+		this.parCtr = 0;
 	}
 	
 	mxCell getTraceVert() {
 		return traceVert;
 	}	
-	void setTraceVert(mxCell traceVert) {
-		this.traceVert = traceVert;
-	}
-	
-	long getInvokes() {
+
+	synchronized long getInvokes() {
 		return invokes;
 	}
-	void setInvokes(long invokes) {
-		this.invokes = invokes;
-	}
 	
-	long getExecTime() {
+	synchronized long getExecTime() {
 		return execTime;
 	}
-	void setExecTime(long execTime) {
-		this.execTime = execTime;
+	
+	synchronized void setStartTime() {
+		this.invokes++;
+		if (parCtr == 0)
+			this.startTime = System.currentTimeMillis();
+		this.parCtr++;
 	}
 	
-	long getStartTime() {
-		return startTime;
-	}
-	void setStartTime(long startTime) {
-		this.startTime = startTime;
+	synchronized void setEndTime() {
+		if (parCtr == 0) throw new RuntimeException("Should not be here!");
+		this.parCtr--;
+		if (parCtr == 0) {
+			long currTime = System.currentTimeMillis();
+			this.execTime += currTime - startTime;
+			startTime = 0;
+		}
 	}
 	
 }
