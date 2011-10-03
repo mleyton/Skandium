@@ -17,8 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-import cl.niclabs.skandium.skeletons.Skeleton;
-
 /**
  * A <code>IntegerBooleanParamListener</code> is a listener for events that passes as parameter 
  * an index. 
@@ -47,8 +45,7 @@ public abstract class IntegerParamListener<P> implements SkandiumEventListener {
 	 * @param index index value
 	 * @return true if the handler must be executed, false otherwise. 
 	 */
-	@SuppressWarnings("rawtypes")
-	public boolean guard(P param, Skeleton[] strace, int index) {
+	public boolean guard(P param, SkeletonTraceElement[] strace, int index) {
 		return true;
 	}
 
@@ -61,7 +58,6 @@ public abstract class IntegerParamListener<P> implements SkandiumEventListener {
 	 * @param index index value
 	 * @return New <code>param</code> value. 
 	 */
-	@SuppressWarnings("rawtypes")
-	public abstract P handler(P param, Skeleton[] strace, int index);
+	public abstract P handler(P param, SkeletonTraceElement[] strace, int index);
 
 }

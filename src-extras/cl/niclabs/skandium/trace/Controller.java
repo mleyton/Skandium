@@ -28,6 +28,7 @@ import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.skeletons.AbstractSkeleton;
 import cl.niclabs.skandium.skeletons.Skeleton;
+import cl.niclabs.skandium.system.events.SkeletonTraceElement;
 
 class Controller {
 
@@ -80,9 +81,9 @@ class Controller {
 		}
 	}
 	
-	void addTraceElement(Skeleton<?,?>[] strace, Where where, When when) {
+	void addTraceElement(SkeletonTraceElement[] strace, Where where, When when) {
 		String skelHashKey = new String();
-		for (Skeleton<?,?> s : strace) {
+		for (SkeletonTraceElement s : strace) {
 			skelHashKey += s.hashCode() + ":";
 		}
 		String hashKey = skelHashKey + where.hashCode();

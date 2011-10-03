@@ -24,8 +24,8 @@ import java.util.concurrent.ExecutionException;
 
 import cl.niclabs.skandium.instructions.Instruction;
 import cl.niclabs.skandium.skeletons.AbstractSkeleton;
-import cl.niclabs.skandium.skeletons.Skeleton;
 import cl.niclabs.skandium.system.Task;
+import cl.niclabs.skandium.system.events.SkeletonTraceElement;
 
 /**
  * The interpretation code.
@@ -55,7 +55,7 @@ public class Interpreter {
 		//get the current data, stack and strace
 		Object P = task.getP();
 		Stack<Instruction> stack = task.getStack();
-		Skeleton<?,?>[] strace = null;
+		SkeletonTraceElement[] strace = null;
 		
 		try{	
 			//array for storing children if needed
@@ -113,7 +113,7 @@ public class Interpreter {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private static void setLogicalException(Throwable t, Skeleton<?,?>[] strace){
+	private static void setLogicalException(Throwable t, SkeletonTraceElement[] strace){
 
 		ArrayList<StackTraceElement> list = new ArrayList<StackTraceElement>();
 
@@ -140,7 +140,7 @@ public class Interpreter {
 					t.getStackTrace()[i+1].getClassName().equals(Interpreter.class.getCanonicalName())){
 			
 				for(int j=strace.length-1; j>=0; j--){
-					list.add(((AbstractSkeleton)strace[j]).getTrace());
+					list.add(((AbstractSkeleton)strace[j].getSkel()).getTrace());
 				}
 			}
 			else{

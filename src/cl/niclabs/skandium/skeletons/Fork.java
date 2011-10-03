@@ -57,6 +57,14 @@ public class Fork<P,R> extends AbstractSkeleton<P,R> {
 		this.merge=merge;
 	}
 	
+	public Split<P, ?> getSplit() {
+		return split;
+	}
+
+	public Merge<?, R> getMerge() {
+		return merge;
+	}
+
 	/**
 	 * The constructor.
 	 * 

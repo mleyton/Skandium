@@ -19,7 +19,6 @@ package cl.niclabs.skandium.system.events;
 
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
-import cl.niclabs.skandium.skeletons.Skeleton;
 
 /**
  * A <code>UndefinedParamListener</code> is a listener for events that passes undefined set of 
@@ -49,8 +48,7 @@ public abstract class UndefinedParamListener implements SkandiumEventListener {
 	 * @param params event parameters
 	 * @return true if the handler must be executed, false otherwise. 
 	 */
-	@SuppressWarnings("rawtypes")
-	public boolean guard(Object param, Skeleton[] strace, When when, Where where, Object... params) {
+	public boolean guard(Object param, SkeletonTraceElement[] strace, When when, Where where, Object... params) {
 		return true;
 	}
 
@@ -63,7 +61,6 @@ public abstract class UndefinedParamListener implements SkandiumEventListener {
 	 * @param params event parameters
 	 * @return New <code>param</code> value. 
 	 */
-	@SuppressWarnings("rawtypes")
-	public abstract Object handler(Object param, Skeleton[] strace,  When when, Where where, Object... params);
+	public abstract Object handler(Object param, SkeletonTraceElement[] strace,  When when, Where where, Object... params);
 
 }

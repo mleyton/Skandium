@@ -70,6 +70,19 @@ public class DaC<P,R> extends AbstractSkeleton<P,R> {
 		this(condition, split,new Seq<X,Y>(execute), merge);
 	}
 	
+	
+	public Condition<P> getCondition() {
+		return condition;
+	}
+
+	public Split<P, ?> getSplit() {
+		return split;
+	}
+
+	public Merge<?, R> getMerge() {
+		return merge;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

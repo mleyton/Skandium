@@ -51,6 +51,10 @@ public class If<P,R> extends AbstractSkeleton<P,R> {
 		this.falseCase=falseCase;
 	}
 	
+	public Condition<P> getCondition() {
+		return condition;
+	}
+	
 	/**
 	 * The constructor.
 	 * 

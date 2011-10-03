@@ -31,6 +31,7 @@ import cl.niclabs.skandium.system.events.IntegerParamListener;
 import cl.niclabs.skandium.system.events.NoParamListener;
 import cl.niclabs.skandium.system.events.RBranchBooleanParamListener;
 import cl.niclabs.skandium.system.events.RBranchParamListener;
+import cl.niclabs.skandium.system.events.SkeletonTraceElement;
 import cl.niclabs.skandium.system.events.UndefinedParamListener;
 
 
@@ -51,7 +52,7 @@ public class EventInst extends AbstractInstruction {
 	 * @param strace nested skeleton tree branch of the current execution.
 	 * @param params specific event parameters
 	 */
-	public EventInst(When when, Where where, Skeleton<?,?>[] strace, Object... params){
+	public EventInst(When when, Where where, SkeletonTraceElement[] strace, Object... params){
 		super(strace);
 		this.when = when;
 		this.where = where;
@@ -65,7 +66,7 @@ public class EventInst extends AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, 
 			List<Stack<Instruction>> children) throws Exception {
-		Skeleton<?,?> curr = strace[strace.length-1];
+		Skeleton<?,?> curr = strace[strace.length-1].getSkel();
 		SkandiumEventListener[] listeners = ((AbstractSkeleton<?,?>) curr).getListeners(when, where);
 		for (SkandiumEventListener l : listeners) {
 			if (l instanceof NoParamListener<?>) {
@@ -108,7 +109,7 @@ public class EventInst extends AbstractInstruction {
 	 */
 	@Override
 	public Instruction copy() {
-		return new EventInst(when, where, strace, params);
+		return new EventInst(when, where, copySkeletonTrace(), params);
 	}
 
 }

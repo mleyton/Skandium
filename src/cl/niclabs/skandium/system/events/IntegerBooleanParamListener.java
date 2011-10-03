@@ -17,8 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-import cl.niclabs.skandium.skeletons.Skeleton;
-
 /**
  * A <code>IntegerBooleanParamListener</code> is a listener for events that passes as parameters  
  * an index and the result of a condition. 
@@ -48,8 +46,7 @@ public abstract class IntegerBooleanParamListener<P> implements SkandiumEventLis
 	 * @param cond result of the condition execution
 	 * @return true if the handler must be executed, false otherwise. 
 	 */
-	@SuppressWarnings("rawtypes")
-	public boolean guard(P param, Skeleton[] strace, int index, boolean cond) {
+	public boolean guard(P param, SkeletonTraceElement[] strace, int index, boolean cond) {
 		return true;
 	}
 
@@ -63,7 +60,6 @@ public abstract class IntegerBooleanParamListener<P> implements SkandiumEventLis
 	 * @param cond Result of the condition execution
 	 * @return New <code>param</code> value. 
 	 */
-	@SuppressWarnings("rawtypes")
-	public abstract P handler(P param, Skeleton[] strace, int index, boolean cond);
+	public abstract P handler(P param, SkeletonTraceElement[] strace, int index, boolean cond);
 
 }

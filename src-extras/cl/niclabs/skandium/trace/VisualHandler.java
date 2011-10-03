@@ -21,7 +21,7 @@ package cl.niclabs.skandium.trace;
 
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
-import cl.niclabs.skandium.skeletons.Skeleton;
+import cl.niclabs.skandium.system.events.SkeletonTraceElement;
 
 
 class VisualHandler implements EventHandler{
@@ -33,9 +33,8 @@ class VisualHandler implements EventHandler{
 		this.controller = controller;
 	}
 	
-	@SuppressWarnings("rawtypes")
 	@Override
-	public Object handler(Object param, Skeleton[] strace, When when,
+	public Object handler(Object param, SkeletonTraceElement[] strace, When when,
 			Where where, Object... params) {
 		controller.addTraceElement(strace, where, when);
 		return param;

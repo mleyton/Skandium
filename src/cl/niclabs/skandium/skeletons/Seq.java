@@ -39,6 +39,10 @@ public class Seq<P,R> extends AbstractSkeleton<P,R> {
 		this.execute = execute;
 	}
 	
+	public Execute<P,R> getExecute() {
+		return execute;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */

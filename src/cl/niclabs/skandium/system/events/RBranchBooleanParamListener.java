@@ -17,8 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-import cl.niclabs.skandium.skeletons.Skeleton;
-
 /**
  * A <code>RBranchBooleanParamListener</code> is a listener for events that passes as parameters 
  * the recursive tree branch and an index for DaC events. 
@@ -48,8 +46,7 @@ public abstract class RBranchBooleanParamListener<P> implements SkandiumEventLis
 	 * @param cond Result of the condition 
 	 * @return true if the handler must be executed, false otherwise. 
 	 */
-	@SuppressWarnings("rawtypes")
-	public boolean guard(P param, Skeleton[] strace, Integer[] rbranch, boolean cond) {
+	public boolean guard(P param, SkeletonTraceElement[] strace, Integer[] rbranch, boolean cond) {
 		return true;
 	}
 
@@ -63,7 +60,6 @@ public abstract class RBranchBooleanParamListener<P> implements SkandiumEventLis
 	 * @param cond Result of the condition 
 	 * @return New <code>param</code> value. 
 	 */
-	@SuppressWarnings("rawtypes")
-	public abstract P handler(P param, Skeleton[] strace, Integer[] rbranch, boolean cond);
+	public abstract P handler(P param, SkeletonTraceElement[] strace, Integer[] rbranch, boolean cond);
 
 }

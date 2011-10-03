@@ -17,8 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-import cl.niclabs.skandium.skeletons.Skeleton;
-
 /**
  * A <code>NoParamListener</code> is a listener for events that des not have any event parameters 
  */
@@ -45,8 +43,7 @@ public abstract class NoParamListener<P> implements SkandiumEventListener {
 	 * @param strace Nested skeleton tree branch of the current execution.
 	 * @return true if the handler must be executed, false otherwise. 
 	 */
-	@SuppressWarnings("rawtypes")
-	public boolean guard(P param, Skeleton[] strace) {
+	public boolean guard(P param, SkeletonTraceElement[] strace) {
 		return true;
 	}
 
@@ -58,7 +55,6 @@ public abstract class NoParamListener<P> implements SkandiumEventListener {
 	 * @param strace Nested skeleton tree branch of the current execution.
 	 * @return New <code>param</code> value. 
 	 */
-	@SuppressWarnings("rawtypes")
-	public abstract P handler(P param, Skeleton[] strace);
+	public abstract P handler(P param, SkeletonTraceElement[] strace);
 
 }

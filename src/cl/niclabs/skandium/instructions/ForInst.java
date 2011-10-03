@@ -22,7 +22,7 @@ import java.util.Stack;
 
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
-import cl.niclabs.skandium.skeletons.Skeleton;
+import cl.niclabs.skandium.system.events.SkeletonTraceElement;
 
 
 /**
@@ -42,7 +42,7 @@ public class ForInst extends AbstractInstruction{
 	 * @param times The number of times to iterate.
 	 * @param strace nested skeleton tree branch of the current execution.
 	 */
-	public ForInst(Stack<Instruction> substack, int times, Skeleton<?,?>[] strace) {
+	public ForInst(Stack<Instruction> substack, int times, SkeletonTraceElement[] strace) {
 		super(strace);
 		this.substack = substack;
 		this.times = times;
@@ -74,7 +74,7 @@ public class ForInst extends AbstractInstruction{
 	@Override
 	public Instruction copy() {
 		
-		return new ForInst(copyStack(substack), times, strace);
+		return new ForInst(copyStack(substack), times, copySkeletonTrace());
 	}
 
 	

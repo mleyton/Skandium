@@ -32,6 +32,7 @@ import cl.niclabs.skandium.instructions.Instruction;
 import cl.niclabs.skandium.instructions.MapInst;
 import cl.niclabs.skandium.instructions.SeqInst;
 import cl.niclabs.skandium.instructions.WhileInst;
+import cl.niclabs.skandium.system.events.SkeletonTraceElement;
 
 /**
  * Using the visitor pattern, this class navigates a skeleton structure (ie
@@ -43,15 +44,15 @@ import cl.niclabs.skandium.instructions.WhileInst;
 public class StackBuilder implements SkeletonVisitor {
 
 	public Stack<Instruction> stack;
-	public Stack<Skeleton<?, ?>> strace;
+	public Stack<SkeletonTraceElement> strace;
 
 	public StackBuilder() {
 		super();
 		this.stack = new Stack<Instruction>();
-		this.strace = new Stack<Skeleton<?, ?>>();
+		this.strace = new Stack<SkeletonTraceElement>();
 	}
 
-	public StackBuilder(Stack<Skeleton<?, ?>> trace) {
+	public StackBuilder(Stack<SkeletonTraceElement> trace) {
 		this();
 		this.strace.addAll(trace);
 	}
@@ -59,9 +60,9 @@ public class StackBuilder implements SkeletonVisitor {
 	@Override
 	public <P, R> void visit(Farm<P, R> skeleton) {
 
-		strace.add(skeleton);
+		strace.add(new SkeletonTraceElement(skeleton,0));
 		
-		Skeleton<?,?>[] straceArray = getStraceAsArray();
+		SkeletonTraceElement[] straceArray = getStraceAsArray();
 		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray));
 		skeleton.subskel.accept(this);
 		stack.push(new EventInst(When.BEFORE, Where.SKELETON, straceArray));
@@ -72,7 +73,7 @@ public class StackBuilder implements SkeletonVisitor {
 	public <P, R> void visit(Pipe<P, R> skeleton) {
 
 		// mark the trace of the pipe skeleton
-		strace.add(skeleton);
+		strace.add(new SkeletonTraceElement(skeleton,0));
 
 		// create a new stack builder for each stage
 		StackBuilder stage1 = new StackBuilder(strace);
@@ -83,7 +84,7 @@ public class StackBuilder implements SkeletonVisitor {
 		skeleton.stage2.accept(stage2);
 
 		// add the results to this stack (as there is no pipe instruction)
-		Skeleton<?,?>[] straceArray = getStraceAsArray();
+		SkeletonTraceElement[] straceArray = getStraceAsArray();
 		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray));
 		stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, straceArray, 1));
 		stack.addAll(stage2.stack); // second stage first
@@ -96,9 +97,9 @@ public class StackBuilder implements SkeletonVisitor {
 
 	@Override
 	public <P, R> void visit(Seq<P, R> skeleton) {
-		strace.add(skeleton);
+		strace.add(new SkeletonTraceElement(skeleton,0));
 
-		Skeleton<?,?>[] straceArray = getStraceAsArray();
+		SkeletonTraceElement[] straceArray = getStraceAsArray();
 		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray));
 		stack.push(new SeqInst(skeleton.execute, straceArray));
 		stack.push(new EventInst(When.BEFORE, Where.SKELETON, straceArray));
@@ -107,7 +108,7 @@ public class StackBuilder implements SkeletonVisitor {
 	@Override
 	public <P, R> void visit(If<P, R> skeleton) {
 
-		strace.add(skeleton);
+		strace.add(new SkeletonTraceElement(skeleton,0));
 
 		StackBuilder trueCaseStackBuilder = new StackBuilder(strace);
 		StackBuilder falseCaseStackBuilder = new StackBuilder(strace);
@@ -115,7 +116,7 @@ public class StackBuilder implements SkeletonVisitor {
 		skeleton.trueCase.accept(trueCaseStackBuilder);
 		skeleton.falseCase.accept(falseCaseStackBuilder);
 
-		Skeleton<?,?>[] straceArray = getStraceAsArray();
+		SkeletonTraceElement[] straceArray = getStraceAsArray();
 		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray));
 		stack.push(new IfInst(skeleton.condition, trueCaseStackBuilder.stack,
 				falseCaseStackBuilder.stack, straceArray));
@@ -126,13 +127,13 @@ public class StackBuilder implements SkeletonVisitor {
 	@Override
 	public <P> void visit(While<P> skeleton) {
 
-		strace.add(skeleton);
+		strace.add(new SkeletonTraceElement(skeleton,0));
 		StackBuilder subStackBuilder = new StackBuilder(strace);
 		
 
 		skeleton.subskel.accept(subStackBuilder);
 
-		Skeleton<?,?>[] straceArray = getStraceAsArray();
+		SkeletonTraceElement[] straceArray = getStraceAsArray();
 		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray));
 		stack.push(new WhileInst(skeleton.condition, subStackBuilder.stack, straceArray));
 		stack.push(new EventInst(When.BEFORE, Where.CONDITION, straceArray, 0));
@@ -142,12 +143,12 @@ public class StackBuilder implements SkeletonVisitor {
 	@Override
 	public <P> void visit(For<P> skeleton) {
 
-		strace.add(skeleton);
+		strace.add(new SkeletonTraceElement(skeleton,0));
 		StackBuilder subStackBuilder = new StackBuilder(strace);
 
 		skeleton.subskel.accept(subStackBuilder);
 
-		Skeleton<?,?>[] straceArray = getStraceAsArray();
+		SkeletonTraceElement[] straceArray = getStraceAsArray();
 		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray));
 		stack.push(new ForInst(subStackBuilder.stack, skeleton.times, straceArray));
 		stack.push(new EventInst(When.BEFORE, Where.SKELETON, straceArray));
@@ -156,12 +157,12 @@ public class StackBuilder implements SkeletonVisitor {
 	@Override
 	public <P, R> void visit(Map<P, R> skeleton) {
 
-		strace.add(skeleton);
+		strace.add(new SkeletonTraceElement(skeleton,0));
 		StackBuilder subStackBuilder = new StackBuilder(strace);
 
 		skeleton.skeleton.accept(subStackBuilder);
 
-		Skeleton<?,?>[] straceArray = getStraceAsArray();
+		SkeletonTraceElement[] straceArray = getStraceAsArray();
 		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray));
 		stack.push(new MapInst(skeleton.split, subStackBuilder.stack, skeleton.merge, straceArray));
 		stack.push(new EventInst(When.BEFORE, Where.SPLIT, straceArray));
@@ -173,13 +174,13 @@ public class StackBuilder implements SkeletonVisitor {
 
 		List<Stack<Instruction>> stacks = new ArrayList<Stack<Instruction>>();
 
-		strace.add(skeleton);
+		strace.add(new SkeletonTraceElement(skeleton,0));
 		for (Skeleton<?, ?> s : skeleton.skeletons) {
 			StackBuilder subStackBuilder = new StackBuilder(strace);
 			s.accept(subStackBuilder);
 			stacks.add(subStackBuilder.stack);
 		}
-		Skeleton<?,?>[] straceArray = getStraceAsArray();
+		SkeletonTraceElement[] straceArray = getStraceAsArray();
 		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray));
 		stack.push(new ForkInst(skeleton.split, stacks, skeleton.merge, straceArray));
 		stack.push(new EventInst(When.BEFORE, Where.SPLIT, straceArray));
@@ -189,14 +190,14 @@ public class StackBuilder implements SkeletonVisitor {
 	@Override
 	public <P, R> void visit(DaC<P, R> skeleton) {
 
-		strace.add(skeleton);
+		strace.add(new SkeletonTraceElement(skeleton,0));
 		StackBuilder subStackBuilder = new StackBuilder(strace);
 
 		skeleton.skeleton.accept(subStackBuilder);
 
 		Stack<Integer> rbranch = new Stack<Integer>();
 
-		Skeleton<?,?>[] straceArray = getStraceAsArray();
+		SkeletonTraceElement[] straceArray = getStraceAsArray();
 		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray, rbranch));
 		stack.push(new DaCInst(skeleton.condition, skeleton.split, subStackBuilder.stack, skeleton.merge, rbranch, straceArray));
 		stack.push(new EventInst(When.BEFORE, Where.CONDITION, straceArray, rbranch));
@@ -208,7 +209,7 @@ public class StackBuilder implements SkeletonVisitor {
 		throw new RuntimeException("Should not be here!");
 	}
 
-	private Skeleton<?, ?>[] getStraceAsArray() {
-		return strace.toArray(new Skeleton[strace.size()]);
+	private SkeletonTraceElement[] getStraceAsArray() {
+		return strace.toArray(new SkeletonTraceElement[strace.size()]);
 	}
 }

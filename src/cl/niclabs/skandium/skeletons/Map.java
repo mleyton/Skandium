@@ -64,6 +64,14 @@ public class Map<P,R> extends AbstractSkeleton<P,R> {
 		this(split,new Seq(execute), merge);
 	}
 	
+	public Split<P,?> getSplit() {
+		return split;
+	}
+	
+	public Merge<?,R> getMerge() {
+		return merge;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

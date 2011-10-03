@@ -17,8 +17,6 @@
  */
 package cl.niclabs.skandium.system.events;
 
-import cl.niclabs.skandium.skeletons.Skeleton;
-
 /**
  * A <code>BooleanParamListener</code> is a listener for events that passes as parameter the 
  * result of a condition. 
@@ -47,8 +45,7 @@ public abstract class BooleanParamListener<P> implements SkandiumEventListener {
 	 * @param cond result of the condition execution
 	 * @return true if the handler must be executed, false otherwise. 
 	 */
-	@SuppressWarnings("rawtypes")
-	public boolean guard(P param, Skeleton[] strace, boolean cond) {
+	public boolean guard(P param, SkeletonTraceElement[] strace, boolean cond) {
 		return true;
 	}
 
@@ -61,8 +58,7 @@ public abstract class BooleanParamListener<P> implements SkandiumEventListener {
 	 * @param cond Result of the condition execution
 	 * @return New <code>param</code> value. 
 	 */
-	@SuppressWarnings("rawtypes")
-	public abstract P handler(P param, Skeleton[] strace, boolean cond);
+	public abstract P handler(P param, SkeletonTraceElement[] strace, boolean cond);
 	
 	
 

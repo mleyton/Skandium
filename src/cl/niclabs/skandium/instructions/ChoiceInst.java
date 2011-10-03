@@ -20,7 +20,7 @@ package cl.niclabs.skandium.instructions;
 import java.util.List;
 import java.util.Stack;
 
-import cl.niclabs.skandium.skeletons.Skeleton;
+import cl.niclabs.skandium.system.events.SkeletonTraceElement;
 
 
 /**
@@ -39,7 +39,7 @@ public class ChoiceInst extends AbstractInstruction {
 	 * @param falseCaseStack sub-stack to be executed if <code>cond</code> is true.
 	 * @param strace nested skeleton tree branch of the current execution.
 	 */
-	public ChoiceInst(boolean cond, Stack<Instruction> trueCaseStack, Stack<Instruction> falseCaseStack, Skeleton<?,?>[] strace){
+	public ChoiceInst(boolean cond, Stack<Instruction> trueCaseStack, Stack<Instruction> falseCaseStack, SkeletonTraceElement[] strace){
 		super(strace);
 		this.cond = cond;
 		this.trueCaseStack = trueCaseStack;
@@ -65,7 +65,7 @@ public class ChoiceInst extends AbstractInstruction {
 	 */
 	@Override
 	public Instruction copy() {
-		return new ChoiceInst(cond, copyStack(trueCaseStack), copyStack(falseCaseStack), strace);
+		return new ChoiceInst(cond, copyStack(trueCaseStack), copyStack(falseCaseStack), copySkeletonTrace());
 	}
 
 }

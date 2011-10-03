@@ -43,6 +43,10 @@ public class While<P> extends AbstractSkeleton<P,P> {
 		this(new Seq<P,P>(execute), condition);
 	}
 	
+	public Condition<P> getCondition() {
+		return condition;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
