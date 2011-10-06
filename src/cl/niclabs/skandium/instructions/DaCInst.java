@@ -18,7 +18,6 @@
 package cl.niclabs.skandium.instructions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
@@ -93,9 +92,8 @@ public class DaCInst extends  AbstractInstruction {
 		Stack<Instruction> execStack = new Stack<Instruction>();
 
 		execStack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, rbranch));
-		int id = Arrays.deepHashCode(rbranch.toArray(new Integer[rbranch.size()]));
+		copyIds(this.substack);
 		execStack.addAll(this.substack);
-		setChildIds(execStack, id);
 		execStack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, rbranch));
 
 		stack.push(new ChoiceInst(cond, splitStack, execStack, strace));

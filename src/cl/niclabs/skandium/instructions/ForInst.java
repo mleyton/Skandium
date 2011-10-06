@@ -62,6 +62,7 @@ public class ForInst extends AbstractInstruction{
 			times--;
 			stack.push(this);
 			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, n-times));
+			copyIds(substack);
 			stack.addAll(substack);
 			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, n-times));
 		}

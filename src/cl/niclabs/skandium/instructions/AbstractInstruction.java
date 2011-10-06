@@ -72,10 +72,16 @@ abstract class AbstractInstruction implements Instruction {
 	void setChildIds(Stack<Instruction> subStack, int id) {
 		for (Instruction i:subStack) {
 			SkeletonTraceElement[] subStrace = i.getSkeletonTrace();
-			for (int j=strace.length; j<subStrace.length; j++) {
-				subStrace[j] = new SkeletonTraceElement(subStrace[j].getSkel(), id);
+			int j=strace.length;
+			subStrace[j] = new SkeletonTraceElement(subStrace[j].getSkel(), id);
+		}
+	}
+	
+	void copyIds(Stack<Instruction> subStack) {
+		for(Instruction ins:subStack) {
+			for (int i=0; i<strace.length; i++) {
+				ins.getSkeletonTrace()[i] = new SkeletonTraceElement(strace[i].getSkel(), strace[i].getId());
 			}
 		}
 	}
-
 }

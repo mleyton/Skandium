@@ -53,8 +53,10 @@ public class ChoiceInst extends AbstractInstruction {
 	public <P> Object interpret(P param, Stack<Instruction> stack, 
 			List<Stack<Instruction>> children) throws Exception {
 		if(cond){
+			copyIds(trueCaseStack);
 			stack.addAll(trueCaseStack);
 		} else {
+			copyIds(trueCaseStack);
 			stack.addAll(falseCaseStack);
 		}
 		return param;

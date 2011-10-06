@@ -82,6 +82,6 @@ public class ForkInst extends  AbstractInstruction {
 			newStacks.add(copyStack(substacks.get(i)));
 		}
 		
-		return new ForkInst(split, substacks, merge, copySkeletonTrace());
+		return new ForkInst(split, newStacks, merge, copySkeletonTrace());
 	}
 }

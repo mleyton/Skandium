@@ -87,6 +87,9 @@ public class For<P> extends AbstractSkeleton<P,P> {
 	public Skeleton<P, P> getSubskel() {
 		return subskel;
 	}
-    
+
+	public int getTimes() {
+		return times;
+	}
     
 }

@@ -24,10 +24,7 @@ class SkeletonListener {
 			public Object handler(Object param, SkeletonTraceElement[] strace, 
 					When when, Where where, Object... params) {
 				Seq<?,?> curr = (Seq<?,?>)strace[strace.length - 1].getSkel();
-				for (SkeletonTraceElement s:strace) {
-					System.out.println(s.getSkel().getClass().getSimpleName() + ": " + s.getSkel() + " id: " + s.getId());
-				}
-				c.seqm(curr.getExecute());
+				c.seqm(strace, curr.getExecute());
 				return param;
 			}
 			
@@ -39,10 +36,7 @@ class SkeletonListener {
 			public Object handler(Object param, SkeletonTraceElement[] strace, 
 					When when, Where where, Object... params) {
 				If<?,?> curr = (If<?,?>)strace[strace.length - 1].getSkel();
-				for (SkeletonTraceElement s:strace) {
-					System.out.println(s.getSkel().getClass().getSimpleName() + ": " + s.getSkel() + " id: " + s.getId());
-				}
-				c.ifm(curr.getCondition(), (Boolean) params[0]);
+				c.ifm(strace, curr.getCondition(), (Boolean) params[0]);
 				return param;
 			}
 			
@@ -54,10 +48,7 @@ class SkeletonListener {
 			public Object handler(Object param, SkeletonTraceElement[] strace, 
 					When when, Where where, Object... params) {
 				While<?> curr = (While<?>)strace[strace.length - 1].getSkel();
-				for (SkeletonTraceElement s:strace) {
-					System.out.println(s.getSkel().getClass().getSimpleName() + ": " + s.getSkel() + " id: " + s.getId());
-				}
-				c.whilem(curr.getCondition(), (Integer) params[0], (Boolean) params[1]);
+				c.whilem(strace, curr.getCondition(), (Integer) params[0], (Boolean) params[1], param);
 				return param;
 			}
 			
@@ -69,10 +60,7 @@ class SkeletonListener {
 			public Object handler(Object param, SkeletonTraceElement[] strace, 
 					When when, Where where, Object... params) {
 				Map<?,?> curr = (Map<?,?>)strace[strace.length - 1].getSkel();
-				for (SkeletonTraceElement s:strace) {
-					System.out.println(s.getSkel().getClass().getSimpleName() + ": " + s.getSkel() + " id: " + s.getId());
-				}
-				c.mapm(curr.getSplit());
+				c.mapm(strace, curr.getSplit(), ((Object[]) param).length);
 				return param;
 			}
 			
@@ -84,10 +72,7 @@ class SkeletonListener {
 			public Object handler(Object param, SkeletonTraceElement[] strace, 
 					When when, Where where, Object... params) {
 				Map<?,?> curr = (Map<?,?>)strace[strace.length - 1].getSkel();
-				for (SkeletonTraceElement s:strace) {
-					System.out.println(s.getSkel().getClass().getSimpleName() + ": " + s.getSkel() + " id: " + s.getId());
-				}
-				c.mapm(curr.getMerge());
+				c.mapm(strace, curr.getMerge());
 				return param;
 			}
 			
@@ -99,10 +84,7 @@ class SkeletonListener {
 			public Object handler(Object param, SkeletonTraceElement[] strace, 
 					When when, Where where, Object... params) {
 				Fork<?,?> curr = (Fork<?,?>)strace[strace.length - 1].getSkel();
-				for (SkeletonTraceElement s:strace) {
-					System.out.println(s.getSkel().getClass().getSimpleName() + ": " + s.getSkel() + " id: " + s.getId());
-				}
-				c.forkm(curr.getSplit());
+				c.forkm(strace, curr.getSplit());
 				return param;
 			}
 			
@@ -114,10 +96,7 @@ class SkeletonListener {
 			public Object handler(Object param, SkeletonTraceElement[] strace, 
 					When when, Where where, Object... params) {
 				Fork<?,?> curr = (Fork<?,?>)strace[strace.length - 1].getSkel();
-				for (SkeletonTraceElement s:strace) {
-					System.out.println(s.getSkel().getClass().getSimpleName() + ": " + s.getSkel() + " id: " + s.getId());
-				}
-				c.forkm(curr.getMerge());
+				c.forkm(strace, curr.getMerge());
 				return param;
 			}
 			
@@ -130,10 +109,7 @@ class SkeletonListener {
 			public Object handler(Object param, SkeletonTraceElement[] strace, 
 					When when, Where where, Object... params) {
 				DaC<?,?> curr = (DaC<?,?>)strace[strace.length - 1].getSkel();
-				for (SkeletonTraceElement s:strace) {
-					System.out.println(s.getSkel().getClass().getSimpleName() + ": " + s.getSkel() + " id: " + s.getId());
-				}
-				c.dacm(curr.getCondition(), (Stack<Integer>) params[0], (Boolean) params[1]);
+				c.dacm(strace, curr.getCondition(), (Stack<Integer>) params[0], (Boolean) params[1], param);
 				return param;
 			}
 			
@@ -146,10 +122,7 @@ class SkeletonListener {
 			public Object handler(Object param, SkeletonTraceElement[] strace, 
 					When when, Where where, Object... params) {
 				DaC<?,?> curr = (DaC<?,?>)strace[strace.length - 1].getSkel();
-				for (SkeletonTraceElement s:strace) {
-					System.out.println(s.getSkel().getClass().getSimpleName() + ": " + s.getSkel() + " id: " + s.getId());
-				}
-				c.dacm(curr.getSplit(), (Stack<Integer>) params[0], ((Object[]) param).length);
+				c.dacm(strace, curr.getSplit(), (Stack<Integer>) params[0], (Object[]) param);
 				return param;
 			}
 			
@@ -157,15 +130,11 @@ class SkeletonListener {
 
 		root.addListener(new GenericListener() {
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public Object handler(Object param, SkeletonTraceElement[] strace, 
 					When when, Where where, Object... params) {
 				DaC<?,?> curr = (DaC<?,?>)strace[strace.length - 1].getSkel();
-				for (SkeletonTraceElement s:strace) {
-					System.out.println(s.getSkel().getClass().getSimpleName() + ": " + s.getSkel() + " id: " + s.getId());
-				}
-				c.dacm(curr.getMerge(), (Stack<Integer>) params[0]);
+				c.dacm(strace, curr.getMerge());
 				return param;
 			}
 			

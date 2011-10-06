@@ -18,6 +18,7 @@
 package cl.niclabs.skandium.skeletons;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
@@ -190,12 +191,13 @@ public class StackBuilder implements SkeletonVisitor {
 	@Override
 	public <P, R> void visit(DaC<P, R> skeleton) {
 
-		strace.add(new SkeletonTraceElement(skeleton,0));
+		Stack<Integer> rbranch = new Stack<Integer>();
+		int id = Arrays.deepHashCode(rbranch.toArray(new Integer[rbranch.size()]));
+		
+		strace.add(new SkeletonTraceElement(skeleton,id));
 		StackBuilder subStackBuilder = new StackBuilder(strace);
 
 		skeleton.skeleton.accept(subStackBuilder);
-
-		Stack<Integer> rbranch = new Stack<Integer>();
 
 		SkeletonTraceElement[] straceArray = getStraceAsArray();
 		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray, rbranch));

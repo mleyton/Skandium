@@ -64,6 +64,7 @@ public class WhileInst extends AbstractInstruction {
 			stack.push(this);
 			stack.push(new EventInst(When.BEFORE, Where.CONDITION, strace, iter+1));
 			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, iter));
+			copyIds(this.substack);
 			stack.addAll(this.substack);
 			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, iter));
 		}

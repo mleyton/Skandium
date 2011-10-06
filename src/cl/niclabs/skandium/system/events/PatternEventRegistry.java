@@ -67,7 +67,8 @@ public class PatternEventRegistry {
 		} else {
 			q = listeners.get(hashCode);
 		}
-		return q.add(e);
+		if (!q.contains(e)) return q.add(e);
+		return true;
 	}
 	
 	/**

@@ -17,6 +17,7 @@
  */
 package cl.niclabs.skandium.instructions;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
@@ -83,8 +84,12 @@ public class SplitInst extends AbstractInstruction {
 				subrbranch.addAll(rbranch);
 				subrbranch.push(i);
 				subStack = copyStack(this.substacks.get(0));
-				((DaCInst)subStack.peek()).rbranch = subrbranch;				
-				subStack.push(new EventInst(When.BEFORE, Where.CONDITION, copySkeletonTrace(), subrbranch, cond));				
+				DaCInst subDaC = ((DaCInst)subStack.peek());
+				subDaC.rbranch = subrbranch;
+				int id = Arrays.deepHashCode(subrbranch.toArray(new Integer[subrbranch.size()]));
+				SkeletonTraceElement[] subtrace = subDaC.getSkeletonTrace();
+				subtrace[subtrace.length-1] = new SkeletonTraceElement(subtrace[subtrace.length-1].getSkel(),id);
+				subStack.push(new EventInst(When.BEFORE, Where.CONDITION, subDaC.getSkeletonTrace(), subrbranch, cond));				
 			} else {
 				subStack = copyStack(subsize == 1? this.substacks.get(0) : this.substacks.get(i));
 				setChildIds(subStack, i);
