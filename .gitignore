@@ -1,0 +1,13 @@
+.DS_Store
+manifest.mf
+nbproject
+*.project
+*.classpath
+*.launch
+*/target/**
+*/reports/**
+build.xml
+build/**
+*/logs/**
+logs/**
+lib/**
