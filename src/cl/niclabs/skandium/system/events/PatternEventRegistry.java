@@ -41,16 +41,6 @@ public class PatternEventRegistry {
 	}
 
 	/**
-	 * Adds a non generic event listener
-	 * @param e event listener to register
-	 * @return true if the listener was registered successfully, and false otherwise
-	 * @throws BadListenerException
-	 */
-	public boolean addListener(NonGenericListener e) throws BadListenerException {
-		return addListener(getWhen(e), getWhere(e), e);
-	}
-	
-	/**
 	 * Adds an event listener
 	 * @param when Defines the event {@link When} dimension, it could be {@link When#BEFORE} or {@link When#AFTER}
 	 * @param where Defines the event {@link Where} dimension, it could be {@link Where#SKELETON}, {@link Where#CONDITION}, {@link Where#SPLIT}, {@link Where#NESTED_SKELETON} or {@link Where#MERGE}
@@ -71,16 +61,6 @@ public class PatternEventRegistry {
 		return true;
 	}
 	
-	/**
-	 * Removes a non generic event listener
-	 * @param e event listener to remove
-	 * @return true if the listener was removed successfully, and false otherwise
-	 * @throws BadListenerException
-	 */
-	public boolean removeListener(NonGenericListener e) throws BadListenerException {
-		return removeListener(getWhen(e), getWhere(e),e);
-	}
-
 	/**
 	 * Removes an event listener
 	 * @param when Defines the event {@link When} dimension, it could be {@link When#BEFORE} or {@link When#AFTER}
@@ -115,20 +95,5 @@ public class PatternEventRegistry {
 	private int getHashCode(When when, Where where) {
 		return where.ordinal() + Where.values().length * when.ordinal();
 	}
-	
-	private Where getWhere(SkandiumEventListener e) throws BadListenerException {
-		if (e instanceof SkeletonListener) return Where.SKELETON;
-		if (e instanceof NestedSkelListener) return Where.NESTED_SKELETON;
-		if (e instanceof ConditionListener) return Where.CONDITION;
-		if (e instanceof SplitListener) return Where.SPLIT;
-		if (e instanceof MergeListener) return Where.MERGE;
-		throw new BadListenerException();
-	}
-
-	private When getWhen(SkandiumEventListener e) throws BadListenerException {
-		if (e instanceof BeforeListener) return When.BEFORE;
-		if (e instanceof AfterListener) return When.AFTER;
-		throw new BadListenerException();
-	}
-	
+		
 }

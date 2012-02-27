@@ -21,6 +21,7 @@ import java.util.concurrent.Future;
 
 import cl.niclabs.skandium.Skandium;
 import cl.niclabs.skandium.Stream;
+import cl.niclabs.skandium.events.TraceListener;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.system.events.GenericListenerRegistry;
@@ -144,7 +145,7 @@ public abstract class AbstractSkeleton<P,R> implements Skeleton<P,R> {
      * @return true if listener <code>l</code> has been registered successfully, false otherwise
      */
     @SuppressWarnings("rawtypes")
-	public boolean addListener(GenericListener l, Class pattern, When when, Where where) {
+	public boolean addGeneric(GenericListener l, Class pattern, When when, Where where) {
     	GenericListenerRegistry gres = new GenericListenerRegistry(false, pattern, when, where, l);
     	this.accept(gres);
     	return gres.getR();
@@ -167,9 +168,25 @@ public abstract class AbstractSkeleton<P,R> implements Skeleton<P,R> {
      * @return true if listener <code>l</code> has been removed successfully, false otherwise
      */
     @SuppressWarnings("rawtypes")
-	public boolean removeListener(GenericListener l, Class pattern, When when, Where where) {
+	public boolean removeGeneric(GenericListener l, Class pattern, When when, Where where) {
     	GenericListenerRegistry gres = new GenericListenerRegistry(true, pattern, when, where, l);
     	this.accept(gres);
     	return gres.getR();
+    }
+    
+    public boolean addBefore(TraceListener<P> l) {
+    	return eregis.addListener(When.BEFORE, Where.SKELETON, l);
+    }
+
+    public boolean removeBefore(TraceListener<P> l) {
+    	return eregis.removeListener(When.BEFORE, Where.SKELETON, l);
+    }
+
+    public boolean addAfter(TraceListener<R> l) {
+    	return eregis.addListener(When.AFTER, Where.SKELETON, l);
+    }
+
+    public boolean removeAfter(TraceListener<R> l) {
+    	return eregis.removeListener(When.AFTER, Where.SKELETON, l);
     }
 }

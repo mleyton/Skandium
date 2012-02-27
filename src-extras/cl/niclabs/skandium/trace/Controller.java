@@ -50,7 +50,7 @@ class Controller {
 	boolean open() {
 		if (!open) {
 			traces = Collections.synchronizedMap(new HashMap<String,TraceElement>());
-			open = skeleton.addListener(listener, Skeleton.class, null, null);
+			open = skeleton.addGeneric(listener, Skeleton.class, null, null);
 			frame = new SkelFrame(this);
 			frame.initSkelFrame(skeleton);
 		}
@@ -59,7 +59,7 @@ class Controller {
 	
 	boolean close() {
 		if (open) {
-			open = !skeleton.removeListener(listener, Skeleton.class, null, null);
+			open = !skeleton.removeGeneric(listener, Skeleton.class, null, null);
 			frame.close();
 		}
 		return !open;

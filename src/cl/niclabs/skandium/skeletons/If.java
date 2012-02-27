@@ -17,10 +17,12 @@
  */
 package cl.niclabs.skandium.skeletons;
 
+import cl.niclabs.skandium.events.ConditionListener;
+import cl.niclabs.skandium.events.TraceListener;
+import cl.niclabs.skandium.events.When;
+import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.muscles.Condition;
 import cl.niclabs.skandium.muscles.Execute;
-import cl.niclabs.skandium.system.events.BadListenerException;
-import cl.niclabs.skandium.system.events.IfListener;
 
 /**
  * An <code>If</code> {@link cl.niclabs.skandium.skeletons.Skeleton} represents condition branching.
@@ -73,24 +75,36 @@ public class If<P,R> extends AbstractSkeleton<P,R> {
         visitor.visit(this);
     }
 
-    /**
-     * Register an event listener
-     * @param l Event listener to register
-     * @return true if the event listener registration was successful, false otherwise.
-     * @throws BadListenerException
-     */
-    public boolean addListener(IfListener<P,R> l) throws BadListenerException {
-    	return eregis.addListener(l);
+    public boolean addBeforeCondition(TraceListener<P> l) {
+    	return eregis.addListener(When.BEFORE, Where.CONDITION, l);
     }
 
-    /**
-     * Remove an event listener
-     * @param l Event listener to remove
-     * @return true if the event listener removal was successful, false otherwise.
-     * @throws BadListenerException
-     */
-    public boolean removeListener(IfListener<P,R> l) throws BadListenerException {
-    	return eregis.removeListener(l);
+    public boolean removeBeforeCondition(TraceListener<P> l) {
+    	return eregis.removeListener(When.BEFORE, Where.CONDITION, l);
+    }
+
+    public boolean addAfterCondition(ConditionListener<P> l) {
+    	return eregis.addListener(When.AFTER, Where.CONDITION, l);
+    }
+
+    public boolean removeAfterCondition(ConditionListener<P> l) {
+    	return eregis.removeListener(When.AFTER, Where.CONDITION, l);
+    }
+
+    public boolean addBeforeNestedSkel(ConditionListener<P> l) {
+    	return eregis.addListener(When.BEFORE, Where.NESTED_SKELETON, l);
+    }
+
+    public boolean removeBeforeNestedSkel(ConditionListener<P> l) {
+    	return eregis.removeListener(When.BEFORE, Where.NESTED_SKELETON, l);
+    }
+
+    public boolean addAfterNestedSkel(ConditionListener<P> l) {
+    	return eregis.addListener(When.AFTER, Where.NESTED_SKELETON, l);
+    }
+
+    public boolean removeAfterNestedSkel(ConditionListener<P> l) {
+    	return eregis.removeListener(When.AFTER, Where.NESTED_SKELETON, l);
     }
 
 	public Skeleton<P, R> getTrueCase() {

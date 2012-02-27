@@ -18,7 +18,7 @@ import cl.niclabs.skandium.system.events.GenericListener;
 class SkeletonListener {
 	
 	static void register(final Controller c, AbstractSkeleton<?,?> root) {
-		root.addListener(new GenericListener() {
+		root.addGeneric(new GenericListener() {
 
 			@Override
 			public Object handler(Object param, SkeletonTraceElement[] strace, 
@@ -30,7 +30,7 @@ class SkeletonListener {
 			
 		}, Seq.class, When.AFTER, Where.SKELETON);
 		
-		root.addListener(new GenericListener() {
+		root.addGeneric(new GenericListener() {
 
 			@Override
 			public Object handler(Object param, SkeletonTraceElement[] strace, 
@@ -42,7 +42,7 @@ class SkeletonListener {
 			
 		}, If.class, When.AFTER, Where.CONDITION);
 
-		root.addListener(new GenericListener() {
+		root.addGeneric(new GenericListener() {
 
 			@Override
 			public Object handler(Object param, SkeletonTraceElement[] strace, 
@@ -54,7 +54,7 @@ class SkeletonListener {
 			
 		}, While.class, When.AFTER, Where.CONDITION);
 
-		root.addListener(new GenericListener() {
+		root.addGeneric(new GenericListener() {
 
 			@Override
 			public Object handler(Object param, SkeletonTraceElement[] strace, 
@@ -66,7 +66,7 @@ class SkeletonListener {
 			
 		}, Map.class, When.AFTER, Where.SPLIT);
 
-		root.addListener(new GenericListener() {
+		root.addGeneric(new GenericListener() {
 
 			@Override
 			public Object handler(Object param, SkeletonTraceElement[] strace, 
@@ -78,7 +78,7 @@ class SkeletonListener {
 			
 		}, Map.class, When.AFTER, Where.MERGE);
 
-		root.addListener(new GenericListener() {
+		root.addGeneric(new GenericListener() {
 
 			@Override
 			public Object handler(Object param, SkeletonTraceElement[] strace, 
@@ -90,7 +90,7 @@ class SkeletonListener {
 			
 		}, Fork.class, When.AFTER, Where.SPLIT);
 
-		root.addListener(new GenericListener() {
+		root.addGeneric(new GenericListener() {
 
 			@Override
 			public Object handler(Object param, SkeletonTraceElement[] strace, 
@@ -102,7 +102,7 @@ class SkeletonListener {
 			
 		}, Fork.class, When.AFTER, Where.MERGE);
 
-		root.addListener(new GenericListener() {
+		root.addGeneric(new GenericListener() {
 
 			@SuppressWarnings("unchecked")
 			@Override
@@ -115,7 +115,7 @@ class SkeletonListener {
 			
 		}, DaC.class, When.AFTER, Where.CONDITION);
 
-		root.addListener(new GenericListener() {
+		root.addGeneric(new GenericListener() {
 
 			@SuppressWarnings("unchecked")
 			@Override
@@ -128,7 +128,7 @@ class SkeletonListener {
 			
 		}, DaC.class, When.AFTER, Where.SPLIT);
 
-		root.addListener(new GenericListener() {
+		root.addGeneric(new GenericListener() {
 
 			@Override
 			public Object handler(Object param, SkeletonTraceElement[] strace, 

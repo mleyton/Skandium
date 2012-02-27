@@ -17,11 +17,13 @@
  */
 package cl.niclabs.skandium.skeletons;
 
+import cl.niclabs.skandium.events.IndexListener;
+import cl.niclabs.skandium.events.TraceListener;
+import cl.niclabs.skandium.events.When;
+import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.muscles.Execute;
 import cl.niclabs.skandium.muscles.Merge;
 import cl.niclabs.skandium.muscles.Split;
-import cl.niclabs.skandium.system.events.BadListenerException;
-import cl.niclabs.skandium.system.events.MapListener;
 
 /**
  * A <code>Map</code> {@link cl.niclabs.skandium.skeletons.Skeleton} divides an input parameter into a list of sub-parameters,
@@ -79,28 +81,52 @@ public class Map<P,R> extends AbstractSkeleton<P,R> {
         visitor.visit(this);
     }
 
-    /**
-     * Register an event listener
-     * @param <X> Type of the <code>param</code> after {@link cl.niclabs.skandium.muscles.Split}
-     * @param <Y> Type of the <code>param</code> before {@link cl.niclabs.skandium.muscles.Merge}
-     * @param l Event listener to register
-     * @return true if the event listener registration was successful, false otherwise.
-     * @throws BadListenerException
-     */
-    public <X,Y> boolean addListener(MapListener<P,X,Y,R> l) throws BadListenerException {
-    	return eregis.addListener(l);
+    public boolean addBeforeSplit(TraceListener<P> l) {
+    	return eregis.addListener(When.BEFORE,Where.SPLIT,l);
     }
 
-    /**
-     * Remove an event listener
-     * @param <X> Type of the <code>param</code> after {@link cl.niclabs.skandium.muscles.Split}
-     * @param <Y> Type of the <code>param</code> before {@link cl.niclabs.skandium.muscles.Merge}
-     * @param l Event listener to remove
-     * @return true if the event listener removal was successful, false otherwise.
-     * @throws BadListenerException
-     */
-    public <X,Y> boolean removeListener(MapListener<P,X,Y,R> l) throws BadListenerException {
-    	return eregis.removeListener(l);
+    public boolean removeBeforeSplit(TraceListener<P> l) {
+    	return eregis.removeListener(When.BEFORE,Where.SPLIT,l);
+    }
+
+    public <X> boolean addAfterSplit(TraceListener<X[]> l) {
+    	return eregis.addListener(When.AFTER,Where.SPLIT,l);
+    }
+
+    public <X> boolean removeAfterSplit(TraceListener<X[]> l) {
+    	return eregis.removeListener(When.AFTER,Where.SPLIT,l);
+    }
+
+    public <X> boolean addBeforeNestedSkel(IndexListener<X> l) {
+    	return eregis.addListener(When.BEFORE,Where.NESTED_SKELETON,l);
+    }
+
+    public <X> boolean removeBeforeNestedSkel(IndexListener<X> l) {
+    	return eregis.removeListener(When.BEFORE,Where.NESTED_SKELETON,l);
+    }
+
+    public <Y> boolean addAfterNestedSkel(IndexListener<Y> l) {
+    	return eregis.addListener(When.AFTER,Where.NESTED_SKELETON,l);
+    }
+
+    public <Y> boolean removeAfterNestedSkel(IndexListener<Y> l) {
+    	return eregis.removeListener(When.AFTER,Where.NESTED_SKELETON,l);
+    }
+
+    public <Y> boolean addBeforeMerge(TraceListener<Y[]> l) {
+    	return eregis.addListener(When.BEFORE,Where.MERGE,l);
+    }
+
+    public <Y> boolean removeBeforeMerge(TraceListener<Y[]> l) {
+    	return eregis.removeListener(When.BEFORE,Where.MERGE,l);
+    }
+
+    public boolean addAfterMerge(TraceListener<R> l) {
+    	return eregis.addListener(When.AFTER,Where.MERGE,l);
+    }
+
+    public boolean removeAfterMerge(TraceListener<R> l) {
+    	return eregis.removeListener(When.AFTER,Where.MERGE,l);
     }
 
 	public Skeleton<?, ?> getSkeleton() {

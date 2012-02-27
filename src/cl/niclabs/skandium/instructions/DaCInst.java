@@ -85,19 +85,19 @@ public class DaCInst extends  AbstractInstruction {
 		
 		Stack<Instruction> splitStack = new Stack<Instruction>();
 		splitStack.push(new SplitInst(substacks, merge, strace, rbranch));
-		splitStack.push(new EventInst(When.AFTER, Where.SPLIT, strace, rbranch));
+		splitStack.push(new EventInst(When.AFTER, Where.SPLIT, strace));
 		splitStack.push(new SeqInst(split, strace));
-		splitStack.push(new EventInst(When.BEFORE, Where.SPLIT, strace, rbranch));
+		splitStack.push(new EventInst(When.BEFORE, Where.SPLIT, strace));
 		
 		Stack<Instruction> execStack = new Stack<Instruction>();
 
-		execStack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, rbranch));
+		execStack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, rbranch.peek()));
 		copyIds(this.substack);
 		execStack.addAll(this.substack);
-		execStack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, rbranch));
+		execStack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, rbranch.peek()));
 
 		stack.push(new ChoiceInst(cond, splitStack, execStack, strace));
-		stack.push(new EventInst(When.AFTER, Where.CONDITION, strace, rbranch, cond));
+		stack.push(new EventInst(When.AFTER, Where.CONDITION, strace, rbranch.peek(), cond));
 				
 		return param;
 	}

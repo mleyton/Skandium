@@ -17,10 +17,12 @@
  */
 package cl.niclabs.skandium.skeletons;
 
+import cl.niclabs.skandium.events.ConditionListener;
+import cl.niclabs.skandium.events.IndexListener;
+import cl.niclabs.skandium.events.When;
+import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.muscles.Condition;
 import cl.niclabs.skandium.muscles.Execute;
-import cl.niclabs.skandium.system.events.BadListenerException;
-import cl.niclabs.skandium.system.events.WhileListener;
 
 /**
  * A <code></code> {@link cl.niclabs.skandium.skeletons.Skeleton}
@@ -54,24 +56,36 @@ public class While<P> extends AbstractSkeleton<P,P> {
         visitor.visit(this);
     }
 
-    /**
-     * Register an event listener
-     * @param l Event listener to register
-     * @return true if the event listener registration was successful, false otherwise.
-     * @throws BadListenerException
-     */
-    public boolean addListener(WhileListener<P> l) throws BadListenerException {
-    	return eregis.addListener(l);
+    public boolean addBeforeCondition(IndexListener<P> l) {
+    	return eregis.addListener(When.BEFORE, Where.CONDITION, l);
     }
 
-    /**
-     * Remove an event listener
-     * @param l Event listener to remove
-     * @return true if the event listener removal was successful, false otherwise.
-     * @throws BadListenerException
-     */
-    public boolean removeListener(WhileListener<P> l) throws BadListenerException {
-    	return eregis.removeListener(l);
+    public boolean removeBeforeCondition(IndexListener<P> l) {
+    	return eregis.removeListener(When.BEFORE, Where.CONDITION, l);
+    }
+
+    public boolean addAfterCondition(ConditionListener<P> l) {
+    	return eregis.addListener(When.AFTER, Where.CONDITION, l);
+    }
+
+    public boolean removeAfterCondition(ConditionListener<P> l) {
+    	return eregis.removeListener(When.AFTER, Where.CONDITION, l);
+    }
+
+    public boolean addBeforeNestedSkel(IndexListener<P> l) {
+    	return eregis.addListener(When.BEFORE, Where.NESTED_SKELETON, l);
+    }
+
+    public boolean removeBeforeNestedSkel(IndexListener<P> l) {
+    	return eregis.removeListener(When.BEFORE, Where.NESTED_SKELETON, l);
+    }
+
+    public boolean addAfterNestedSkel(IndexListener<P> l) {
+    	return eregis.addListener(When.AFTER, Where.NESTED_SKELETON, l);
+    }
+
+    public boolean removeAfterNestedSkel(IndexListener<P> l) {
+    	return eregis.removeListener(When.AFTER, Where.NESTED_SKELETON, l);
     }
 
 	public Skeleton<P, P> getSubskel() {

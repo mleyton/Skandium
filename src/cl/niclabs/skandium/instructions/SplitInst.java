@@ -89,7 +89,7 @@ public class SplitInst extends AbstractInstruction {
 				int id = Arrays.deepHashCode(subrbranch.toArray(new Integer[subrbranch.size()]));
 				SkeletonTraceElement[] subtrace = subDaC.getSkeletonTrace();
 				subtrace[subtrace.length-1] = new SkeletonTraceElement(subtrace[subtrace.length-1].getSkel(),id);
-				subStack.push(new EventInst(When.BEFORE, Where.CONDITION, subDaC.getSkeletonTrace(), subrbranch, cond));				
+				subStack.push(new EventInst(When.BEFORE, Where.CONDITION, subDaC.getSkeletonTrace()));				
 			} else {
 				subStack = copyStack(subsize == 1? this.substacks.get(0) : this.substacks.get(i));
 				setChildIds(subStack, i);
@@ -98,9 +98,9 @@ public class SplitInst extends AbstractInstruction {
 			}
 			children.add(subStack);
 		}
-		stack.push(new EventInst(When.AFTER, Where.MERGE, strace, rbranch));
+		stack.push(new EventInst(When.AFTER, Where.MERGE, strace));
 		stack.push(new MergeInst(merge, strace));
-		stack.push(new EventInst(When.BEFORE, Where.MERGE, strace, rbranch));
+		stack.push(new EventInst(When.BEFORE, Where.MERGE, strace));
 	
 		return params;
 	}

@@ -19,8 +19,6 @@ package cl.niclabs.skandium.skeletons;
 
 import cl.niclabs.skandium.muscles.Execute;
 import cl.niclabs.skandium.muscles.Muscle;
-import cl.niclabs.skandium.system.events.BadListenerException;
-import cl.niclabs.skandium.system.events.SeqListener;
 
 /**
  * A Seq skeleton is used to terminate recursive nesting of {@link cl.niclabs.skandium.skeletons.Skeleton}s.
@@ -50,23 +48,4 @@ public class Seq<P,R> extends AbstractSkeleton<P,R> {
         visitor.visit(this);
     }
 
-    /**
-     * Register an event listener
-     * @param l Event listener to register
-     * @return true if the event listener registration was successful, false otherwise.
-     * @throws BadListenerException
-     */
-    public boolean addListener(SeqListener<P,R> l) throws BadListenerException {
-    	return eregis.addListener(l);
-    }
-
-    /**
-     * Remove an event listener
-     * @param l Event listener to remove
-     * @return true if the event listener removal was successful, false otherwise.
-     * @throws BadListenerException
-     */
-    public boolean removeListener(SeqListener<P,R> l) throws BadListenerException {
-    	return eregis.removeListener(l);
-    }
 }

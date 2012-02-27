@@ -192,6 +192,7 @@ public class StackBuilder implements SkeletonVisitor {
 	public <P, R> void visit(DaC<P, R> skeleton) {
 
 		Stack<Integer> rbranch = new Stack<Integer>();
+		rbranch.add(0);
 		int id = Arrays.deepHashCode(rbranch.toArray(new Integer[rbranch.size()]));
 		
 		strace.add(new SkeletonTraceElement(skeleton,id));
@@ -200,10 +201,10 @@ public class StackBuilder implements SkeletonVisitor {
 		skeleton.skeleton.accept(subStackBuilder);
 
 		SkeletonTraceElement[] straceArray = getStraceAsArray();
-		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray, rbranch));
+		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray));
 		stack.push(new DaCInst(skeleton.condition, skeleton.split, subStackBuilder.stack, skeleton.merge, rbranch, straceArray));
-		stack.push(new EventInst(When.BEFORE, Where.CONDITION, straceArray, rbranch));
-		stack.push(new EventInst(When.BEFORE, Where.SKELETON, straceArray, rbranch));
+		stack.push(new EventInst(When.BEFORE, Where.CONDITION, straceArray));
+		stack.push(new EventInst(When.BEFORE, Where.SKELETON, straceArray));
 	}
 
 	@Override

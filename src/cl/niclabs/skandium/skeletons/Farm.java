@@ -18,8 +18,6 @@
 package cl.niclabs.skandium.skeletons;
 
 import cl.niclabs.skandium.muscles.Execute;
-import cl.niclabs.skandium.system.events.BadListenerException;
-import cl.niclabs.skandium.system.events.FarmListener;
 
 /**
  * A <code>Farm</code> {@link cl.niclabs.skandium.skeletons.Skeleton} provides task replication or master-worker like parallelism.
@@ -59,26 +57,6 @@ public class Farm<P,R> extends AbstractSkeleton<P,R> {
 	 */
     public void accept(SkeletonVisitor visitor) {
         visitor.visit(this);
-    }
-
-    /**
-     * Register an event listener
-     * @param l Event listener to register
-     * @return true if the event listener registration was successful, false otherwise.
-     * @throws BadListenerException
-     */
-    public boolean addListener(FarmListener<P,R> l) throws BadListenerException {
-    	return eregis.addListener(l);
-    }
-
-    /**
-     * Remove an event listener
-     * @param l Event listener to remove
-     * @return true if the event listener removal was successful, false otherwise.
-     * @throws BadListenerException
-     */
-    public boolean removeListener(FarmListener<P,R> l) throws BadListenerException {
-    	return eregis.removeListener(l);
     }
 
 	public Skeleton<P, R> getSubskel() {

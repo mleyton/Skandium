@@ -62,10 +62,10 @@ public class IfInst extends AbstractInstruction {
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
 
 		boolean cond = condition.condition(param);
-		stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, cond));
+		stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, 0, cond));
 		stack.push(new ChoiceInst(cond, trueCaseStack, falseCaseStack, strace));
-		stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, cond));
-		stack.push(new EventInst(When.AFTER, Where.CONDITION, strace, cond));
+		stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, 0, cond));
+		stack.push(new EventInst(When.AFTER, Where.CONDITION, strace, 0, cond));
 
 		return param;
 	}

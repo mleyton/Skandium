@@ -17,10 +17,11 @@
  */
 package cl.niclabs.skandium.skeletons;
 
+import cl.niclabs.skandium.events.IndexListener;
+import cl.niclabs.skandium.events.When;
+import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.muscles.Execute;
 import cl.niclabs.skandium.muscles.Muscle;
-import cl.niclabs.skandium.system.events.BadListenerException;
-import cl.niclabs.skandium.system.events.ForListener;
 
 /**
  * A <code>For</code> {@link cl.niclabs.skandium.skeletons.Skeleton} provides a fixed iteration.
@@ -64,24 +65,20 @@ public class For<P> extends AbstractSkeleton<P,P> {
         visitor.visit(this);
     }
 
-    /**
-     * Register an event listener
-     * @param l Event listener to register
-     * @return true if the event listener registration was successful, false otherwise.
-     * @throws BadListenerException
-     */
-    public boolean addListener(ForListener<P> l) throws BadListenerException {
-    	return eregis.addListener(l);
+    public boolean addBeforeNestedSkel(IndexListener<P> l) {
+    	return eregis.addListener(When.BEFORE,Where.NESTED_SKELETON,l);
     }
 
-    /**
-     * Remove an event listener
-     * @param l Event listener to remove
-     * @return true if the event listener removal was successful, false otherwise.
-     * @throws BadListenerException
-     */
-    public boolean removeListener(ForListener<P> l) throws BadListenerException {
-    	return eregis.removeListener(l);
+    public boolean removeBeforeNestedSkel(IndexListener<P> l) {
+    	return eregis.removeListener(When.BEFORE,Where.NESTED_SKELETON,l);
+    }
+
+    public boolean addAfterNestedSkel(IndexListener<P> l) {
+    	return eregis.addListener(When.AFTER,Where.NESTED_SKELETON,l);
+    }
+
+    public boolean removeAfterNestedSkel(IndexListener<P> l) {
+    	return eregis.removeListener(When.AFTER,Where.NESTED_SKELETON,l);
     }
 
 	public Skeleton<P, P> getSubskel() {

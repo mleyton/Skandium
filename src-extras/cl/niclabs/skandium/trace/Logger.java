@@ -39,14 +39,14 @@ public class Logger {
 
 	public boolean start() {
 		if (!running) {			
-			running = skeleton.addListener(listener, Skeleton.class, null, null);
+			running = skeleton.addGeneric(listener, Skeleton.class, null, null);
 		}
 		return running;
 	}
 	
 	public boolean stop() {
 		if (running) {
-			running = !skeleton.removeListener(listener, Skeleton.class, null, null);
+			running = !skeleton.removeGeneric(listener, Skeleton.class, null, null);
 		}
 		return !running;
 	}
