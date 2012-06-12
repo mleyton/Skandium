@@ -52,7 +52,21 @@ public class Skandium {
 		if(maxThreads < 1) throw new IllegalArgumentException("The specified number of threads must be larger than 1");
 		
 		executor = new TaskExecutor(maxThreads);		
-		eregis = new SkandiumEventRegistry(executor.getMaximumPoolSize()); 
+		eregis = new SkandiumEventRegistry();
+	}
+
+	/**
+	 * Sets the maximum number of threads using during a Skeleton execution.
+	 * @param maxThreads The maximum number of threads to compute concurrently. This number must be larger than 1.
+	 */
+	public void setMaxThreads(int maxThreads) {
+
+		if(maxThreads < 1) throw new IllegalArgumentException("The specified number of threads must be larger than 1");
+		
+		executor.setCorePoolSize(maxThreads);
+		executor.setMaximumPoolSize(maxThreads);
+		eregis.triggerEvent(executor.getMaximumPoolSize()); 
+
 	}
 	
 	/**
@@ -97,7 +111,8 @@ public class Skandium {
 	 * @param l The maximum-number-of-threads event listener.
 	 * @return true if the listener was registered correctly and fale otherwise.
 	 */
-	public boolean addListener(MaxThreadPoolListener l) {
-		return eregis.addListener(l);
+	public void setListener(MaxThreadPoolListener l) {
+		eregis.setListener(l);
+		eregis.triggerEvent(executor.getMaximumPoolSize());
 	}
 }

@@ -21,17 +21,23 @@ import cl.niclabs.skandium.events.MaxThreadPoolListener;
 
 public class SkandiumEventRegistry {
 	
-	int maxThreadPoolSize;
+	MaxThreadPoolListener maxThreadPoolListener;
 	
-	public SkandiumEventRegistry(int maxThreadPoolSize) {
-		this.maxThreadPoolSize = maxThreadPoolSize;
+	public SkandiumEventRegistry() {
+		super();
 	}
 	
-	public boolean addListener(MaxThreadPoolListener l) {
-		if(l.guard(maxThreadPoolSize)) {
-			l.handler(maxThreadPoolSize);
+	public void setListener(MaxThreadPoolListener l) {
+		maxThreadPoolListener = l;
+		return;
+	}
+	
+	public void triggerEvent(int maxThreadPoolSize) {
+		if (maxThreadPoolListener == null) return;
+		if(maxThreadPoolListener.guard(maxThreadPoolSize)) {
+			maxThreadPoolListener.handler(maxThreadPoolSize);
 		}
-		return true;
+		return;
 	}
 	
 }
