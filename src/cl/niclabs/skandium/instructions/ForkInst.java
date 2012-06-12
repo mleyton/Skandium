@@ -25,7 +25,7 @@ import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.muscles.Merge;
 import cl.niclabs.skandium.muscles.Split;
-import cl.niclabs.skandium.system.events.SkeletonTraceElement;
+import cl.niclabs.skandium.skeletons.Skeleton;
 
 /**
  * This instruction holds the parallelism behavior of a {@link cl.niclabs.skandium.skeletons.Fork} skeleton.
@@ -47,7 +47,7 @@ public class ForkInst extends  AbstractInstruction {
 	 * @param merge The code to merge the result of executing the stack on the subparam.
 	 * @param strace nested skeleton tree branch of the current execution.
 	 */
-	public ForkInst(Split<?, ?> split, List<Stack<Instruction>> stacks, Merge<?, ?> merge, SkeletonTraceElement[] strace) {
+	public ForkInst(Split<?, ?> split, List<Stack<Instruction>> stacks, Merge<?, ?> merge, @SuppressWarnings("rawtypes") Skeleton[] strace) {
 		super(strace);
 		this.split = split;
 		this.substacks = stacks;

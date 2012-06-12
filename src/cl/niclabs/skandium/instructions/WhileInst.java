@@ -22,9 +22,8 @@ import java.util.Stack;
 
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
-import cl.niclabs.skandium.instructions.Instruction;
 import cl.niclabs.skandium.muscles.Condition;
-import cl.niclabs.skandium.system.events.SkeletonTraceElement;
+import cl.niclabs.skandium.skeletons.Skeleton;
 
 /**
  * Represents the behavior of a {@link cl.niclabs.skandium.skeletons.While} skeleton.
@@ -44,7 +43,7 @@ public class WhileInst extends AbstractInstruction {
 	 * @param stack The code to execute while the condition holds true.
 	 * @param strace nested skeleton tree branch of the current execution.
 	 */
-	public WhileInst(Condition<?> condition, Stack<Instruction> stack, SkeletonTraceElement[] strace) {
+	public WhileInst(Condition<?> condition, Stack<Instruction> stack, @SuppressWarnings("rawtypes") Skeleton[] strace) {
 		super(strace);
 		this.condition = condition;
 		this.substack = stack;
@@ -64,7 +63,6 @@ public class WhileInst extends AbstractInstruction {
 			stack.push(this);
 			stack.push(new EventInst(When.BEFORE, Where.CONDITION, strace, iter+1));
 			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, iter));
-			copyIds(this.substack);
 			stack.addAll(this.substack);
 			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, iter));
 		}

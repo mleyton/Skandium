@@ -23,13 +23,12 @@ import java.util.Stack;
 import cl.niclabs.skandium.events.ConditionListener;
 import cl.niclabs.skandium.events.IndexListener;
 import cl.niclabs.skandium.events.TraceListener;
+import cl.niclabs.skandium.events.GenericListener;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.skeletons.AbstractSkeleton;
 import cl.niclabs.skandium.skeletons.Skeleton;
 import cl.niclabs.skandium.system.events.SkandiumEventListener;
-import cl.niclabs.skandium.system.events.SkeletonTraceElement;
-import cl.niclabs.skandium.system.events.UndefinedParamListener;
 
 
 /**
@@ -49,7 +48,7 @@ public class EventInst extends AbstractInstruction {
 	 * @param strace nested skeleton tree branch of the current execution.
 	 * @param params specific event parameters
 	 */
-	public EventInst(When when, Where where, SkeletonTraceElement[] strace, Object... params){
+	public EventInst(When when, Where where, @SuppressWarnings("rawtypes") Skeleton[] strace, Object... params){
 		super(strace);
 		this.when = when;
 		this.where = where;
@@ -63,7 +62,7 @@ public class EventInst extends AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, 
 			List<Stack<Instruction>> children) throws Exception {
-		Skeleton<?,?> curr = strace[strace.length-1].getSkel();
+		Skeleton<?,?> curr = strace[strace.length-1];
 		SkandiumEventListener[] listeners = ((AbstractSkeleton<?,?>) curr).getListeners(when, where);
 		for (SkandiumEventListener l : listeners) {
 			if (l instanceof TraceListener<?>) {
@@ -78,9 +77,9 @@ public class EventInst extends AbstractInstruction {
 				if (((ConditionListener<P>) l).guard(param, strace, (Integer) params[0], (Boolean) params[1])) {
 					param = ((ConditionListener<P>) l).handler(param, strace, (Integer) params[0], (Boolean) params[1]);
 				}
-			} else if (l instanceof UndefinedParamListener) {
-				if (((UndefinedParamListener) l).guard(param, strace, when, where, params)) {
-					param = (P) ((UndefinedParamListener) l).handler(param, strace, when, where, params);
+			} else if (l instanceof GenericListener) {
+				if (((GenericListener) l).guard(param, strace, when, where, params)) {
+					param = (P) ((GenericListener) l).handler(param, strace, when, where, params);
 				}
 			} else throw new RuntimeException("Should not be here!");
 		}

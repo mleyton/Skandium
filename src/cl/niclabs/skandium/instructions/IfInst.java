@@ -22,9 +22,8 @@ import java.util.Stack;
 
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
-import cl.niclabs.skandium.instructions.Instruction;
 import cl.niclabs.skandium.muscles.Condition;
-import cl.niclabs.skandium.system.events.SkeletonTraceElement;
+import cl.niclabs.skandium.skeletons.Skeleton;
 
 /**
  * This instruction holds the parallelism behavior of an {@link cl.niclabs.skandium.skeletons.If} skeleton.
@@ -44,7 +43,7 @@ public class IfInst extends AbstractInstruction {
 	 * @param falseCaseStack Code to execute in the false case.
 	 * @param strace nested skeleton tree branch of the current execution.
 	 */
-	public IfInst(Condition<?> condition, Stack<Instruction> trueCaseStack, Stack<Instruction> falseCaseStack, SkeletonTraceElement[] strace) {
+	public IfInst(Condition<?> condition, Stack<Instruction> trueCaseStack, Stack<Instruction> falseCaseStack, @SuppressWarnings("rawtypes") Skeleton[] strace) {
 		super(strace);
 		this.condition = condition;
 		this.trueCaseStack = trueCaseStack;

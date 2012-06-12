@@ -20,7 +20,7 @@ package cl.niclabs.skandium;
 import java.util.concurrent.Future;
 
 import cl.niclabs.skandium.skeletons.Skeleton;
-import cl.niclabs.skandium.skeletons.StackBuilder;
+import cl.niclabs.skandium.system.StackBuilder;
 import cl.niclabs.skandium.system.Task;
 import cl.niclabs.skandium.system.TaskExecutor;
 

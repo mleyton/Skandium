@@ -18,10 +18,10 @@
 
 package cl.niclabs.skandium.trace;
 
+import cl.niclabs.skandium.events.GenericListener;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
-import cl.niclabs.skandium.system.events.GenericListener;
-import cl.niclabs.skandium.system.events.SkeletonTraceElement;
+import cl.niclabs.skandium.skeletons.Skeleton;
 
 class SkeletonListener extends GenericListener {
 
@@ -33,7 +33,7 @@ class SkeletonListener extends GenericListener {
 	}
 
 	@Override
-	public Object handler(Object param, SkeletonTraceElement[] strace, When when,
+	public Object handler(Object param, @SuppressWarnings("rawtypes") Skeleton[] strace, When when,
 			Where where, Object... params) {
 		return handler.handler(param, strace, when, where, params);
 	}

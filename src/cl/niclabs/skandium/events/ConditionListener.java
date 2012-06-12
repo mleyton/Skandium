@@ -17,8 +17,8 @@
  */
 package cl.niclabs.skandium.events;
 
+import cl.niclabs.skandium.skeletons.Skeleton;
 import cl.niclabs.skandium.system.events.SkandiumEventListener;
-import cl.niclabs.skandium.system.events.SkeletonTraceElement;
 
 public abstract class ConditionListener<P> implements SkandiumEventListener {
 
@@ -45,7 +45,7 @@ public abstract class ConditionListener<P> implements SkandiumEventListener {
 	 * @param cond result of condition muscle.
 	 * @return true if the handler must be executed, false otherwise. 
 	 */
-	public boolean guard(P param, SkeletonTraceElement[] strace, int index, boolean cond) {
+	public boolean guard(P param, @SuppressWarnings("rawtypes") Skeleton[] strace, int index, boolean cond) {
 		return true;
 	}
 
@@ -59,6 +59,6 @@ public abstract class ConditionListener<P> implements SkandiumEventListener {
 	 * @param cond result of condition muscle.
 	 * @return New <code>param</code> value. 
 	 */
-	public abstract P handler(P param, SkeletonTraceElement[] strace, int index, boolean cond);
+	public abstract P handler(P param, @SuppressWarnings("rawtypes") Skeleton[] strace, int index, boolean cond);
 	
 }

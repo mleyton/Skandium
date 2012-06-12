@@ -17,8 +17,8 @@
  */
 package cl.niclabs.skandium.events;
 
+import cl.niclabs.skandium.skeletons.Skeleton;
 import cl.niclabs.skandium.system.events.SkandiumEventListener;
-import cl.niclabs.skandium.system.events.SkeletonTraceElement;
 
 public abstract class TraceListener<P> implements SkandiumEventListener {
 
@@ -43,7 +43,7 @@ public abstract class TraceListener<P> implements SkandiumEventListener {
 	 * @param strace Nested skeleton tree branch of the current execution.
 	 * @return true if the handler must be executed, false otherwise. 
 	 */
-	public boolean guard(P param, SkeletonTraceElement[] strace) {
+	public boolean guard(P param, @SuppressWarnings("rawtypes") Skeleton[] strace) {
 		return true;
 	}
 
@@ -55,6 +55,6 @@ public abstract class TraceListener<P> implements SkandiumEventListener {
 	 * @param strace Nested skeleton tree branch of the current execution.
 	 * @return New <code>param</code> value. 
 	 */
-	public abstract P handler(P param, SkeletonTraceElement[] strace);
+	public abstract P handler(P param, @SuppressWarnings("rawtypes") Skeleton[] strace);
 	
 }

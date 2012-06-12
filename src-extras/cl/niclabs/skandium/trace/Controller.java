@@ -22,13 +22,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.mxgraph.model.mxCell;
-
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.skeletons.AbstractSkeleton;
 import cl.niclabs.skandium.skeletons.Skeleton;
-import cl.niclabs.skandium.system.events.SkeletonTraceElement;
+
+import com.mxgraph.model.mxCell;
 
 class Controller {
 
@@ -81,9 +80,9 @@ class Controller {
 		}
 	}
 	
-	void addTraceElement(SkeletonTraceElement[] strace, Where where, When when) {
+	void addTraceElement(@SuppressWarnings("rawtypes") Skeleton[] strace, Where where, When when) {
 		String skelHashKey = new String();
-		for (SkeletonTraceElement s : strace) {
+		for (Skeleton<?,?> s : strace) {
 			skelHashKey += s.hashCode() + ":";
 		}
 		String hashKey = skelHashKey + where.hashCode();

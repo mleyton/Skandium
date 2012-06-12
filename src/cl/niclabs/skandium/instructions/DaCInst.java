@@ -26,7 +26,7 @@ import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.muscles.Condition;
 import cl.niclabs.skandium.muscles.Merge;
 import cl.niclabs.skandium.muscles.Split;
-import cl.niclabs.skandium.system.events.SkeletonTraceElement;
+import cl.niclabs.skandium.skeletons.Skeleton;
 
 /**
  * This instruction holds the parallelism behavior of a Divide and Conquer ({@link cl.niclabs.skandium.skeletons.DaC}) skeleton.
@@ -54,7 +54,7 @@ public class DaCInst extends  AbstractInstruction {
 	 * @param strace nested skeleton tree branch of the current execution.
 	 */
 	public DaCInst(Condition<?> condition, Split<?, ?> split, Stack<Instruction> stack, Merge<?, ?> merge, 
-			Stack<Integer> rbranch, SkeletonTraceElement[] strace) {
+			Stack<Integer> rbranch, @SuppressWarnings("rawtypes") Skeleton[] strace) {
 		super(strace);
 		this.condition = condition;
 		this.split = split;
@@ -92,7 +92,6 @@ public class DaCInst extends  AbstractInstruction {
 		Stack<Instruction> execStack = new Stack<Instruction>();
 
 		execStack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, rbranch.peek()));
-		copyIds(this.substack);
 		execStack.addAll(this.substack);
 		execStack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, rbranch.peek()));
 

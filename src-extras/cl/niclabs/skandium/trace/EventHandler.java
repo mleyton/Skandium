@@ -20,11 +20,11 @@ package cl.niclabs.skandium.trace;
 
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
-import cl.niclabs.skandium.system.events.SkeletonTraceElement;
+import cl.niclabs.skandium.skeletons.Skeleton;
 
 interface EventHandler {
 
-	Object handler(Object param, SkeletonTraceElement[] strace, When when,
+	Object handler(Object param, @SuppressWarnings("rawtypes") Skeleton[] strace, When when,
 			Where where, Object... params);
 
 }

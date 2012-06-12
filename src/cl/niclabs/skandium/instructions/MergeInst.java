@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Stack;
 
 import cl.niclabs.skandium.muscles.Merge;
-import cl.niclabs.skandium.system.events.SkeletonTraceElement;
+import cl.niclabs.skandium.skeletons.Skeleton;
 
 /**
  * This is a utility instruction and does not represent a {@link cl.niclabs.skandium.skeletons.Skeleton} in particular.
@@ -40,7 +40,7 @@ public class MergeInst extends AbstractInstruction{
 	 * @param merge The code to merge the results of the execution of each subparam.
 	 * @param strace nested skeleton tree branch of the current execution.
 	 */
-	public MergeInst(Merge<?,?> merge, SkeletonTraceElement[] strace) {
+	public MergeInst(Merge<?,?> merge, @SuppressWarnings("rawtypes") Skeleton[] strace) {
 		super(strace);
 		this.merge = merge;
 	}

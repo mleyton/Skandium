@@ -19,7 +19,7 @@ package cl.niclabs.skandium.instructions;
 
 import java.util.Stack;
 
-import cl.niclabs.skandium.system.events.SkeletonTraceElement;
+import cl.niclabs.skandium.skeletons.Skeleton;
 
 /**
  * The main class from which all other Instructions inherit.
@@ -30,9 +30,10 @@ import cl.niclabs.skandium.system.events.SkeletonTraceElement;
  */
 abstract class AbstractInstruction implements Instruction {
 
-	final SkeletonTraceElement[] strace;
+	@SuppressWarnings("rawtypes")
+	final Skeleton[] strace;
 	
-	AbstractInstruction(SkeletonTraceElement[] strace){
+	AbstractInstruction(@SuppressWarnings("rawtypes") Skeleton[] strace){
 		this.strace = strace;
 	}
 	
@@ -54,34 +55,20 @@ abstract class AbstractInstruction implements Instruction {
 		return newStack;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@Override
-	public SkeletonTraceElement[] getSkeletonTrace(){
+	public Skeleton[] getSkeletonTrace(){
 		
 		return strace;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
-	public SkeletonTraceElement[] copySkeletonTrace(){
-		SkeletonTraceElement[] newStrace = new SkeletonTraceElement[strace.length];
+	public Skeleton[] copySkeletonTrace(){
+		Skeleton[] newStrace = new Skeleton[strace.length];
 		for (int i=0; i<strace.length; i++) {
-			newStrace[i] = new SkeletonTraceElement(strace[i].getSkel(), strace[i].getId());
+			newStrace[i] = strace[i];
 		}
 		return newStrace;
-	}
-	
-	void setChildIds(Stack<Instruction> subStack, int id) {
-		for (Instruction i:subStack) {
-			SkeletonTraceElement[] subStrace = i.getSkeletonTrace();
-			int j=strace.length;
-			subStrace[j] = new SkeletonTraceElement(subStrace[j].getSkel(), id);
-		}
-	}
-	
-	void copyIds(Stack<Instruction> subStack) {
-		for(Instruction ins:subStack) {
-			for (int i=0; i<strace.length; i++) {
-				ins.getSkeletonTrace()[i] = new SkeletonTraceElement(strace[i].getSkel(), strace[i].getId());
-			}
-		}
 	}
 }

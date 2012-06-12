@@ -17,6 +17,7 @@
  */
 package cl.niclabs.skandium.system.events;
 
+import cl.niclabs.skandium.events.GenericListener;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.skeletons.AbstractSkeleton;

@@ -17,14 +17,13 @@
  */
 package cl.niclabs.skandium.instructions;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.muscles.Merge;
-import cl.niclabs.skandium.system.events.SkeletonTraceElement;
+import cl.niclabs.skandium.skeletons.Skeleton;
 
 
 /**
@@ -48,7 +47,7 @@ public class SplitInst extends AbstractInstruction {
 	 * @param strace nested skeleton tree branch of the current execution.
 	 */
 	@SuppressWarnings("rawtypes")
-	public SplitInst(List<Stack<Instruction>> substacks, Merge merge, SkeletonTraceElement[] strace){
+	public SplitInst(List<Stack<Instruction>> substacks, Merge merge, Skeleton[] strace){
 		super(strace);
 		this.substacks = substacks;
 		this.merge = merge;
@@ -58,7 +57,7 @@ public class SplitInst extends AbstractInstruction {
 	 * The constructor when reducing DaCInst.
 	 */
 	@SuppressWarnings("rawtypes")
-	public SplitInst(List<Stack<Instruction>> substacks, Merge merge, SkeletonTraceElement[] strace, Stack<Integer> rbranch){
+	public SplitInst(List<Stack<Instruction>> substacks, Merge merge, Skeleton[] strace, Stack<Integer> rbranch){
 		this(substacks,merge,strace);
 		this.rbranch = rbranch;
 	}
@@ -86,13 +85,9 @@ public class SplitInst extends AbstractInstruction {
 				subStack = copyStack(this.substacks.get(0));
 				DaCInst subDaC = ((DaCInst)subStack.peek());
 				subDaC.rbranch = subrbranch;
-				int id = Arrays.deepHashCode(subrbranch.toArray(new Integer[subrbranch.size()]));
-				SkeletonTraceElement[] subtrace = subDaC.getSkeletonTrace();
-				subtrace[subtrace.length-1] = new SkeletonTraceElement(subtrace[subtrace.length-1].getSkel(),id);
 				subStack.push(new EventInst(When.BEFORE, Where.CONDITION, subDaC.getSkeletonTrace()));				
 			} else {
 				subStack = copyStack(subsize == 1? this.substacks.get(0) : this.substacks.get(i));
-				setChildIds(subStack, i);
 				subStack.add(0,new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, i));
 				subStack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, i));
 			}

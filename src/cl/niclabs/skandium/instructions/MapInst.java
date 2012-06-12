@@ -25,7 +25,7 @@ import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.muscles.Merge;
 import cl.niclabs.skandium.muscles.Split;
-import cl.niclabs.skandium.system.events.SkeletonTraceElement;
+import cl.niclabs.skandium.skeletons.Skeleton;
 
 /**
  * This instruction holds the parallelism behavior of a {@link cl.niclabs.skandium.skeletons.Map} skeleton.
@@ -48,7 +48,7 @@ public class MapInst extends  AbstractInstruction {
 	 * @param merge The code to merge the results of the execution of each subparam.
 	 * @param strace nested skeleton tree branch of the current execution.
 	 */
-	public MapInst(Split<?, ?> split, Stack<Instruction> stack, Merge<?, ?> merge, SkeletonTraceElement[] strace) {
+	public MapInst(Split<?, ?> split, Stack<Instruction> stack, Merge<?, ?> merge, @SuppressWarnings("rawtypes") Skeleton[] strace) {
 		super(strace);
 
 		this.split=split;

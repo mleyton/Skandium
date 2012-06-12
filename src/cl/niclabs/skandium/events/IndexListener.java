@@ -17,8 +17,8 @@
  */
 package cl.niclabs.skandium.events;
 
+import cl.niclabs.skandium.skeletons.Skeleton;
 import cl.niclabs.skandium.system.events.SkandiumEventListener;
-import cl.niclabs.skandium.system.events.SkeletonTraceElement;
 
 public abstract class IndexListener<P> implements SkandiumEventListener {
 
@@ -44,7 +44,7 @@ public abstract class IndexListener<P> implements SkandiumEventListener {
 	 * @param index integer parameter as a result of context inferred indexes.
 	 * @return true if the handler must be executed, false otherwise. 
 	 */
-	public boolean guard(P param, SkeletonTraceElement[] strace, int index) {
+	public boolean guard(P param, @SuppressWarnings("rawtypes") Skeleton[] strace, int index) {
 		return true;
 	}
 
@@ -57,6 +57,6 @@ public abstract class IndexListener<P> implements SkandiumEventListener {
 	 * @param index integer parameter as a result of context inferred indexes.
 	 * @return New <code>param</code> value. 
 	 */
-	public abstract P handler(P param, SkeletonTraceElement[] strace, int index);
+	public abstract P handler(P param, @SuppressWarnings("rawtypes") Skeleton[] strace, int index);
 	
 }
