@@ -18,7 +18,6 @@
 package cl.niclabs.skandium.skeletons;
 
 import cl.niclabs.skandium.events.IndexListener;
-import cl.niclabs.skandium.events.TraceListener;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.muscles.Execute;
@@ -81,19 +80,19 @@ public class Map<P,R> extends AbstractSkeleton<P,R> {
         visitor.visit(this);
     }
 
-    public boolean addBeforeSplit(TraceListener<P> l) {
+    public boolean addBeforeSplit(IndexListener<P> l) {
     	return eregis.addListener(When.BEFORE,Where.SPLIT,l);
     }
 
-    public boolean removeBeforeSplit(TraceListener<P> l) {
+    public boolean removeBeforeSplit(IndexListener<P> l) {
     	return eregis.removeListener(When.BEFORE,Where.SPLIT,l);
     }
 
-    public <X> boolean addAfterSplit(TraceListener<X[]> l) {
+    public <X> boolean addAfterSplit(IndexListener<X[]> l) {
     	return eregis.addListener(When.AFTER,Where.SPLIT,l);
     }
 
-    public <X> boolean removeAfterSplit(TraceListener<X[]> l) {
+    public <X> boolean removeAfterSplit(IndexListener<X[]> l) {
     	return eregis.removeListener(When.AFTER,Where.SPLIT,l);
     }
 
@@ -113,19 +112,19 @@ public class Map<P,R> extends AbstractSkeleton<P,R> {
     	return eregis.removeListener(When.AFTER,Where.NESTED_SKELETON,l);
     }
 
-    public <Y> boolean addBeforeMerge(TraceListener<Y[]> l) {
+    public <Y> boolean addBeforeMerge(IndexListener<Y[]> l) {
     	return eregis.addListener(When.BEFORE,Where.MERGE,l);
     }
 
-    public <Y> boolean removeBeforeMerge(TraceListener<Y[]> l) {
+    public <Y> boolean removeBeforeMerge(IndexListener<Y[]> l) {
     	return eregis.removeListener(When.BEFORE,Where.MERGE,l);
     }
 
-    public boolean addAfterMerge(TraceListener<R> l) {
+    public boolean addAfterMerge(IndexListener<R> l) {
     	return eregis.addListener(When.AFTER,Where.MERGE,l);
     }
 
-    public boolean removeAfterMerge(TraceListener<R> l) {
+    public boolean removeAfterMerge(IndexListener<R> l) {
     	return eregis.removeListener(When.AFTER,Where.MERGE,l);
     }
 

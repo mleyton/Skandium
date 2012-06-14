@@ -20,7 +20,7 @@ package cl.niclabs.skandium.events;
 import cl.niclabs.skandium.skeletons.Skeleton;
 import cl.niclabs.skandium.system.events.SkandiumEventListener;
 
-public abstract class TraceListener<P> implements SkandiumEventListener {
+public abstract class ParentListener<P> implements SkandiumEventListener {
 
 	/**
 	 * Default implementation of compareTo method inherited from Comparable interface
@@ -41,9 +41,11 @@ public abstract class TraceListener<P> implements SkandiumEventListener {
 	 * This is the default implementation when true is returned.
 	 * @param param Current <code>param</code> value
 	 * @param strace Nested skeleton tree branch of the current execution.
+	 * @param index integer parameter as a result of context inferred indexes.
+	 * @param cond result of condition muscle.
 	 * @return true if the handler must be executed, false otherwise. 
 	 */
-	public boolean guard(P param, @SuppressWarnings("rawtypes") Skeleton[] strace) {
+	public boolean guard(P param, @SuppressWarnings("rawtypes") Skeleton[] strace, int index, int parent) {
 		return true;
 	}
 
@@ -53,8 +55,10 @@ public abstract class TraceListener<P> implements SkandiumEventListener {
 	 * 
 	 * @param param Current <code>param</code> value
 	 * @param strace Nested skeleton tree branch of the current execution.
+	 * @param index integer parameter as a result of context inferred indexes.
+	 * @param parent index of parent during a D&C execution
 	 * @return New <code>param</code> value. 
 	 */
-	public abstract P handler(P param, @SuppressWarnings("rawtypes") Skeleton[] strace);
+	public abstract P handler(P param, @SuppressWarnings("rawtypes") Skeleton[] strace, int index, int parent);
 	
 }

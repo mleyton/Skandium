@@ -17,9 +17,11 @@
  */
 package cl.niclabs.skandium.instructions;
 
+import java.util.HashMap;
 import java.util.Stack;
 
 import cl.niclabs.skandium.skeletons.Skeleton;
+import cl.niclabs.skandium.system.events.EventIdGenerator;
 
 /**
  * The main class from which all other Instructions inherit.
@@ -47,8 +49,20 @@ abstract class AbstractInstruction implements Instruction {
 	
 		Stack<Instruction> newStack= new Stack<Instruction>();
 		
+		HashMap<Integer,Integer> newIds = new HashMap<Integer,Integer>();
 		for(int i=0; i < stack.size(); i++){
 			Instruction inst = stack.get(i).copy();
+			/* Set new event ids */
+			if (inst instanceof EventInst) {
+				int id = ((EventInst)inst).getIndex();
+				int newId;
+				if(newIds.containsKey(id)) newId = newIds.get(id);
+				else {
+					newId = EventIdGenerator.getSingleton().increment();
+					newIds.put(id, newId);
+				}
+				((EventInst)inst).setIndex(newId);
+			}
 			newStack.push(inst);
 		}
 		

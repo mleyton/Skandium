@@ -18,7 +18,7 @@
 package cl.niclabs.skandium.skeletons;
 
 import cl.niclabs.skandium.events.ConditionListener;
-import cl.niclabs.skandium.events.TraceListener;
+import cl.niclabs.skandium.events.IndexListener;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.muscles.Condition;
@@ -75,11 +75,11 @@ public class If<P,R> extends AbstractSkeleton<P,R> {
         visitor.visit(this);
     }
 
-    public boolean addBeforeCondition(TraceListener<P> l) {
+    public boolean addBeforeCondition(IndexListener<P> l) {
     	return eregis.addListener(When.BEFORE, Where.CONDITION, l);
     }
 
-    public boolean removeBeforeCondition(TraceListener<P> l) {
+    public boolean removeBeforeCondition(IndexListener<P> l) {
     	return eregis.removeListener(When.BEFORE, Where.CONDITION, l);
     }
 

@@ -22,12 +22,12 @@ import java.util.concurrent.Future;
 import cl.niclabs.skandium.Skandium;
 import cl.niclabs.skandium.Stream;
 import cl.niclabs.skandium.events.GenericListener;
-import cl.niclabs.skandium.events.TraceListener;
+import cl.niclabs.skandium.events.IndexListener;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.system.events.GenericListenerRegistry;
-import cl.niclabs.skandium.system.events.SkandiumEventListener;
 import cl.niclabs.skandium.system.events.PatternEventRegistry;
+import cl.niclabs.skandium.system.events.SkandiumEventListener;
 
 /**
  * Abstract skeleton class from which all skeletons extends.
@@ -174,19 +174,19 @@ public abstract class AbstractSkeleton<P,R> implements Skeleton<P,R> {
     	return gres.getR();
     }
     
-    public boolean addBefore(TraceListener<P> l) {
+    public boolean addBefore(IndexListener<P> l) {
     	return eregis.addListener(When.BEFORE, Where.SKELETON, l);
     }
 
-    public boolean removeBefore(TraceListener<P> l) {
+    public boolean removeBefore(IndexListener<P> l) {
     	return eregis.removeListener(When.BEFORE, Where.SKELETON, l);
     }
 
-    public boolean addAfter(TraceListener<R> l) {
+    public boolean addAfter(IndexListener<R> l) {
     	return eregis.addListener(When.AFTER, Where.SKELETON, l);
     }
 
-    public boolean removeAfter(TraceListener<R> l) {
+    public boolean removeAfter(IndexListener<R> l) {
     	return eregis.removeListener(When.AFTER, Where.SKELETON, l);
     }
 }

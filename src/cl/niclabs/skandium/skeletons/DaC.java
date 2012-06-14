@@ -17,9 +17,8 @@
  */
 package cl.niclabs.skandium.skeletons;
 
-import cl.niclabs.skandium.events.ConditionListener;
-import cl.niclabs.skandium.events.IndexListener;
-import cl.niclabs.skandium.events.TraceListener;
+import cl.niclabs.skandium.events.ParentConditionListener;
+import cl.niclabs.skandium.events.ParentListener;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.muscles.Condition;
@@ -93,67 +92,67 @@ public class DaC<P,R> extends AbstractSkeleton<P,R> {
         visitor.visit(this);
     }
     
-    public boolean addBeforeCondition(TraceListener<P> l) {
+    public boolean addBeforeCondition(ParentListener<P> l) {
     	return eregis.addListener(When.BEFORE, Where.CONDITION, l);
     }
 
-    public boolean removeBeforeCondition(TraceListener<P> l) {
+    public boolean removeBeforeCondition(ParentListener<P> l) {
     	return eregis.removeListener(When.BEFORE, Where.CONDITION, l);
     }
 
-    public boolean addAfterCondition(ConditionListener<P> l) {
+    public boolean addAfterCondition(ParentConditionListener<P> l) {
     	return eregis.addListener(When.AFTER, Where.CONDITION, l);
     }
 
-    public boolean removeAfterCondition(ConditionListener<P> l) {
+    public boolean removeAfterCondition(ParentConditionListener<P> l) {
     	return eregis.removeListener(When.AFTER, Where.CONDITION, l);
     }
 
-    public boolean addBeforeSplit(TraceListener<P> l) {
+    public boolean addBeforeSplit(ParentListener<P> l) {
     	return eregis.addListener(When.BEFORE, Where.SPLIT, l);
     }
 
-    public boolean removeBeforeSplit(TraceListener<P> l) {
+    public boolean removeBeforeSplit(ParentListener<P> l) {
     	return eregis.removeListener(When.BEFORE, Where.SPLIT, l);
     }
 
-    public <X> boolean addAfterSplit(TraceListener<X[]> l) {
+    public <X> boolean addAfterSplit(ParentListener<X[]> l) {
     	return eregis.addListener(When.AFTER, Where.SPLIT, l);
     }
 
-    public <X> boolean removeAfterSplit(TraceListener<X[]> l) {
+    public <X> boolean removeAfterSplit(ParentListener<X[]> l) {
     	return eregis.removeListener(When.AFTER, Where.SPLIT, l);
     }
 
-    public <X> boolean addBeforeNestedSkel(IndexListener<X> l) {
+    public <X> boolean addBeforeNestedSkel(ParentListener<X> l) {
     	return eregis.addListener(When.BEFORE, Where.NESTED_SKELETON, l);
     }
 
-    public <X> boolean removeBeforeNestedSkel(IndexListener<X> l) {
+    public <X> boolean removeBeforeNestedSkel(ParentListener<X> l) {
     	return eregis.removeListener(When.BEFORE, Where.NESTED_SKELETON, l);
     }
 
-    public <Y> boolean addAfterNestedSkel(IndexListener<Y> l) {
+    public <Y> boolean addAfterNestedSkel(ParentListener<Y> l) {
     	return eregis.addListener(When.AFTER, Where.NESTED_SKELETON, l);
     }
 
-    public <Y> boolean removeAfterNestedSkel(IndexListener<Y> l) {
+    public <Y> boolean removeAfterNestedSkel(ParentListener<Y> l) {
     	return eregis.removeListener(When.AFTER, Where.NESTED_SKELETON, l);
     }
 
-    public <Y> boolean addBeforeMerge(TraceListener<Y[]> l) {
+    public <Y> boolean addBeforeMerge(ParentListener<Y[]> l) {
     	return eregis.addListener(When.BEFORE, Where.MERGE, l);
     }
 
-    public <Y> boolean removeBeforeMerge(TraceListener<Y[]> l) {
+    public <Y> boolean removeBeforeMerge(ParentListener<Y[]> l) {
     	return eregis.removeListener(When.BEFORE, Where.MERGE, l);
     }
 
-    public boolean addAfterMerge(TraceListener<R> l) {
+    public boolean addAfterMerge(ParentListener<R> l) {
     	return eregis.addListener(When.AFTER, Where.MERGE, l);
     }
 
-    public boolean removeAfterMerge(TraceListener<R> l) {
+    public boolean removeAfterMerge(ParentListener<R> l) {
     	return eregis.removeListener(When.AFTER, Where.MERGE, l);
     }
 

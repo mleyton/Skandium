@@ -27,6 +27,7 @@ import cl.niclabs.skandium.muscles.Condition;
 import cl.niclabs.skandium.muscles.Merge;
 import cl.niclabs.skandium.muscles.Split;
 import cl.niclabs.skandium.skeletons.Skeleton;
+import cl.niclabs.skandium.system.events.EventIdGenerator;
 
 /**
  * This instruction holds the parallelism behavior of a Divide and Conquer ({@link cl.niclabs.skandium.skeletons.DaC}) skeleton.
@@ -42,7 +43,7 @@ public class DaCInst extends  AbstractInstruction {
 	Stack<Instruction> substack;
 	@SuppressWarnings("rawtypes")
 	Merge merge;
-	Stack<Integer> rbranch;
+	int parent;
 	
 	/**
 	 * The constructor.
@@ -54,13 +55,13 @@ public class DaCInst extends  AbstractInstruction {
 	 * @param strace nested skeleton tree branch of the current execution.
 	 */
 	public DaCInst(Condition<?> condition, Split<?, ?> split, Stack<Instruction> stack, Merge<?, ?> merge, 
-			Stack<Integer> rbranch, @SuppressWarnings("rawtypes") Skeleton[] strace) {
+			@SuppressWarnings("rawtypes") Skeleton[] strace, int parent) {
 		super(strace);
 		this.condition = condition;
 		this.split = split;
 		this.substack = stack;
-		this.rbranch = rbranch;
 		this.merge = merge;
+		this.parent = parent;
 	}
 
 	/**
@@ -74,44 +75,41 @@ public class DaCInst extends  AbstractInstruction {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack,List<Stack<Instruction>> children) throws Exception {
-
+		int id = EventIdGenerator.getSingleton().increment();
+		(new EventInst(When.BEFORE, Where.CONDITION, strace, id, false, parent)).interpret(param, stack, children);
 		boolean cond = condition.condition(param);
-		
+
 		Stack<Instruction> newStack = new Stack<Instruction>();
 		DaCInst subInst = (DaCInst) this.copy();
+		subInst.parent = id;
 		newStack.push(subInst);
 		List<Stack<Instruction>> substacks = new ArrayList<Stack<Instruction>>();
 		substacks.add(newStack);
 		
 		Stack<Instruction> splitStack = new Stack<Instruction>();
-		splitStack.push(new SplitInst(substacks, merge, strace, rbranch));
-		splitStack.push(new EventInst(When.AFTER, Where.SPLIT, strace));
+		splitStack.push(new SplitInst(substacks, merge, strace, id, parent));
+		splitStack.push(new EventInst(When.AFTER, Where.SPLIT, strace, id, false, parent));
 		splitStack.push(new SeqInst(split, strace));
-		splitStack.push(new EventInst(When.BEFORE, Where.SPLIT, strace));
+		splitStack.push(new EventInst(When.BEFORE, Where.SPLIT, strace, id, false, parent));
 		
 		Stack<Instruction> execStack = new Stack<Instruction>();
 
-		execStack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, rbranch.peek()));
+		execStack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, id, false, parent));
 		execStack.addAll(this.substack);
-		execStack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, rbranch.peek()));
+		execStack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, id, false, parent));
 
 		stack.push(new ChoiceInst(cond, splitStack, execStack, strace));
-		stack.push(new EventInst(When.AFTER, Where.CONDITION, strace, rbranch.peek(), cond));
+		stack.push(new EventInst(When.AFTER, Where.CONDITION, strace, id, cond, parent));
 				
 		return param;
 	}
 	
-	private Stack<Integer> copyRbranch() {
-		Stack<Integer> newRbranch = new Stack<Integer>();
-		newRbranch.addAll(rbranch);
-		return newRbranch;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Instruction copy() {
-		return new DaCInst(condition, split, copyStack(substack), merge, copyRbranch(), copySkeletonTrace());
+		return new DaCInst(condition, split, copyStack(substack), merge, copySkeletonTrace(), parent);
 	}
+	
 }

@@ -25,6 +25,6 @@ import cl.niclabs.skandium.skeletons.Skeleton;
 interface EventHandler {
 
 	Object handler(Object param, @SuppressWarnings("rawtypes") Skeleton[] strace, When when,
-			Where where, Object... params);
+			Where where, int index, boolean cond);
 
 }

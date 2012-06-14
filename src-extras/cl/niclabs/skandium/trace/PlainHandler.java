@@ -32,12 +32,12 @@ class PlainHandler implements EventHandler{
 	
 	@Override
 	public Object handler(Object param, @SuppressWarnings("rawtypes") Skeleton[] strace, When when,
-			Where where, Object... params) {
+			Where where, int index, boolean cond) {
 		String out = System.currentTimeMillis() + " skeletonTrace:";
 		for (int i=0; i<strace.length; i++) {
 			out += "/" + strace[i].getClass().getSimpleName();
 		}
-		out += " when:" + when + " where:" + where + " params:" + params; 
+		out += " when:" + when + " where:" + where + " index:" + index + " cond:" + cond; 
 		System.out.println(out);
 		return param;
 	}

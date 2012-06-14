@@ -48,7 +48,7 @@ public abstract class GenericListener implements SkandiumEventListener {
 	 * @param params event parameters
 	 * @return true if the handler must be executed, false otherwise. 
 	 */
-	public boolean guard(Object param, @SuppressWarnings("rawtypes") Skeleton[] strace, When when, Where where, Object... params) {
+	public boolean guard(Object param, @SuppressWarnings("rawtypes") Skeleton[] strace, int index, boolean cond, int parent, When when, Where where) {
 		return true;
 	}
 
@@ -61,6 +61,6 @@ public abstract class GenericListener implements SkandiumEventListener {
 	 * @param params event parameters
 	 * @return New <code>param</code> value. 
 	 */
-	public abstract Object handler(Object param, @SuppressWarnings("rawtypes") Skeleton[] strace,  When when, Where where, Object... params);
+	public abstract Object handler(Object param, @SuppressWarnings("rawtypes") Skeleton[] strace,  int index, boolean cond, int parent, When when, Where where);
 
 }

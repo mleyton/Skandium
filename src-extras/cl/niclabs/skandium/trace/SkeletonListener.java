@@ -32,10 +32,11 @@ class SkeletonListener extends GenericListener {
 		this.handler = handler;
 	}
 
+
 	@Override
-	public Object handler(Object param, @SuppressWarnings("rawtypes") Skeleton[] strace, When when,
-			Where where, Object... params) {
-		return handler.handler(param, strace, when, where, params);
+	public Object handler(Object param, @SuppressWarnings("rawtypes") Skeleton[] strace, int index,
+			boolean cond, int parent, When when, Where where) {
+		return handler.handler(param, strace, when, where, index, cond);
 	}
 
 }

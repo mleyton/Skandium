@@ -26,6 +26,7 @@ import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.muscles.Merge;
 import cl.niclabs.skandium.muscles.Split;
 import cl.niclabs.skandium.skeletons.Skeleton;
+import cl.niclabs.skandium.system.events.EventIdGenerator;
 
 /**
  * This instruction holds the parallelism behavior of a {@link cl.niclabs.skandium.skeletons.Fork} skeleton.
@@ -61,11 +62,12 @@ public class ForkInst extends  AbstractInstruction {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
-
+		int id = EventIdGenerator.getSingleton().increment();
+		(new EventInst(When.BEFORE, Where.SPLIT, strace, id, false, 0)).interpret(param, stack, children);
 		Object[] params = split.split(param);
 		
-		stack.push(new SplitInst(substacks, merge, strace));
-		stack.push(new EventInst(When.AFTER, Where.SPLIT, strace));
+		stack.push(new SplitInst(substacks, merge, strace, id));
+		stack.push(new EventInst(When.AFTER, Where.SPLIT, strace, id, false, 0));
 		
 		return params;
 	}

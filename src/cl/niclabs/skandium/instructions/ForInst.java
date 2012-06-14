@@ -23,6 +23,7 @@ import java.util.Stack;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.skeletons.Skeleton;
+import cl.niclabs.skandium.system.events.EventIdGenerator;
 
 
 /**
@@ -34,7 +35,6 @@ public class ForInst extends AbstractInstruction{
 
 	Stack<Instruction> substack;
 	int times;
-	int n;
 	
 	/**
 	 * The main constructor.
@@ -46,7 +46,6 @@ public class ForInst extends AbstractInstruction{
 		super(strace);
 		this.substack = substack;
 		this.times = times;
-		this.n = times-1;
 	}
 	
 	/**
@@ -58,12 +57,14 @@ public class ForInst extends AbstractInstruction{
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
 
+		int id = EventIdGenerator.getSingleton().increment();
+		
 		if (times > 0) {		
 			times--;
 			stack.push(this);
-			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, n-times));
+			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, id, false, 0));
 			stack.addAll(substack);
-			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, n-times));
+			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, id, false, 0));
 		}
 		return param;
 	}

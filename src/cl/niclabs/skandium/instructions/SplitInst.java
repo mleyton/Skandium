@@ -24,6 +24,7 @@ import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.muscles.Merge;
 import cl.niclabs.skandium.skeletons.Skeleton;
+import cl.niclabs.skandium.system.events.EventIdGenerator;
 
 
 /**
@@ -38,7 +39,8 @@ public class SplitInst extends AbstractInstruction {
 	List<Stack<Instruction>> substacks;
 	@SuppressWarnings("rawtypes")
 	Merge merge;
-	Stack<Integer> rbranch;
+	int id;
+	int parent;
 
 	/**
 	 * The main constructor.
@@ -47,21 +49,26 @@ public class SplitInst extends AbstractInstruction {
 	 * @param strace nested skeleton tree branch of the current execution.
 	 */
 	@SuppressWarnings("rawtypes")
-	public SplitInst(List<Stack<Instruction>> substacks, Merge merge, Skeleton[] strace){
+	public SplitInst(List<Stack<Instruction>> substacks, Merge merge, Skeleton[] strace, int id){
 		super(strace);
 		this.substacks = substacks;
 		this.merge = merge;
-	}
-	
-	/**
-	 * The constructor when reducing DaCInst.
-	 */
-	@SuppressWarnings("rawtypes")
-	public SplitInst(List<Stack<Instruction>> substacks, Merge merge, Skeleton[] strace, Stack<Integer> rbranch){
-		this(substacks,merge,strace);
-		this.rbranch = rbranch;
+		this.id = id;
+		this.parent = 0;
 	}
 
+	/**
+	 * The main constructor.
+	 * @param substacks list of substacks, if the list has just 1 substack, it is copied to complete the <code>param</code> size. 
+	 * @param merge The code to merge the results of the execution of each subparam.
+	 * @param strace nested skeleton tree branch of the current execution.
+	 */
+	@SuppressWarnings("rawtypes")
+	public SplitInst(List<Stack<Instruction>> substacks, Merge merge, Skeleton[] strace, int id, int parent){
+		this(substacks, merge, strace, id);
+		this.parent = parent;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -77,31 +84,25 @@ public class SplitInst extends AbstractInstruction {
 		// For each stack copy all of its elements
 		for(int i=0; i < params.length; i++){
 			Stack<Instruction> subStack;
-			// ID and RBranch (in DaC case) calculation
-			if (rbranch != null) {
-				Stack<Integer> subrbranch = new Stack<Integer>();
-				subrbranch.addAll(rbranch);
-				subrbranch.push(i);
-				subStack = copyStack(this.substacks.get(0));
-				DaCInst subDaC = ((DaCInst)subStack.peek());
-				subDaC.rbranch = subrbranch;
-				subStack.push(new EventInst(When.BEFORE, Where.CONDITION, subDaC.getSkeletonTrace()));				
-			} else {
-				subStack = copyStack(subsize == 1? this.substacks.get(0) : this.substacks.get(i));
-				subStack.add(0,new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, i));
-				subStack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, i));
+
+			subStack = copyStack(subsize == 1? this.substacks.get(0) : this.substacks.get(i));			
+			if (!(subStack.peek() instanceof DaCInst)) {
+				int subId = EventIdGenerator.getSingleton().increment();
+				subStack.add(0,new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, subId, false, 0));
+				subStack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, subId, false, 0));
 			}
 			children.add(subStack);
 		}
-		stack.push(new EventInst(When.AFTER, Where.MERGE, strace));
+		
+		stack.push(new EventInst(When.AFTER, Where.MERGE, strace, id, false, parent));
 		stack.push(new MergeInst(merge, strace));
-		stack.push(new EventInst(When.BEFORE, Where.MERGE, strace));
+		stack.push(new EventInst(When.BEFORE, Where.MERGE, strace, id, false, parent));
 	
 		return params;
 	}
 
 	@Override
 	public Instruction copy() {
-		return new SplitInst(substacks, merge, copySkeletonTrace());
+		return new SplitInst(substacks, merge, copySkeletonTrace(),id, parent);
 	}
 }

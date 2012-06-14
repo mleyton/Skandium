@@ -22,8 +22,9 @@ import java.util.Stack;
 
 import cl.niclabs.skandium.events.ConditionListener;
 import cl.niclabs.skandium.events.IndexListener;
-import cl.niclabs.skandium.events.TraceListener;
 import cl.niclabs.skandium.events.GenericListener;
+import cl.niclabs.skandium.events.ParentConditionListener;
+import cl.niclabs.skandium.events.ParentListener;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.skeletons.AbstractSkeleton;
@@ -39,7 +40,9 @@ public class EventInst extends AbstractInstruction {
 	
 	When when;
 	Where where;
-	Object[] params;
+	int index;
+	boolean cond;
+	int parent;
 
 	/**
 	 * The constructor
@@ -48,11 +51,13 @@ public class EventInst extends AbstractInstruction {
 	 * @param strace nested skeleton tree branch of the current execution.
 	 * @param params specific event parameters
 	 */
-	public EventInst(When when, Where where, @SuppressWarnings("rawtypes") Skeleton[] strace, Object... params){
+	public EventInst(When when, Where where, @SuppressWarnings("rawtypes") Skeleton[] strace, int index, boolean cond, int parent){
 		super(strace);
 		this.when = when;
 		this.where = where;
-		this.params = params;
+		this.index = index;
+		this.cond = cond;
+		this.parent = parent;
 	}
 	
 	/**
@@ -65,21 +70,25 @@ public class EventInst extends AbstractInstruction {
 		Skeleton<?,?> curr = strace[strace.length-1];
 		SkandiumEventListener[] listeners = ((AbstractSkeleton<?,?>) curr).getListeners(when, where);
 		for (SkandiumEventListener l : listeners) {
-			if (l instanceof TraceListener<?>) {
-				if (((TraceListener<P>) l).guard(param, strace)) {
-					param = ((TraceListener<P>) l).handler(param, strace);
-				}
-			} else if (l instanceof IndexListener<?>) {
-				if (((IndexListener<P>) l).guard(param, strace, (Integer) params[0])) {
-					param = ((IndexListener<P>) l).handler(param, strace, (Integer) params[0]);
+			if (l instanceof IndexListener<?>) {
+				if (((IndexListener<P>) l).guard(param, strace, index)) {
+					param = ((IndexListener<P>) l).handler(param, strace, index);
 				}
 			} else if (l instanceof ConditionListener<?>) {
-				if (((ConditionListener<P>) l).guard(param, strace, (Integer) params[0], (Boolean) params[1])) {
-					param = ((ConditionListener<P>) l).handler(param, strace, (Integer) params[0], (Boolean) params[1]);
+				if (((ConditionListener<P>) l).guard(param, strace, index, cond)) {
+					param = ((ConditionListener<P>) l).handler(param, strace, index, cond);
+				}
+			} else if (l instanceof ParentListener<?>) {
+				if (((ParentListener<P>) l).guard(param, strace, index, parent)) {
+					param = ((ParentListener<P>) l).handler(param, strace, index, parent);
+				}
+			} else if (l instanceof ParentConditionListener<?>) {
+				if (((ParentConditionListener<P>) l).guard(param, strace, index, cond, parent)) {
+					param = ((ParentConditionListener<P>) l).handler(param, strace, index, cond, parent);
 				}
 			} else if (l instanceof GenericListener) {
-				if (((GenericListener) l).guard(param, strace, when, where, params)) {
-					param = (P) ((GenericListener) l).handler(param, strace, when, where, params);
+				if (((GenericListener) l).guard(param, strace, index, cond, parent, when, where)) {
+					param = (P) ((GenericListener) l).handler(param, strace, index, cond, parent, when, where);
 				}
 			} else throw new RuntimeException("Should not be here!");
 		}
@@ -91,7 +100,15 @@ public class EventInst extends AbstractInstruction {
 	 */
 	@Override
 	public Instruction copy() {
-		return new EventInst(when, where, copySkeletonTrace(), params);
+		return new EventInst(when, where, copySkeletonTrace(), index, cond, parent);
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 }
