@@ -42,7 +42,6 @@ public class EventInst extends AbstractInstruction {
 	Where where;
 	int index;
 	boolean cond;
-	int parent;
 
 	/**
 	 * The constructor

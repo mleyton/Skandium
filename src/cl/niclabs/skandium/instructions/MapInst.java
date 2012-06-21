@@ -49,12 +49,13 @@ public class MapInst extends  AbstractInstruction {
 	 * @param merge The code to merge the results of the execution of each subparam.
 	 * @param strace nested skeleton tree branch of the current execution.
 	 */
-	public MapInst(Split<?, ?> split, Stack<Instruction> stack, Merge<?, ?> merge, @SuppressWarnings("rawtypes") Skeleton[] strace) {
+	public MapInst(Split<?, ?> split, Stack<Instruction> stack, Merge<?, ?> merge, @SuppressWarnings("rawtypes") Skeleton[] strace, int parent) {
 		super(strace);
 
 		this.split=split;
 		this.substack=stack;
 		this.merge=merge;
+		this.parent = parent;
 	}
 
 	/**
@@ -67,13 +68,13 @@ public class MapInst extends  AbstractInstruction {
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
 		
 		int id = EventIdGenerator.getSingleton().increment();
-		(new EventInst(When.BEFORE, Where.SPLIT, strace, id, false, 0)).interpret(param, stack, children);
+		(new EventInst(When.BEFORE, Where.SPLIT, strace, id, false, parent)).interpret(param, stack, children);
 		Object[] params = split.split(param);
 		List<Stack<Instruction>> substacks = new ArrayList<Stack<Instruction>>();
 		substacks.add(copyStack(this.substack));
 		
-		stack.push(new SplitInst(substacks, merge, strace, id));
-		stack.push(new EventInst(When.AFTER, Where.SPLIT, strace, id, false, 0));
+		stack.push(new SplitInst(substacks, merge, strace, id, parent));
+		stack.push(new EventInst(When.AFTER, Where.SPLIT, strace, id, false, parent));
 		return params;
 	}
 	
@@ -83,6 +84,6 @@ public class MapInst extends  AbstractInstruction {
 	@Override
 	public Instruction copy() {
 		
-		return new MapInst(split, copyStack(substack), merge, copySkeletonTrace());
+		return new MapInst(split, copyStack(substack), merge, copySkeletonTrace(), parent);
 	}
 }

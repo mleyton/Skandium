@@ -1,9 +1,23 @@
 package cl.niclabs.skandium.autonomic;
 
-import java.util.List;
+import cl.niclabs.skandium.skeletons.Skeleton;
 
-class SplitState extends SkeletonState {
+class SplitState extends ChildrenState {
 	private boolean isBeforeMerge;
 	private boolean isBeforeSplit;
-	private List<Integer> subIndexes;
+	SplitState(Skeleton<?, ?> skel, int index) {
+		super(skel, index);
+	}
+	boolean isBeforeMerge() {
+		return isBeforeMerge;
+	}
+	boolean isBeforeSplit() {
+		return isBeforeSplit;
+	}
+	void setBeforeMerge(boolean isBeforeMerge) {
+		this.isBeforeMerge = isBeforeMerge;
+	}
+	void setBeforeSplit(boolean isBeforeSplit) {
+		this.isBeforeSplit = isBeforeSplit;
+	}
 }

@@ -42,10 +42,11 @@ public class ForInst extends AbstractInstruction{
 	 * @param times The number of times to iterate.
 	 * @param strace nested skeleton tree branch of the current execution.
 	 */
-	public ForInst(Stack<Instruction> substack, int times, @SuppressWarnings("rawtypes") Skeleton[] strace) {
+	public ForInst(Stack<Instruction> substack, int times, @SuppressWarnings("rawtypes") Skeleton[] strace, int parent) {
 		super(strace);
 		this.substack = substack;
 		this.times = times;
+		this.parent = parent;
 	}
 	
 	/**
@@ -62,9 +63,9 @@ public class ForInst extends AbstractInstruction{
 		if (times > 0) {		
 			times--;
 			stack.push(this);
-			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, id, false, 0));
+			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, id, false, parent));
 			stack.addAll(substack);
-			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, id, false, 0));
+			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, id, false, parent));
 		}
 		return param;
 	}
@@ -75,7 +76,7 @@ public class ForInst extends AbstractInstruction{
 	@Override
 	public Instruction copy() {
 		
-		return new ForInst(copyStack(substack), times, copySkeletonTrace());
+		return new ForInst(copyStack(substack), times, copySkeletonTrace(),parent);
 	}
 
 	

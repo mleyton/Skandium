@@ -32,6 +32,8 @@ import cl.niclabs.skandium.system.events.EventIdGenerator;
  */
 abstract class AbstractInstruction implements Instruction {
 
+	int parent;
+
 	@SuppressWarnings("rawtypes")
 	final Skeleton[] strace;
 	
@@ -65,6 +67,13 @@ abstract class AbstractInstruction implements Instruction {
 			}
 			newStack.push(inst);
 		}
+		/* update parents */
+		for(Instruction inst : newStack) {
+			int parent = ((AbstractInstruction)inst).getParent();
+			if(newIds.containsKey(parent)) {
+				((AbstractInstruction)inst).setParent(newIds.get(parent));
+			}
+		}
 		
 		return newStack;
 	}
@@ -85,4 +94,13 @@ abstract class AbstractInstruction implements Instruction {
 		}
 		return newStrace;
 	}
+
+	int getParent() {
+		return parent;
+	}
+
+	void setParent(int parent) {
+		this.parent = parent;
+	}
+	
 }

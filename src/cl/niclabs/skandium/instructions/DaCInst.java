@@ -43,7 +43,6 @@ public class DaCInst extends  AbstractInstruction {
 	Stack<Instruction> substack;
 	@SuppressWarnings("rawtypes")
 	Merge merge;
-	int parent;
 	
 	/**
 	 * The constructor.
@@ -78,6 +77,13 @@ public class DaCInst extends  AbstractInstruction {
 		int id = EventIdGenerator.getSingleton().increment();
 		(new EventInst(When.BEFORE, Where.CONDITION, strace, id, false, parent)).interpret(param, stack, children);
 		boolean cond = condition.condition(param);
+
+		/* update parent */
+		for (Instruction inst : this.substack) {
+			if (((AbstractInstruction)inst).getParent() == parent) {
+				((AbstractInstruction)inst).setParent(id);
+			}
+		}
 
 		Stack<Instruction> newStack = new Stack<Instruction>();
 		DaCInst subInst = (DaCInst) this.copy();

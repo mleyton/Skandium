@@ -40,22 +40,6 @@ public class SplitInst extends AbstractInstruction {
 	@SuppressWarnings("rawtypes")
 	Merge merge;
 	int id;
-	int parent;
-
-	/**
-	 * The main constructor.
-	 * @param substacks list of substacks, if the list has just 1 substack, it is copied to complete the <code>param</code> size. 
-	 * @param merge The code to merge the results of the execution of each subparam.
-	 * @param strace nested skeleton tree branch of the current execution.
-	 */
-	@SuppressWarnings("rawtypes")
-	public SplitInst(List<Stack<Instruction>> substacks, Merge merge, Skeleton[] strace, int id){
-		super(strace);
-		this.substacks = substacks;
-		this.merge = merge;
-		this.id = id;
-		this.parent = 0;
-	}
 
 	/**
 	 * The main constructor.
@@ -65,10 +49,13 @@ public class SplitInst extends AbstractInstruction {
 	 */
 	@SuppressWarnings("rawtypes")
 	public SplitInst(List<Stack<Instruction>> substacks, Merge merge, Skeleton[] strace, int id, int parent){
-		this(substacks, merge, strace, id);
+		super(strace);
+		this.substacks = substacks;
+		this.merge = merge;
+		this.id = id;
 		this.parent = parent;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

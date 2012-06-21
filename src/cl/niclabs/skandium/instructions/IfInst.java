@@ -44,11 +44,12 @@ public class IfInst extends AbstractInstruction {
 	 * @param falseCaseStack Code to execute in the false case.
 	 * @param strace nested skeleton tree branch of the current execution.
 	 */
-	public IfInst(Condition<?> condition, Stack<Instruction> trueCaseStack, Stack<Instruction> falseCaseStack, @SuppressWarnings("rawtypes") Skeleton[] strace) {
+	public IfInst(Condition<?> condition, Stack<Instruction> trueCaseStack, Stack<Instruction> falseCaseStack, @SuppressWarnings("rawtypes") Skeleton[] strace, int parent) {
 		super(strace);
 		this.condition = condition;
 		this.trueCaseStack = trueCaseStack;
 		this.falseCaseStack = falseCaseStack;
+		this.parent = parent;
 	}
 	
 	/**
@@ -62,13 +63,13 @@ public class IfInst extends AbstractInstruction {
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
 
 		int id = EventIdGenerator.getSingleton().increment();
-		new EventInst(When.BEFORE, Where.CONDITION, strace, id, false, 0).interpret(param, stack, children);
+		new EventInst(When.BEFORE, Where.CONDITION, strace, id, false, parent).interpret(param, stack, children);
 		boolean cond = condition.condition(param);
 
-		stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, id, cond, 0));
+		stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, id, cond, parent));
 		stack.push(new ChoiceInst(cond, trueCaseStack, falseCaseStack, strace));
-		stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, id, cond, 0));
-		stack.push(new EventInst(When.AFTER, Where.CONDITION, strace, id, cond, 0));
+		stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, id, cond, parent));
+		stack.push(new EventInst(When.AFTER, Where.CONDITION, strace, id, cond, parent));
 
 		return param;
 	}
@@ -79,6 +80,6 @@ public class IfInst extends AbstractInstruction {
 	@Override
 	public Instruction copy() {
 		
-		return new IfInst(condition, copyStack(trueCaseStack), copyStack(falseCaseStack), copySkeletonTrace());
+		return new IfInst(condition, copyStack(trueCaseStack), copyStack(falseCaseStack), copySkeletonTrace(), parent);
 	}
 }

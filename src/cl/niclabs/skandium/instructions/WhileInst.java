@@ -43,10 +43,11 @@ public class WhileInst extends AbstractInstruction {
 	 * @param stack The code to execute while the condition holds true.
 	 * @param strace nested skeleton tree branch of the current execution.
 	 */
-	public WhileInst(Condition<?> condition, Stack<Instruction> stack, @SuppressWarnings("rawtypes") Skeleton[] strace) {
+	public WhileInst(Condition<?> condition, Stack<Instruction> stack, @SuppressWarnings("rawtypes") Skeleton[] strace, int parent) {
 		super(strace);
 		this.condition = condition;
 		this.substack = stack;
+		this.parent = parent;
 	}
 
 	/**
@@ -58,15 +59,15 @@ public class WhileInst extends AbstractInstruction {
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
 		
 		int id = EventIdGenerator.getSingleton().increment();
-		(new EventInst(When.BEFORE, Where.CONDITION, strace, id, false, 0)).interpret(param, stack, children);
+		(new EventInst(When.BEFORE, Where.CONDITION, strace, id, false, parent)).interpret(param, stack, children);
 		boolean cond = condition.condition(param);
 		if(cond){
 			stack.push(this);
-			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, id, false, 0));
+			stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, id, false, parent));
 			stack.addAll(this.substack);
-			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, id, false, 0));
+			stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, id, false, parent));
 		}
-		stack.push(new EventInst(When.AFTER, Where.CONDITION, strace, id, cond, 0));
+		stack.push(new EventInst(When.AFTER, Where.CONDITION, strace, id, cond, parent));
 				
 		return param;	
 	}
@@ -76,6 +77,6 @@ public class WhileInst extends AbstractInstruction {
 	 */
 	@Override
 	public Instruction copy() {
-		return new WhileInst(condition, copyStack(substack), copySkeletonTrace());
+		return new WhileInst(condition, copyStack(substack), copySkeletonTrace(), parent);
 	}
 }

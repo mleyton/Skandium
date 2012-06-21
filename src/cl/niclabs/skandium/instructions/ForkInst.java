@@ -48,11 +48,12 @@ public class ForkInst extends  AbstractInstruction {
 	 * @param merge The code to merge the result of executing the stack on the subparam.
 	 * @param strace nested skeleton tree branch of the current execution.
 	 */
-	public ForkInst(Split<?, ?> split, List<Stack<Instruction>> stacks, Merge<?, ?> merge, @SuppressWarnings("rawtypes") Skeleton[] strace) {
+	public ForkInst(Split<?, ?> split, List<Stack<Instruction>> stacks, Merge<?, ?> merge, @SuppressWarnings("rawtypes") Skeleton[] strace, int parent) {
 		super(strace);
 		this.split = split;
 		this.substacks = stacks;
 		this.merge = merge;
+		this.parent = parent;
 	}
 
 	/**
@@ -63,11 +64,11 @@ public class ForkInst extends  AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
 		int id = EventIdGenerator.getSingleton().increment();
-		(new EventInst(When.BEFORE, Where.SPLIT, strace, id, false, 0)).interpret(param, stack, children);
+		(new EventInst(When.BEFORE, Where.SPLIT, strace, id, false, parent)).interpret(param, stack, children);
 		Object[] params = split.split(param);
 		
-		stack.push(new SplitInst(substacks, merge, strace, id));
-		stack.push(new EventInst(When.AFTER, Where.SPLIT, strace, id, false, 0));
+		stack.push(new SplitInst(substacks, merge, strace, id, parent));
+		stack.push(new EventInst(When.AFTER, Where.SPLIT, strace, id, false, parent));
 		
 		return params;
 	}
@@ -84,6 +85,6 @@ public class ForkInst extends  AbstractInstruction {
 			newStacks.add(copyStack(substacks.get(i)));
 		}
 		
-		return new ForkInst(split, newStacks, merge, copySkeletonTrace());
+		return new ForkInst(split, newStacks, merge, copySkeletonTrace(), parent);
 	}
 }
