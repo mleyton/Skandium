@@ -98,12 +98,10 @@ public class StackBuilder implements SkeletonVisitor {
 
 		// event ids
 		int id = EventIdGenerator.getSingleton().increment();
-		int idStage1 = EventIdGenerator.getSingleton().increment();
-		int idStage2 = EventIdGenerator.getSingleton().increment();
 
 		// create a new stack builder for each stage
-		StackBuilder stage1 = new StackBuilder(strace,idStage1);
-		StackBuilder stage2 = new StackBuilder(strace,idStage2);
+		StackBuilder stage1 = new StackBuilder(strace,id);
+		StackBuilder stage2 = new StackBuilder(strace,id);
 
 		// construct the stack
 		skeleton.getStage1().accept(stage1);
@@ -113,12 +111,8 @@ public class StackBuilder implements SkeletonVisitor {
 		@SuppressWarnings("rawtypes")
 		Skeleton[] straceArray = getStraceAsArray();
 		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray, id, false, parent));
-		stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, straceArray, idStage2, false, id));
 		stack.addAll(stage2.stack); // second stage first
-		stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, straceArray, idStage2, false, id));
-		stack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, straceArray, idStage1, false, id));
 		stack.addAll(stage1.stack); // first stage last
-		stack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, straceArray, idStage1, false, id));
 		stack.push(new EventInst(When.BEFORE, Where.SKELETON, straceArray, id, false, parent));
 	}
 
@@ -151,7 +145,7 @@ public class StackBuilder implements SkeletonVisitor {
 		Skeleton[] straceArray = getStraceAsArray();
 		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray, id, false, parent));
 		stack.push(new IfInst(skeleton.getCondition(), trueCaseStackBuilder.stack,
-				falseCaseStackBuilder.stack, straceArray, id));
+				falseCaseStackBuilder.stack, straceArray, id, parent));
 		stack.push(new EventInst(When.BEFORE, Where.SKELETON, straceArray, id, false, parent));
 	}
 
@@ -167,7 +161,7 @@ public class StackBuilder implements SkeletonVisitor {
 		@SuppressWarnings("rawtypes")
 		Skeleton[] straceArray = getStraceAsArray();
 		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray, id, false, parent));
-		stack.push(new WhileInst(skeleton.getCondition(), subStackBuilder.stack, straceArray, id));
+		stack.push(new WhileInst(skeleton.getCondition(), subStackBuilder.stack, straceArray, id, parent));
 		stack.push(new EventInst(When.BEFORE, Where.SKELETON, straceArray, id, false, parent));
 	}
 
@@ -183,7 +177,7 @@ public class StackBuilder implements SkeletonVisitor {
 		@SuppressWarnings("rawtypes")
 		Skeleton[] straceArray = getStraceAsArray();
 		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray, id, false, parent));
-		stack.push(new ForInst(subStackBuilder.stack, skeleton.getTimes(), straceArray, id));
+		stack.push(new ForInst(subStackBuilder.stack, skeleton.getTimes(), straceArray));
 		stack.push(new EventInst(When.BEFORE, Where.SKELETON, straceArray, id, false, parent));
 	}
 
@@ -199,7 +193,7 @@ public class StackBuilder implements SkeletonVisitor {
 		@SuppressWarnings("rawtypes")
 		Skeleton[] straceArray = getStraceAsArray();
 		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray, id, false, parent));
-		stack.push(new MapInst(skeleton.getSplit(), subStackBuilder.stack, skeleton.getMerge(), straceArray, id));
+		stack.push(new MapInst(skeleton.getSplit(), subStackBuilder.stack, skeleton.getMerge(), straceArray, id, parent));
 		stack.push(new EventInst(When.BEFORE,Where.SKELETON, straceArray, id, false, parent));
 	}
 
@@ -219,7 +213,7 @@ public class StackBuilder implements SkeletonVisitor {
 		Skeleton[] straceArray = getStraceAsArray();
 				
 		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray, id, false, parent));
-		stack.push(new ForkInst(skeleton.getSplit(), stacks, skeleton.getMerge(), straceArray, id));
+		stack.push(new ForkInst(skeleton.getSplit(), stacks, skeleton.getMerge(), straceArray, id, parent));
 		stack.push(new EventInst(When.BEFORE, Where.SKELETON, straceArray, id, false, parent));
 	}
 
@@ -227,16 +221,13 @@ public class StackBuilder implements SkeletonVisitor {
 	public <P, R> void visit(DaC<P, R> skeleton) {
 
 		strace.add(skeleton);
-		int id = EventIdGenerator.getSingleton().increment();
-		StackBuilder subStackBuilder = new StackBuilder(strace,id);
+		StackBuilder subStackBuilder = new StackBuilder(strace,parent);
 
 		skeleton.getSkeleton().accept(subStackBuilder);
 		
 		@SuppressWarnings("rawtypes")
 		Skeleton[] straceArray = getStraceAsArray();
-		stack.push(new EventInst(When.AFTER, Where.SKELETON, straceArray, id, false, parent));
-		stack.push(new DaCInst(skeleton.getCondition(), skeleton.getSplit(), subStackBuilder.stack, skeleton.getMerge(), straceArray, id));
-		stack.push(new EventInst(When.BEFORE, Where.SKELETON, straceArray, id, false, parent));
+		stack.push(new DaCInst(skeleton.getCondition(), skeleton.getSplit(), subStackBuilder.stack, skeleton.getMerge(), straceArray, parent));
 	}
 
 	@Override

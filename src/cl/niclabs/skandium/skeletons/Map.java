@@ -96,22 +96,6 @@ public class Map<P,R> extends AbstractSkeleton<P,R> {
     	return eregis.removeListener(When.AFTER,Where.SPLIT,l);
     }
 
-    public <X> boolean addBeforeNestedSkel(IndexListener<X> l) {
-    	return eregis.addListener(When.BEFORE,Where.NESTED_SKELETON,l);
-    }
-
-    public <X> boolean removeBeforeNestedSkel(IndexListener<X> l) {
-    	return eregis.removeListener(When.BEFORE,Where.NESTED_SKELETON,l);
-    }
-
-    public <Y> boolean addAfterNestedSkel(IndexListener<Y> l) {
-    	return eregis.addListener(When.AFTER,Where.NESTED_SKELETON,l);
-    }
-
-    public <Y> boolean removeAfterNestedSkel(IndexListener<Y> l) {
-    	return eregis.removeListener(When.AFTER,Where.NESTED_SKELETON,l);
-    }
-
     public <Y> boolean addBeforeMerge(IndexListener<Y[]> l) {
     	return eregis.addListener(When.BEFORE,Where.MERGE,l);
     }

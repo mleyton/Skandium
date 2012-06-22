@@ -75,15 +75,16 @@ public class DaCInst extends  AbstractInstruction {
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack,List<Stack<Instruction>> children) throws Exception {
 		int id = EventIdGenerator.getSingleton().increment();
-		(new EventInst(When.BEFORE, Where.CONDITION, strace, id, false, parent)).interpret(param, stack, children);
-		boolean cond = condition.condition(param);
 
 		/* update parent */
 		for (Instruction inst : this.substack) {
-			if (((AbstractInstruction)inst).getParent() == parent) {
-				((AbstractInstruction)inst).setParent(id);
+			if (inst.getParent() == parent) {
+				inst.setParent(id);
 			}
 		}
+		(new EventInst(When.BEFORE, Where.SKELETON, strace, id, false, parent)).interpret(param, stack, children);
+		(new EventInst(When.BEFORE, Where.CONDITION, strace, id, false, parent)).interpret(param, stack, children);
+		boolean cond = condition.condition(param);
 
 		Stack<Instruction> newStack = new Stack<Instruction>();
 		DaCInst subInst = (DaCInst) this.copy();
@@ -93,6 +94,7 @@ public class DaCInst extends  AbstractInstruction {
 		substacks.add(newStack);
 		
 		Stack<Instruction> splitStack = new Stack<Instruction>();
+		splitStack.push(new EventInst(When.AFTER, Where.SKELETON, strace, id, false, parent));
 		splitStack.push(new SplitInst(substacks, merge, strace, id, parent));
 		splitStack.push(new EventInst(When.AFTER, Where.SPLIT, strace, id, false, parent));
 		splitStack.push(new SeqInst(split, strace));
@@ -100,9 +102,7 @@ public class DaCInst extends  AbstractInstruction {
 		
 		Stack<Instruction> execStack = new Stack<Instruction>();
 
-		execStack.push(new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, id, false, parent));
 		execStack.addAll(this.substack);
-		execStack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, id, false, parent));
 
 		stack.push(new ChoiceInst(cond, splitStack, execStack, strace));
 		stack.push(new EventInst(When.AFTER, Where.CONDITION, strace, id, cond, parent));
@@ -116,6 +116,16 @@ public class DaCInst extends  AbstractInstruction {
 	@Override
 	public Instruction copy() {
 		return new DaCInst(condition, split, copyStack(substack), merge, copySkeletonTrace(), parent);
+	}
+	
+	@Override
+	public void setParent(int parent) {
+		for (Instruction inst : substack) {
+			if (inst.getParent() == this.parent) {
+				inst.setParent(parent);
+			}
+		}		
+		super.setParent(parent);
 	}
 	
 }

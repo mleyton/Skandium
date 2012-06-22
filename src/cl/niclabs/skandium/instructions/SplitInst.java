@@ -24,7 +24,6 @@ import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.muscles.Merge;
 import cl.niclabs.skandium.skeletons.Skeleton;
-import cl.niclabs.skandium.system.events.EventIdGenerator;
 
 
 /**
@@ -73,11 +72,6 @@ public class SplitInst extends AbstractInstruction {
 			Stack<Instruction> subStack;
 
 			subStack = copyStack(subsize == 1? this.substacks.get(0) : this.substacks.get(i));			
-			if (!(subStack.peek() instanceof DaCInst)) {
-				int subId = EventIdGenerator.getSingleton().increment();
-				subStack.add(0,new EventInst(When.AFTER, Where.NESTED_SKELETON, strace, subId, false, 0));
-				subStack.push(new EventInst(When.BEFORE, Where.NESTED_SKELETON, strace, subId, false, 0));
-			}
 			children.add(subStack);
 		}
 		

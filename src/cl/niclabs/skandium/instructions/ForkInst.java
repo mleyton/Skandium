@@ -26,7 +26,6 @@ import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.muscles.Merge;
 import cl.niclabs.skandium.muscles.Split;
 import cl.niclabs.skandium.skeletons.Skeleton;
-import cl.niclabs.skandium.system.events.EventIdGenerator;
 
 /**
  * This instruction holds the parallelism behavior of a {@link cl.niclabs.skandium.skeletons.Fork} skeleton.
@@ -40,6 +39,7 @@ public class ForkInst extends  AbstractInstruction {
 	List<Stack<Instruction>> substacks; 
 	@SuppressWarnings("rawtypes")
 	Merge merge;
+	int id;
 	
 	/**
 	 * The main constructor.
@@ -48,11 +48,12 @@ public class ForkInst extends  AbstractInstruction {
 	 * @param merge The code to merge the result of executing the stack on the subparam.
 	 * @param strace nested skeleton tree branch of the current execution.
 	 */
-	public ForkInst(Split<?, ?> split, List<Stack<Instruction>> stacks, Merge<?, ?> merge, @SuppressWarnings("rawtypes") Skeleton[] strace, int parent) {
+	public ForkInst(Split<?, ?> split, List<Stack<Instruction>> stacks, Merge<?, ?> merge, @SuppressWarnings("rawtypes") Skeleton[] strace, int id, int parent) {
 		super(strace);
 		this.split = split;
 		this.substacks = stacks;
 		this.merge = merge;
+		this.id = id;
 		this.parent = parent;
 	}
 
@@ -63,7 +64,6 @@ public class ForkInst extends  AbstractInstruction {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <P> Object interpret(P param, Stack<Instruction> stack, List<Stack<Instruction>> children) throws Exception {
-		int id = EventIdGenerator.getSingleton().increment();
 		(new EventInst(When.BEFORE, Where.SPLIT, strace, id, false, parent)).interpret(param, stack, children);
 		Object[] params = split.split(param);
 		
@@ -85,6 +85,18 @@ public class ForkInst extends  AbstractInstruction {
 			newStacks.add(copyStack(substacks.get(i)));
 		}
 		
-		return new ForkInst(split, newStacks, merge, copySkeletonTrace(), parent);
+		return new ForkInst(split, newStacks, merge, copySkeletonTrace(), id, parent);
+	}
+	
+	@Override
+	public void setParent(int parent) {
+		for (Stack<Instruction> stack : substacks) {
+			for (Instruction inst : stack) {
+				if (inst.getParent() == this.parent) {
+					inst.setParent(parent);
+				}
+			}
+		}
+		super.setParent(parent);
 	}
 }

@@ -17,9 +17,6 @@
  */
 package cl.niclabs.skandium.skeletons;
 
-import cl.niclabs.skandium.events.IndexListener;
-import cl.niclabs.skandium.events.When;
-import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.muscles.Execute;
 import cl.niclabs.skandium.muscles.Muscle;
 
@@ -63,22 +60,6 @@ public class For<P> extends AbstractSkeleton<P,P> {
 	 */
     public void accept(SkeletonVisitor visitor) {
         visitor.visit(this);
-    }
-
-    public boolean addBeforeNestedSkel(IndexListener<P> l) {
-    	return eregis.addListener(When.BEFORE,Where.NESTED_SKELETON,l);
-    }
-
-    public boolean removeBeforeNestedSkel(IndexListener<P> l) {
-    	return eregis.removeListener(When.BEFORE,Where.NESTED_SKELETON,l);
-    }
-
-    public boolean addAfterNestedSkel(IndexListener<P> l) {
-    	return eregis.addListener(When.AFTER,Where.NESTED_SKELETON,l);
-    }
-
-    public boolean removeAfterNestedSkel(IndexListener<P> l) {
-    	return eregis.removeListener(When.AFTER,Where.NESTED_SKELETON,l);
     }
 
 	public Skeleton<P, P> getSubskel() {

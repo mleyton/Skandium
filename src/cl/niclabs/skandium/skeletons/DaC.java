@@ -124,22 +124,6 @@ public class DaC<P,R> extends AbstractSkeleton<P,R> {
     	return eregis.removeListener(When.AFTER, Where.SPLIT, l);
     }
 
-    public <X> boolean addBeforeNestedSkel(ParentListener<X> l) {
-    	return eregis.addListener(When.BEFORE, Where.NESTED_SKELETON, l);
-    }
-
-    public <X> boolean removeBeforeNestedSkel(ParentListener<X> l) {
-    	return eregis.removeListener(When.BEFORE, Where.NESTED_SKELETON, l);
-    }
-
-    public <Y> boolean addAfterNestedSkel(ParentListener<Y> l) {
-    	return eregis.addListener(When.AFTER, Where.NESTED_SKELETON, l);
-    }
-
-    public <Y> boolean removeAfterNestedSkel(ParentListener<Y> l) {
-    	return eregis.removeListener(When.AFTER, Where.NESTED_SKELETON, l);
-    }
-
     public <Y> boolean addBeforeMerge(ParentListener<Y[]> l) {
     	return eregis.addListener(When.BEFORE, Where.MERGE, l);
     }

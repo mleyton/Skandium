@@ -23,48 +23,48 @@ class StateGenerator implements SkeletonVisitor {
 
 	@Override
 	public <P, R> void visit(Farm<P, R> skeleton) {
-		state = new SubState(skeleton, index);
+		state = new SubState(index);
 	}
 
 	@Override
 	public <P, R> void visit(Pipe<P, R> skeleton) {
-		state = new PipeState(skeleton, index);
+		state = new SubState(index);
 	}
 
 	@Override
 	public <P, R> void visit(Seq<P, R> skeleton) {
-		state = new State(skeleton, index);
+		state = new State(index);
 	}
 
 	@Override
 	public <P, R> void visit(If<P, R> skeleton) {
-		state = new IfState(skeleton, index);		
+		state = new SubState(index);		
 	}
 
 	@Override
 	public <P> void visit(While<P> skeleton) {
-		state = new SubState(skeleton, index);
+		state = new SubState(index);
 	}
 
 	@Override
 	public <P> void visit(For<P> skeleton) {
-		state = new SubState(skeleton, index);
+		state = new SubState(index);
 	}
 
 	@Override
 	public <P, R> void visit(Map<P, R> skeleton) {
-		state = new SplitState(skeleton, index);
+		state = new ChildrenState(index);
 	}
 
 	@Override
 	public <P, R> void visit(Fork<P, R> skeleton) {
-		state = new SplitState(skeleton, index);
+		state = new ChildrenState(index);
 
 	}
 
 	@Override
 	public <P, R> void visit(DaC<P, R> skeleton) {
-		state = new ChildrenState(skeleton, index);
+		state = new ChildrenState(index);
 	}
 
 	@Override

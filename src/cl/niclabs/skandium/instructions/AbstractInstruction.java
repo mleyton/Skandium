@@ -69,9 +69,9 @@ abstract class AbstractInstruction implements Instruction {
 		}
 		/* update parents */
 		for(Instruction inst : newStack) {
-			int parent = ((AbstractInstruction)inst).getParent();
+			int parent = inst.getParent();
 			if(newIds.containsKey(parent)) {
-				((AbstractInstruction)inst).setParent(newIds.get(parent));
+				inst.setParent(newIds.get(parent));
 			}
 		}
 		
@@ -95,11 +95,13 @@ abstract class AbstractInstruction implements Instruction {
 		return newStrace;
 	}
 
-	int getParent() {
+	@Override
+	public int getParent() {
 		return parent;
 	}
 
-	void setParent(int parent) {
+	@Override
+	public void setParent(int parent) {
 		this.parent = parent;
 	}
 	

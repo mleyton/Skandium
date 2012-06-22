@@ -31,11 +31,6 @@ public enum Where {
 	SKELETON, 
 
 	/**
-	 * Constant that defines an event related to the nested skeleton execution
-	 */
-	NESTED_SKELETON, 
-
-	/**
 	 * Constant that defines an event related to the condition execution
 	 */
 	CONDITION, 

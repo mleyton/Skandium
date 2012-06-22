@@ -62,4 +62,7 @@ public interface Instruction {
 	 */
 	@SuppressWarnings("rawtypes")
 	public Skeleton[] copySkeletonTrace();
+	
+	public void setParent(int parent);
+	public int getParent();
 }

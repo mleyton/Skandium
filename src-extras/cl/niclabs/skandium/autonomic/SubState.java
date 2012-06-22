@@ -1,21 +1,22 @@
 package cl.niclabs.skandium.autonomic;
 
-import cl.niclabs.skandium.skeletons.Skeleton;
-
 class SubState extends State {
 	
-	SubState(Skeleton<?, ?> skel, int index) {
-		super(skel, index);
+	protected State subState;
+	
+	SubState(int index) {
+		super(index);
 	}
 
-	private State subState;
-	
-	State getSubState() {
-		return subState;
-	}
-
-	void setSubState(State subState) {
-		this.subState = subState;
+	@Override
+	void childSetter(State child) {
+		subState = child;
 	}
 	
+	@Override
+	int threadsCalculator() {
+		if (isFinished) return 0;
+		if (subState == null) return 1;
+		return subState.threadsCalculator();
+	}
 }

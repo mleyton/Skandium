@@ -91,22 +91,6 @@ public class If<P,R> extends AbstractSkeleton<P,R> {
     	return eregis.removeListener(When.AFTER, Where.CONDITION, l);
     }
 
-    public boolean addBeforeNestedSkel(ConditionListener<P> l) {
-    	return eregis.addListener(When.BEFORE, Where.NESTED_SKELETON, l);
-    }
-
-    public boolean removeBeforeNestedSkel(ConditionListener<P> l) {
-    	return eregis.removeListener(When.BEFORE, Where.NESTED_SKELETON, l);
-    }
-
-    public boolean addAfterNestedSkel(ConditionListener<P> l) {
-    	return eregis.addListener(When.AFTER, Where.NESTED_SKELETON, l);
-    }
-
-    public boolean removeAfterNestedSkel(ConditionListener<P> l) {
-    	return eregis.removeListener(When.AFTER, Where.NESTED_SKELETON, l);
-    }
-
 	public Skeleton<P, R> getTrueCase() {
 		return trueCase;
 	}

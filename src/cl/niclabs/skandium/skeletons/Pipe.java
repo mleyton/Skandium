@@ -17,9 +17,6 @@
  */
 package cl.niclabs.skandium.skeletons;
 
-import cl.niclabs.skandium.events.IndexListener;
-import cl.niclabs.skandium.events.When;
-import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.muscles.Execute;
 
 /**
@@ -49,22 +46,6 @@ public class Pipe<P,R> extends AbstractSkeleton<P,R> {
 	 */
     public void accept(SkeletonVisitor visitor) {
         visitor.visit(this);
-    }
-
-    public <X> boolean addBeforeNestedSkel(IndexListener<X> l) {
-    	return eregis.addListener(When.BEFORE,Where.NESTED_SKELETON,l);
-    }
-
-    public <X> boolean removeBeforeNestedSkel(IndexListener<X> l) {
-    	return eregis.removeListener(When.BEFORE,Where.NESTED_SKELETON,l);
-    }
-
-    public <Y> boolean addAfterNestedSkel(IndexListener<Y> l) {
-    	return eregis.addListener(When.AFTER,Where.NESTED_SKELETON,l);
-    }
-
-    public <Y> boolean removeAfterNestedSkel(IndexListener<Y> l) {
-    	return eregis.removeListener(When.AFTER,Where.NESTED_SKELETON,l);
     }
 
 	public Skeleton<P, ?> getStage1() {

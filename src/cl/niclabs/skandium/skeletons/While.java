@@ -72,22 +72,6 @@ public class While<P> extends AbstractSkeleton<P,P> {
     	return eregis.removeListener(When.AFTER, Where.CONDITION, l);
     }
 
-    public boolean addBeforeNestedSkel(IndexListener<P> l) {
-    	return eregis.addListener(When.BEFORE, Where.NESTED_SKELETON, l);
-    }
-
-    public boolean removeBeforeNestedSkel(IndexListener<P> l) {
-    	return eregis.removeListener(When.BEFORE, Where.NESTED_SKELETON, l);
-    }
-
-    public boolean addAfterNestedSkel(IndexListener<P> l) {
-    	return eregis.addListener(When.AFTER, Where.NESTED_SKELETON, l);
-    }
-
-    public boolean removeAfterNestedSkel(IndexListener<P> l) {
-    	return eregis.removeListener(When.AFTER, Where.NESTED_SKELETON, l);
-    }
-
 	public Skeleton<P, P> getSubskel() {
 		return subskel;
 	}

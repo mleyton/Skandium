@@ -67,5 +67,20 @@ public class ChoiceInst extends AbstractInstruction {
 	public Instruction copy() {
 		return new ChoiceInst(cond, copyStack(trueCaseStack), copyStack(falseCaseStack), copySkeletonTrace());
 	}
+	
+	@Override
+	public void setParent(int parent) {
+		for (Instruction inst : trueCaseStack) {
+			if (inst.getParent() == this.parent) {
+				inst.setParent(parent);
+			}
+		}
+		for (Instruction inst : falseCaseStack) {
+			if (inst.getParent() == this.parent) {
+				inst.setParent(parent);
+			}
+		}
+		super.setParent(parent);
+	}
 
 }
