@@ -126,7 +126,7 @@ public class GenericListenerRegistry implements SkeletonVisitor {
 		skeleton.getSkeleton().accept(this);		
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	private boolean listenerRegistry(Skeleton skeleton) {
 		boolean ret= false;
 		if (pattern.isInstance(skeleton)) {

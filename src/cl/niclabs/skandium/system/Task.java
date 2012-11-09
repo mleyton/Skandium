@@ -76,7 +76,7 @@ public class Task implements Runnable, Comparable<Task>{
 	 * @param priority The priority of this <code>Task</code>.
 	 * @param executor The executor service used to compute this <code>Task</code>.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	Task(Task root, Task parent, Object P, Stack<Instruction> stack, int priority, TaskExecutor executor){
 		this.id       = random.nextLong();
 		this.root     = root;
