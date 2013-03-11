@@ -40,13 +40,13 @@ class Controller extends GenericListener {
 			if (parent == 0) {
 				root = state;
 			} else {
-				State parentState = global.get(parent);
-				parentState.childSetter(state);
+//				State parentState = global.get(parent);
+//				parentState.childSetter(state);
 			}
 		}		
 		/* Update State */
 		if (when == When.AFTER && where == Where.SKELETON) {
-			state.setFinished(true);
+//			state.setFinished(true);
 		}
 		if (System.currentTimeMillis() - lastExecution > poolCheck) {
 			threadsControl();
@@ -56,9 +56,10 @@ class Controller extends GenericListener {
 	}
 	
 	static private State newState(Skeleton<?,?> skel, int index) {
-		StateGenerator sgen = new StateGenerator(index);
-		skel.accept(sgen);
-		return sgen.getState();
+//		StateGenerator sgen = new StateGenerator(index);
+//		skel.accept(sgen);
+//		return sgen.getState();
+		return new State();
 	}
 	
 	private void threadsControl() {
@@ -75,7 +76,7 @@ class Controller extends GenericListener {
 */
 		if (consumption < yellowThreshold) {
 			int currThreads = Thread.activeCount();
-			int neededThreads = root.threadsCalculator();
+			int neededThreads = 0; //= root.threadsCalculator();
 			if (2*currThreads < neededThreads) {
 				skandium.setMaxThreads(2*currThreads);
 				return;
@@ -85,7 +86,7 @@ class Controller extends GenericListener {
 		}
 		if (consumption < redThreshold) {
 			int currThreads = Thread.activeCount();
-			int neededThreads = root.threadsCalculator();
+			int neededThreads = 0;//root.threadsCalculator();
 			if (currThreads > neededThreads) 
 				skandium.setMaxThreads(neededThreads);
 			return;
