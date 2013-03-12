@@ -9,10 +9,11 @@ class TransitionLabel implements Comparable<TransitionLabel> {
 	private When when;
 	private Where where;
 	private boolean cond;
-	TransitionLabel(TransitionSkelIndex ts, When when, Where where) {
+	TransitionLabel(TransitionSkelIndex ts, When when, Where where, boolean cond) {
 		this.ts = ts;
 		this.when = when;
 		this.where = where;
+		this.cond = cond;
 	}
 	boolean isIn(TransitionLabel event) {
 		if (!stackComparison(event.ts.getStrace())) return false;
