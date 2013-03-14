@@ -59,11 +59,15 @@ class TransitionGenerator implements SkeletonVisitor {
 		lastState = new State();
 		@SuppressWarnings("rawtypes")
 		Skeleton[] straceArray = getStraceAsArray();
-		TransitionSkelIndex tsi = new TransitionSkelIndex(straceArray);
+		final TransitionSkelIndex tsi = new TransitionSkelIndex(straceArray);
 		Transition toF = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.SKELETON, false),lastState) {
 			@Override
 			protected void execute() {
 				//TODO
+				System.out.println(tl.getTs().getStrace()[tl.getTs().getStrace().length-1].getClass().getCanonicalName() + "\t" +
+						tl.getTs().getStrace()[tl.getTs().getStrace().length-1] + "\t" +
+						tl.getWhen().name() + "\t" + tl.getWhere().name() + "\t" + 
+						tl.isCond() + "\t" + "\t" +getDest());
 			}
 		};
 		State I = new State();
@@ -71,7 +75,12 @@ class TransitionGenerator implements SkeletonVisitor {
 		initialTrans = new Transition(new TransitionLabel(tsi, When.BEFORE, Where.SKELETON, false),I) {
 			@Override
 			protected void execute(int i) {
+				tsi.setIndex(i);
 				//TODO
+				System.out.println(tl.getTs().getStrace()[tl.getTs().getStrace().length-1].getClass().getCanonicalName() + "\t" +
+						tl.getTs().getStrace()[tl.getTs().getStrace().length-1] + "\t" +
+						tl.getWhen().name() + "\t" + tl.getWhere().name() + "\t" + 
+						tl.isCond() + "\t" + i + "\t" +getDest());
 			}
 		};
 	}
@@ -87,11 +96,15 @@ class TransitionGenerator implements SkeletonVisitor {
 		lastState = new State();
 		@SuppressWarnings("rawtypes")
 		Skeleton[] straceArray = getStraceAsArray();
-		TransitionSkelIndex tsi = new TransitionSkelIndex(straceArray);
+		final TransitionSkelIndex tsi = new TransitionSkelIndex(straceArray);
 		Transition toF = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.CONDITION, false),lastState) {
 			@Override
 			protected void execute() {
 				//TODO
+				System.out.println(tl.getTs().getStrace()[tl.getTs().getStrace().length-1].getClass().getCanonicalName() + "\t" +
+						tl.getTs().getStrace()[tl.getTs().getStrace().length-1] + "\t" +
+						tl.getWhen().name() + "\t" + tl.getWhere().name() + "\t" + 
+						tl.isCond() + "\t" + "\t" +getDest());
 			}
 		};
 		State I = new State();
@@ -99,7 +112,12 @@ class TransitionGenerator implements SkeletonVisitor {
 		initialTrans = new Transition(new TransitionLabel(tsi, When.BEFORE, Where.CONDITION, false),I) {
 			@Override
 			protected void execute(int i) {
+				tsi.setIndex(i);
 				//TODO
+				System.out.println(tl.getTs().getStrace()[tl.getTs().getStrace().length-1].getClass().getCanonicalName() + "\t" +
+						tl.getTs().getStrace()[tl.getTs().getStrace().length-1] + "\t" +
+						tl.getWhen().name() + "\t" + tl.getWhere().name() + "\t" + 
+						tl.isCond() + "\t" + i + "\t" +getDest());
 			}
 		};
 		State T = new State();
@@ -107,6 +125,10 @@ class TransitionGenerator implements SkeletonVisitor {
 			@Override
 			protected void execute() {
 				//TODO
+				System.out.println(tl.getTs().getStrace()[tl.getTs().getStrace().length-1].getClass().getCanonicalName() + "\t" +
+						tl.getTs().getStrace()[tl.getTs().getStrace().length-1] + "\t" +
+						tl.getWhen().name() + "\t" + tl.getWhere().name() + "\t" + 
+						tl.isCond() + "\t" + "\t" +getDest());
 			}
 		};
 		I.addTransition(toT);
@@ -117,6 +139,10 @@ class TransitionGenerator implements SkeletonVisitor {
 			@Override
 			protected void execute() {
 				//TODO
+				System.out.println(tl.getTs().getStrace()[tl.getTs().getStrace().length-1].getClass().getCanonicalName() + "\t" +
+						tl.getTs().getStrace()[tl.getTs().getStrace().length-1] + "\t" +
+						tl.getWhen().name() + "\t" + tl.getWhere().name() + "\t" + 
+						tl.isCond() + "\t" + "\t" +getDest());
 			}
 		};
 		subSkel.getLastState().addTransition(toI);
@@ -143,19 +169,76 @@ class TransitionGenerator implements SkeletonVisitor {
 	}
 
 	@Override
-	public <P, R> void visit(Map<P, R> skeleton) {
+	public <P, R> void visit(final Map<P, R> skeleton) {
 		strace.add(skeleton);
+		lastState = new State();
+		@SuppressWarnings("rawtypes")
+		Skeleton[] straceArray = getStraceAsArray();
+		final TransitionSkelIndex tsi = new TransitionSkelIndex(straceArray);
+		Transition toF = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.MERGE, false),lastState) {
+			@Override
+			protected void execute() {
+				//TODO
+				System.out.println(tl.getTs().getStrace()[tl.getTs().getStrace().length-1].getClass().getCanonicalName() + "\t" +
+						tl.getTs().getStrace()[tl.getTs().getStrace().length-1] + "\t" +
+						tl.getWhen().name() + "\t" + tl.getWhere().name() + "\t" + 
+						tl.isCond() + "\t" + "\t" +getDest());
+			}
+		};
+		State M = new State();
+		M.addTransition(toF);
+		final Transition toM = new Transition(new TransitionLabel(tsi, When.BEFORE,  Where.MERGE, false),M) {
+			@Override
+			protected void execute() {
+				//TODO
+				System.out.println(tl.getTs().getStrace()[tl.getTs().getStrace().length-1].getClass().getCanonicalName() + "\t" +
+						tl.getTs().getStrace()[tl.getTs().getStrace().length-1] + "\t" +
+						tl.getWhen().name() + "\t" + tl.getWhere().name() + "\t" + 
+						tl.isCond() + "\t" + "\t" +getDest());
+			}
+		};
+		final State S = new State();
+		Transition toS = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.SPLIT, false),S) {
+			@Override
+			protected void execute(int fsCard) {
+				for (int i=0; i<fsCard; i++) {
+					TransitionGenerator subSkel = new TransitionGenerator(strace);
+					skeleton.getSkeleton().accept(subSkel);
+					S.addTransition(subSkel.getInitialTrans());
+					subSkel.getLastState().addTransition(toM);
+				}
+				//TODO 
+				System.out.println(tl.getTs().getStrace()[tl.getTs().getStrace().length-1].getClass().getCanonicalName() + "\t" +
+						tl.getTs().getStrace()[tl.getTs().getStrace().length-1] + "\t" +
+						tl.getWhen().name() + "\t" + tl.getWhere().name() + "\t" + 
+						tl.isCond() + "\t" + fsCard + "\t" +getDest());
+			}
+		};
+		State I = new State();
+		I.addTransition(toS);
+		initialTrans = new Transition(new TransitionLabel(tsi, When.BEFORE,  Where.SPLIT, false),I) {
+			@Override
+			protected void execute(int i) {
+				tsi.setIndex(i);
+				//TODO 
+				System.out.println(tl.getTs().getStrace()[tl.getTs().getStrace().length-1].getClass().getCanonicalName() + "\t" +
+						tl.getTs().getStrace()[tl.getTs().getStrace().length-1] + "\t" +
+						tl.getWhen().name() + "\t" + tl.getWhere().name() + "\t" + 
+						tl.isCond() + "\t" + i + "\t" +getDest());
+			}
+		}; 
 	}
 
 	@Override
 	public <P, R> void visit(Fork<P, R> skeleton) {
-		strace.add(skeleton);
+		throw new RuntimeException("No autonomic support for MAP Skeleton");
 
 	}
 
 	@Override
 	public <P, R> void visit(DaC<P, R> skeleton) {
 		strace.add(skeleton);
+		DaCM(skeleton, 0);
 	}
 
 	@Override
@@ -174,5 +257,106 @@ class TransitionGenerator implements SkeletonVisitor {
 	@SuppressWarnings("rawtypes")
 	private Skeleton[] getStraceAsArray() {
 		return strace.toArray(new Skeleton[strace.size()]);
+	}
+	
+	private <P,R> void DaCM(final DaC<P,R> skeleton, final int fcCard) {
+		final State FT = new State();
+		@SuppressWarnings("rawtypes")
+		Skeleton[] straceArray = getStraceAsArray();
+		final TransitionSkelIndex tsi = new TransitionSkelIndex(straceArray);
+		Transition toF = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.MERGE, false),FT) {
+			@Override
+			protected void execute() {
+				//TODO
+				System.out.println(tl.getTs().getStrace()[tl.getTs().getStrace().length-1].getClass().getCanonicalName() + "\t" +
+						tl.getTs().getStrace()[tl.getTs().getStrace().length-1] + "\t" +
+						tl.getWhen().name() + "\t" + tl.getWhere().name() + "\t" + 
+						tl.isCond() + "\t" + "\t" +getDest());
+			}
+		};
+		State M = new State();
+		M.addTransition(toF);
+		final Transition toM = new Transition(new TransitionLabel(tsi, When.BEFORE,  Where.MERGE, false),M) {
+			@Override
+			protected void execute() {
+				//TODO
+				System.out.println(tl.getTs().getStrace()[tl.getTs().getStrace().length-1].getClass().getCanonicalName() + "\t" +
+						tl.getTs().getStrace()[tl.getTs().getStrace().length-1] + "\t" +
+						tl.getWhen().name() + "\t" + tl.getWhere().name() + "\t" + 
+						tl.isCond() + "\t" + "\t" +getDest());
+			}
+		};		
+		final State T = new State();
+		Transition toT = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.SPLIT, false),T) {
+			@Override
+			protected void execute(int fsCard) {
+				for (int i=0; i<fsCard; i++) {
+					TransitionGenerator subDaC = new TransitionGenerator(strace);
+					subDaC.DaCM(skeleton, fcCard+1);					
+					T.addTransition(subDaC.getInitialTrans());
+					subDaC.getLastState().addTransition(toM);
+				}
+				//TODO 
+				System.out.println(tl.getTs().getStrace()[tl.getTs().getStrace().length-1].getClass().getCanonicalName() + "\t" +
+						tl.getTs().getStrace()[tl.getTs().getStrace().length-1] + "\t" +
+						tl.getWhen().name() + "\t" + tl.getWhere().name() + "\t" + 
+						tl.isCond() + "\t" + fsCard + "\t" +getDest());
+			}
+		};
+		State S = new State();
+		S.addTransition(toT);
+		Transition toS = new Transition(new TransitionLabel(tsi, When.BEFORE,  Where.SPLIT, false),S) {
+			@Override
+			protected void execute() {
+				//TODO
+				System.out.println(tl.getTs().getStrace()[tl.getTs().getStrace().length-1].getClass().getCanonicalName() + "\t" +
+						tl.getTs().getStrace()[tl.getTs().getStrace().length-1] + "\t" +
+						tl.getWhen().name() + "\t" + tl.getWhere().name() + "\t" + 
+						tl.isCond() + "\t" + "\t" +getDest());
+			}
+		};
+		State C = new State();
+		C.addTransition(toS);
+		Transition toC = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.CONDITION, true),C) {
+			@Override
+			protected void execute() {
+				lastState = FT;
+				//TODO
+				System.out.println(tl.getTs().getStrace()[tl.getTs().getStrace().length-1].getClass().getCanonicalName() + "\t" +
+						tl.getTs().getStrace()[tl.getTs().getStrace().length-1] + "\t" +
+						tl.getWhen().name() + "\t" + tl.getWhere().name() + "\t" + 
+						tl.isCond() + "\t" + "\t" +getDest());
+			}
+		};
+		State I = new State();
+		I.addTransition(toC);		
+		TransitionGenerator subSkel = new TransitionGenerator(strace);
+		skeleton.getSkeleton().accept(subSkel);
+		State G = new State();
+		G.addTransition(subSkel.getInitialTrans());
+		final State FF = subSkel.getLastState();
+		Transition toG = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.CONDITION, false),G) {
+			@Override
+			protected void execute() {
+				lastState = FF;
+				//TODO
+				System.out.println(tl.getTs().getStrace()[tl.getTs().getStrace().length-1].getClass().getCanonicalName() + "\t" +
+						tl.getTs().getStrace()[tl.getTs().getStrace().length-1] + "\t" +
+						tl.getWhen().name() + "\t" + tl.getWhere().name() + "\t" + 
+						tl.isCond() + "\t" + "\t" +getDest());
+			}
+		};
+		I.addTransition(toG);
+		initialTrans = new Transition(new TransitionLabel(tsi, When.BEFORE,  Where.SPLIT, false),I) {
+			@Override
+			protected void execute(int i) {
+				tsi.setIndex(i);
+				//TODO 
+				System.out.println(tl.getTs().getStrace()[tl.getTs().getStrace().length-1].getClass().getCanonicalName() + "\t" +
+						tl.getTs().getStrace()[tl.getTs().getStrace().length-1] + "\t" +
+						tl.getWhen().name() + "\t" + tl.getWhere().name() + "\t" + 
+						tl.isCond() + "\t" + i + "\t" +getDest());
+			}
+		}; 
 	}
 }

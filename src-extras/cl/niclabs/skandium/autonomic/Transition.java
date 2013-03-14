@@ -33,4 +33,5 @@ abstract class Transition implements Comparable<Transition> {
 	public int compareTo(Transition t) {
 		return tl.compareTo(t.tl);
 	}
+	
 }

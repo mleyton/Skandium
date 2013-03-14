@@ -38,5 +38,20 @@ class TransitionLabel implements Comparable<TransitionLabel> {
 		Integer i1 = new Integer(ts.getIndex());
 		Integer i2 = new Integer(tl.ts.getIndex());
 		return i1.compareTo(i2);
+	}	
+	
+	//TODO Borrar despues
+	TransitionSkelIndex getTs() {
+		return ts;
 	}
+	When getWhen() {
+		return when;
+	}
+	Where getWhere() {
+		return where;
+	}
+	boolean isCond() {
+		return cond;
+	}
+
 }
