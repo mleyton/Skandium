@@ -34,4 +34,10 @@ abstract class Transition implements Comparable<Transition> {
 		return tl.compareTo(t.tl);
 	}
 	
+	boolean isTheOne(int eventIndex) {
+		return tl.isTheOne(eventIndex);
+	}
+	int getType() {
+		return tl.getType();
+	}
 }

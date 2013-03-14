@@ -137,12 +137,12 @@ class TransitionGenerator implements SkeletonVisitor {
 		T.addTransition(subSkel.getInitialTrans());
 		Transition toI = new Transition(new TransitionLabel(tsi, When.BEFORE,  Where.CONDITION, false),I) {
 			@Override
-			protected void execute() {
+			protected void execute(int i) {
 				//TODO
 				System.out.println(tl.getTs().getStrace()[tl.getTs().getStrace().length-1].getClass().getCanonicalName() + "\t" +
 						tl.getTs().getStrace()[tl.getTs().getStrace().length-1] + "\t" +
 						tl.getWhen().name() + "\t" + tl.getWhere().name() + "\t" + 
-						tl.isCond() + "\t" + "\t" +getDest());
+						tl.isCond() + "\t" + i + "\t" +getDest());
 			}
 		};
 		subSkel.getLastState().addTransition(toI);
@@ -347,7 +347,7 @@ class TransitionGenerator implements SkeletonVisitor {
 			}
 		};
 		I.addTransition(toG);
-		initialTrans = new Transition(new TransitionLabel(tsi, When.BEFORE,  Where.SPLIT, false),I) {
+		initialTrans = new Transition(new TransitionLabel(tsi, When.BEFORE,  Where.CONDITION, false),I) {
 			@Override
 			protected void execute(int i) {
 				tsi.setIndex(i);

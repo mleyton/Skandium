@@ -5,6 +5,10 @@ import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.skeletons.Skeleton;
 
 class TransitionLabel implements Comparable<TransitionLabel> {
+	static final int VOID = 0;
+	static final int INDEX = 1;
+	static final int FS_CARD = 2;
+	
 	private TransitionSkelIndex ts;
 	private When when;
 	private Where where;
@@ -38,7 +42,21 @@ class TransitionLabel implements Comparable<TransitionLabel> {
 		Integer i1 = new Integer(ts.getIndex());
 		Integer i2 = new Integer(tl.ts.getIndex());
 		return i1.compareTo(i2);
-	}	
+	}
+	boolean isTheOne(int eventIndex) {
+		if(ts.getIndex() == TransitionSkelIndex.UDEF) return true;
+		if(eventIndex == ts.getIndex()) return true;
+		return false;
+	}
+	
+	int getType() {
+		if (when == When.AFTER && where == Where.SPLIT) return FS_CARD;
+		if (when == When.BEFORE) {
+			if (where == Where.MERGE ) return VOID;
+			return INDEX;
+		}
+		return VOID;
+	}
 	
 	//TODO Borrar despues
 	TransitionSkelIndex getTs() {
