@@ -125,9 +125,21 @@ class TransitionGenerator implements SkeletonVisitor {
 	@Override
 	public <P> void visit(For<P> skeleton) {
 		strace.add(skeleton);
-///////////////////////////////////////////////
-		TransitionGenerator iniSubSkel = new TransitionGenerator(strace);
-		skeleton.getSubskel().accept(iniSubSkel);
+		State lastLastState = null;
+		int n = skeleton.getTimes();
+		for (int i=0; i<n; i++) {
+			TransitionGenerator subSkel = new TransitionGenerator(strace);
+			skeleton.getSubskel().accept(subSkel);
+			if (lastLastState == null) {
+				initialTrans = subSkel.getInitialTrans();
+			} else {
+				lastLastState.addTransition(subSkel.getInitialTrans());
+			}
+			lastLastState = subSkel.getLastState();
+			if (i==n-1) {
+				lastState = lastLastState;
+			}
+		}
 	}
 
 	@Override
