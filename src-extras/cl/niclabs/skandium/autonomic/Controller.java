@@ -80,12 +80,13 @@ class Controller extends GenericListener {
 			boolean found = false;
 			while (found == false && !areIn.isEmpty()) {
 				t = areIn.poll();
-				if (t.isTheOne(index)) found=true;
+				if (t.isTheOne(index,parent)) found=true;
 			}
 			if(found==false) throw new RuntimeException("Event not expected, should not be here! " +
 			strace[strace.length-1] + " " + when + " " + where + " " + cond + "" + index);
 		}
-		active.remove(fromTransToState.get(t));
+		fromTransToState.get(t).remove(active, t);
+//		active.remove(fromTransToState.get(t));
 		{
 			int type = t.getType(); 
 			if (type == TransitionLabel.VOID) {

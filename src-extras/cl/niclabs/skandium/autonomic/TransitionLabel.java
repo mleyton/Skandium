@@ -2,6 +2,7 @@ package cl.niclabs.skandium.autonomic;
 
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
+import cl.niclabs.skandium.skeletons.DaC;
 import cl.niclabs.skandium.skeletons.Skeleton;
 
 class TransitionLabel implements Comparable<TransitionLabel> {
@@ -43,9 +44,11 @@ class TransitionLabel implements Comparable<TransitionLabel> {
 		Integer i2 = new Integer(tl.ts.getIndex());
 		return i1.compareTo(i2);
 	}
-	boolean isTheOne(int eventIndex) {
+	boolean isTheOne(int eventIndex, int eventParent) {
+		if(ts.getParent() != TransitionSkelIndex.UDEF && ts.getParent() != eventParent)
+			return false; 
 		if(ts.getIndex() == TransitionSkelIndex.UDEF) return true;
-		if(eventIndex == ts.getIndex()) return true;
+		if(eventIndex == ts.getIndex()) return true;		
 		return false;
 	}
 	
@@ -53,23 +56,15 @@ class TransitionLabel implements Comparable<TransitionLabel> {
 		if (when == When.AFTER && where == Where.SPLIT) return FS_CARD;
 		if (when == When.BEFORE) {
 			if (where == Where.MERGE ) return VOID;
+			{
+				Skeleton<?,?> current = ts.getStrace()[ts.getStrace().length-1];
+				if (current instanceof DaC && where == Where.SPLIT) return VOID;
+			}
 			return INDEX;
 		}
 		return VOID;
 	}
-	
-	//TODO Borrar despues
 	TransitionSkelIndex getTs() {
 		return ts;
 	}
-	When getWhen() {
-		return when;
-	}
-	Where getWhere() {
-		return where;
-	}
-	boolean isCond() {
-		return cond;
-	}
-
 }

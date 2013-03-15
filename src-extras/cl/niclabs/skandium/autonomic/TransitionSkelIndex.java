@@ -7,13 +7,18 @@ class TransitionSkelIndex {
 	@SuppressWarnings("rawtypes")
 	private Skeleton[] strace;
 	private int index;
+	private int parent;
 	@SuppressWarnings("rawtypes")
 	TransitionSkelIndex(Skeleton[] strace) {
 		this.strace = strace;
 		index = UDEF;
+		parent = UDEF;
 	}
 	void setIndex(int index) {
 		this.index = index;
+	}
+	void setParent(int parent) {
+		this.parent = parent;
 	}
 	@SuppressWarnings("rawtypes")
 	Skeleton[] getStrace() {
@@ -21,5 +26,8 @@ class TransitionSkelIndex {
 	}
 	int getIndex() {
 		return index;
+	}
+	int getParent() {
+		return parent;
 	}
 }

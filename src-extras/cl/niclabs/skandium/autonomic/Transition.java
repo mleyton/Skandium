@@ -21,6 +21,10 @@ abstract class Transition implements Comparable<Transition> {
 		throw new NotImplementedException();
 	}
 	
+	protected void execute(int i, int p) {
+		throw new NotImplementedException();
+	}
+
 	State getDest() {
 		return dest;
 	}
@@ -34,8 +38,8 @@ abstract class Transition implements Comparable<Transition> {
 		return tl.compareTo(t.tl);
 	}
 	
-	boolean isTheOne(int eventIndex) {
-		return tl.isTheOne(eventIndex);
+	boolean isTheOne(int eventIndex, int eventParent) {
+		return tl.isTheOne(eventIndex, eventParent);
 	}
 	int getType() {
 		return tl.getType();
