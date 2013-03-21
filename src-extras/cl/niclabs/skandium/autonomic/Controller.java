@@ -2,6 +2,7 @@ package cl.niclabs.skandium.autonomic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -9,6 +10,9 @@ import cl.niclabs.skandium.Skandium;
 import cl.niclabs.skandium.events.GenericListener;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
+import cl.niclabs.skandium.muscles.Condition;
+import cl.niclabs.skandium.muscles.Muscle;
+import cl.niclabs.skandium.muscles.Split;
 import cl.niclabs.skandium.skeletons.DaC;
 import cl.niclabs.skandium.skeletons.Map;
 import cl.niclabs.skandium.skeletons.Seq;
@@ -18,25 +22,37 @@ import cl.niclabs.skandium.skeletons.While;
 class Controller extends GenericListener {
 	
 	List<State> active;
+	Activity initialAct;
+	Activity lastAct;
 //	private Skandium skandium;
 //	private float yellowThreshold;
 //	private float redThreshold;
 //	private long lastExecution;
 //	private long poolCheck;
+	private HashSet<Muscle<?,?>> muscles;
+	private HashMap<Muscle<?,?>,Long> t;
+	private HashMap<Muscle<?,?>, Integer> card;
+
 	
-	Controller(Skeleton<?,?> skel, Skandium skandium, float yellowThreshold, float redThreshold, long poolCheck) {
+	Controller(Skeleton<?,?> skel, Skandium skandium, float yellowThreshold, float redThreshold, long poolCheck, double rho) {
 //		this.skandium = skandium; 
 //		this.yellowThreshold = yellowThreshold;
 //		this.redThreshold = redThreshold;
 //		this.poolCheck = poolCheck;
 //		lastExecution = 0;
 		//Inicializar maquina de estados
-		TransitionGenerator visitor = new TransitionGenerator();
+		SGenerator visitor = new SGenerator(rho);
 		skel.accept(visitor);
 		State I = new State();
 		I.addTransition(visitor.getInitialTrans());
 		active = new ArrayList<State>();
 		active.add(I);
+		initialAct = visitor.getInitialAct();
+		lastAct = visitor.getLastAct();
+		lastAct.addSubsequent(lastAct);
+		muscles = visitor.getMuscles();
+		t = visitor.getT();
+		card = visitor.getCard();
 	}
 
 	@Override
@@ -86,7 +102,6 @@ class Controller extends GenericListener {
 			strace[strace.length-1] + " " + when + " " + where + " " + cond + "" + index);
 		}
 		fromTransToState.get(t).remove(active, t);
-//		active.remove(fromTransToState.get(t));
 		{
 			int type = t.getType(); 
 			if (type == TransitionLabel.VOID) {
@@ -99,6 +114,12 @@ class Controller extends GenericListener {
 			}
 		}
 		active.add(t.getDest());
+// TODO BORRAR PRUEBA DE ACTIVIDADES
+		System.out.println("ACTIVITIES");
+		printActivities(initialAct);
+		printT();
+		printCard();
+		System.out.println("Is ready: " + isActivityDiagramReady());
 /*		
 		if (System.currentTimeMillis() - lastExecution > poolCheck) {
 			threadsControl();
@@ -106,6 +127,46 @@ class Controller extends GenericListener {
 		}
 */
 		return param;
+	}
+	private boolean isActivityDiagramReady() {
+		for (Muscle<?,?> m:muscles) {
+			if (!t.containsKey(m)) return false;
+			if ((m instanceof Condition<?>)&&(!card.containsKey(m))) return false;
+			if ((m instanceof Split<?,?>)&&(!card.containsKey(m))) return false;
+		}
+		return true;
+	}
+	private boolean isLastActivity(Activity a) {
+		for (Activity s: a.getSubsequents()) {
+			if (s == lastAct) return true;
+		}
+		return false;
+	}
+	// TODO: borrar printActivities, printT, y printCard,
+	void printActivities(Activity a) {
+		String sub = new String();
+		for (Activity s: a.getSubsequents()) {
+			sub += "\t" + s;
+		}
+		boolean isLA = isLastActivity(a);
+		System.out.println(a + "\t" + a.getTi() + "\t" + a.getTf() + "\t" + a.getMuscle() + sub + "\t" + isLA);
+		if (!isLA) {
+			for (Activity s: a.getSubsequents()) {
+				printActivities(s);
+			}
+		}
+	}
+	void printT() {
+		System.out.println("T(f)");
+		for (Muscle<?,?> m:t.keySet()) {
+			System.out.println(m + "\t" + t.get(m).longValue());
+		}
+	}
+	void printCard() {
+		System.out.println("Card(f)");
+		for (Muscle<?,?> m:card.keySet()) {
+			System.out.println(m + "\t" + card.get(m).intValue());
+		}
 	}
 /*	
 	private void threadsControl() {
@@ -124,7 +185,7 @@ class Controller extends GenericListener {
 		}
 		if (consumption < redThreshold) {
 			int currThreads = Thread.activeCount();
-			int neededThreads = 0;//root.threadsCalculator();
+			int neededThreads = 0;/root.threadsCalculator();
 			if (currThreads > neededThreads) 
 				skandium.setMaxThreads(neededThreads);
 			return;

@@ -1,9 +1,13 @@
 package cl.niclabs.skandium.autonomic;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Stack;
 
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
+import cl.niclabs.skandium.muscles.Condition;
+import cl.niclabs.skandium.muscles.Muscle;
 import cl.niclabs.skandium.skeletons.AbstractSkeleton;
 import cl.niclabs.skandium.skeletons.DaC;
 import cl.niclabs.skandium.skeletons.Farm;
@@ -17,22 +21,38 @@ import cl.niclabs.skandium.skeletons.Skeleton;
 import cl.niclabs.skandium.skeletons.SkeletonVisitor;
 import cl.niclabs.skandium.skeletons.While;
 
-class TransitionGenerator implements SkeletonVisitor {
+class SGenerator implements SkeletonVisitor {
 
 	private Transition initialTrans;
 	private State lastState;
 	@SuppressWarnings("rawtypes")
 	private Stack<Skeleton> strace;
+	
+	private HashMap<Muscle<?,?>,Long> t;
+	private HashMap<Muscle<?,?>, Integer> card;
+	private HashSet<Muscle<?,?>> muscles;
+	private Activity initialAct;
+	private Activity lastAct;
+	private double rho;
 
 	@SuppressWarnings("rawtypes")
-	TransitionGenerator() {
+	SGenerator(double rho) {
 		this.strace = new Stack<Skeleton>();
+		this.t = new HashMap<Muscle<?,?>,Long>();
+		this.card = new HashMap<Muscle<?,?>,Integer>();
+		this.muscles = new HashSet<Muscle<?,?>>();
+		this.rho = rho;
 	}
 
-	private TransitionGenerator(
-			@SuppressWarnings("rawtypes") Stack<Skeleton> trace) {
-		this();
+	private SGenerator(
+			@SuppressWarnings("rawtypes") Stack<Skeleton> trace,
+			HashMap<Muscle<?,?>,Long> t, HashMap<Muscle<?,?>,Integer> card, double rho,
+			HashSet<Muscle<?,?>> muscles) {
+		this(rho);
 		this.strace.addAll(trace);
+		this.t = t;
+		this.card = card;
+		this.muscles = muscles; 
 	}
 
 	@Override
@@ -44,26 +64,32 @@ class TransitionGenerator implements SkeletonVisitor {
 	@Override
 	public <P, R> void visit(Pipe<P, R> skeleton) {
 		strace.add(skeleton);
-		TransitionGenerator stage2 = new TransitionGenerator(strace);
+		SGenerator stage2 = new SGenerator(strace,t,card,rho,muscles);
 		skeleton.getStage2().accept(stage2);
-		TransitionGenerator stage1 = new TransitionGenerator(strace);
+		SGenerator stage1 = new SGenerator(strace,t,card,rho,muscles);
 		skeleton.getStage1().accept(stage1);
 		stage1.getLastState().addTransition(stage2.getInitialTrans());
 		initialTrans = stage1.getInitialTrans();
 		lastState = stage2.getLastState();
+		initialAct = stage1.getInitialAct();
+		stage1.getLastAct().addSubsequent(stage2.getInitialAct());
+		lastAct = stage2.getLastAct();
 	}
 
 	@Override
 	public <P, R> void visit(Seq<P, R> skeleton) {
 		strace.add(skeleton);
+		muscles.add(skeleton.getExecute());
 		lastState = new State();
 		@SuppressWarnings("rawtypes")
 		Skeleton[] straceArray = getStraceAsArray();
+		initialAct = new Activity(t,skeleton.getExecute(),rho);
+		lastAct = initialAct;
 		final TransitionSkelIndex tsi = new TransitionSkelIndex(straceArray);
 		Transition toF = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.SKELETON, false),lastState) {
 			@Override
 			protected void execute() {
-				//TODO
+				initialAct.setTf(System.nanoTime());
 			}
 		};
 		State I = new State();
@@ -72,7 +98,7 @@ class TransitionGenerator implements SkeletonVisitor {
 			@Override
 			protected void execute(int i) {
 				tsi.setIndex(i);
-				//TODO
+				initialAct.setTi(System.nanoTime());
 			}
 		};
 	}
@@ -83,16 +109,35 @@ class TransitionGenerator implements SkeletonVisitor {
 	}
 
 	@Override
-	public <P> void visit(While<P> skeleton) {
+	public <P> void visit(final While<P> skeleton) {
 		strace.add(skeleton);
+		muscles.add(skeleton.getCondition());
 		lastState = new State();
 		@SuppressWarnings("rawtypes")
 		Skeleton[] straceArray = getStraceAsArray();
+		
+		final Condition<?> cond = skeleton.getCondition();
+		initialAct = new Activity(t,cond,rho);
+		lastAct = new Activity(t,cond,rho);
+		final Box<Activity> currentAct = new Box<Activity>(initialAct);
+		final Box<Integer> c = new Box<Integer>(0);
+		
 		final TransitionSkelIndex tsi = new TransitionSkelIndex(straceArray);
 		Transition toF = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.CONDITION, false),lastState) {
 			@Override
 			protected void execute() {
-				//TODO
+				currentAct.get().setTf(System.nanoTime());
+				for (Activity s: lastAct.getSubsequents()) {
+					currentAct.get().addSubsequent(s);
+				}
+				lastAct = currentAct.get();
+				double v;
+				if (card.containsKey(cond)) {
+					v = rho*(double)c.get() + (1-rho)*(double)card.get(cond); 
+				} else {
+					v = (double)c.get();
+				}
+				card.put(cond, (int)v);
 			}
 		};
 		State I = new State();
@@ -101,45 +146,54 @@ class TransitionGenerator implements SkeletonVisitor {
 			@Override
 			protected void execute(int i) {
 				tsi.setIndex(i);
-				//TODO
+				initialAct.setTi(System.nanoTime());
 			}
 		};
-		State T = new State();
+		final Transition toI = new Transition(new TransitionLabel(tsi, When.BEFORE,  Where.CONDITION, false),I) {
+			@Override
+			protected void execute(int i) {
+				currentAct.get().setTi(System.nanoTime());
+			}
+		};
+		final State T = new State();
 		Transition toT = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.CONDITION, true),T) {
 			@Override
 			protected void execute() {
-				//TODO
+				SGenerator subSkel = new SGenerator(strace,t,card,rho,muscles);
+				skeleton.getSubskel().accept(subSkel);
+				T.addTransition(subSkel.getInitialTrans());
+				subSkel.getLastState().addTransition(toI);
+				currentAct.get().setTf(System.nanoTime());
+				c.set(c.get()+1);
+				currentAct.get().addSubsequent(subSkel.getInitialAct());
+				currentAct.set(new Activity(t,cond,rho));
+				subSkel.getLastAct().addSubsequent(currentAct.get());
 			}
 		};
 		I.addTransition(toT);
-		TransitionGenerator subSkel = new TransitionGenerator(strace);
-		skeleton.getSubskel().accept(subSkel);
-		T.addTransition(subSkel.getInitialTrans());
-		Transition toI = new Transition(new TransitionLabel(tsi, When.BEFORE,  Where.CONDITION, false),I) {
-			@Override
-			protected void execute(int i) {
-				//TODO
-			}
-		};
-		subSkel.getLastState().addTransition(toI);
 	}
 
 	@Override
 	public <P> void visit(For<P> skeleton) {
 		strace.add(skeleton);
 		State lastLastState = null;
+		Activity lastLastAct = null;
 		int n = skeleton.getTimes();
 		for (int i=0; i<n; i++) {
-			TransitionGenerator subSkel = new TransitionGenerator(strace);
+			SGenerator subSkel = new SGenerator(strace,t,card,rho,muscles);
 			skeleton.getSubskel().accept(subSkel);
 			if (lastLastState == null) {
 				initialTrans = subSkel.getInitialTrans();
+				initialAct = subSkel.getInitialAct();
 			} else {
 				lastLastState.addTransition(subSkel.getInitialTrans());
+				lastLastAct.addSubsequent(subSkel.getInitialAct());
 			}
 			lastLastState = subSkel.getLastState();
+			lastLastAct = subSkel.getLastAct();
 			if (i==n-1) {
 				lastState = lastLastState;
+				lastAct = lastLastAct;
 			}
 		}
 	}
@@ -147,6 +201,8 @@ class TransitionGenerator implements SkeletonVisitor {
 	@Override
 	public <P, R> void visit(final Map<P, R> skeleton) {
 		strace.add(skeleton);
+		muscles.add(skeleton.getSplit());
+		muscles.add(skeleton.getMerge());
 		lastState = new State();
 		@SuppressWarnings("rawtypes")
 		Skeleton[] straceArray = getStraceAsArray();
@@ -170,7 +226,7 @@ class TransitionGenerator implements SkeletonVisitor {
 			@Override
 			protected void execute(int fsCard) {
 				for (int i=0; i<fsCard; i++) {
-					TransitionGenerator subSkel = new TransitionGenerator(strace);
+					SGenerator subSkel = new SGenerator(strace,t,card,rho,muscles);
 					skeleton.getSkeleton().accept(subSkel);
 					S.addTransition(subSkel.getInitialTrans());
 					subSkel.getLastState().addTransition(toM);
@@ -198,6 +254,9 @@ class TransitionGenerator implements SkeletonVisitor {
 	@Override
 	public <P, R> void visit(DaC<P, R> skeleton) {
 		strace.add(skeleton);
+		muscles.add(skeleton.getCondition());
+		muscles.add(skeleton.getSplit());
+		muscles.add(skeleton.getMerge());
 		DaCM(skeleton, 0);
 	}
 
@@ -243,7 +302,7 @@ class TransitionGenerator implements SkeletonVisitor {
 			@Override
 			protected void execute(int fsCard) {
 				for (int i=0; i<fsCard; i++) {
-					TransitionGenerator subDaC = new TransitionGenerator(strace);
+					SGenerator subDaC = new SGenerator(strace,t,card,rho,muscles);
 					subDaC.DaCM(skeleton, fcCard+1);
 					subDaC.getInitialTrans().tl.getTs().setParent(this.tl.getTs().getIndex());
 					T.addTransition(subDaC.getInitialTrans());
@@ -274,7 +333,7 @@ class TransitionGenerator implements SkeletonVisitor {
 		Transition toG = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.CONDITION, false),G) {
 			@Override
 			protected void execute() {
-				TransitionGenerator subSkel = new TransitionGenerator(strace);
+				SGenerator subSkel = new SGenerator(strace,t,card,rho,muscles);
 				skeleton.getSkeleton().accept(subSkel);
 				G.addTransition(subSkel.getInitialTrans());
 				for (Transition t: lastState.getTransitions())
@@ -292,4 +351,22 @@ class TransitionGenerator implements SkeletonVisitor {
 			}
 		};
 	}
+	Activity getInitialAct() {
+		return initialAct;
+	}
+	Activity getLastAct() {
+		return lastAct;
+	}
+	HashSet<Muscle<?,?>> getMuscles() {
+		return muscles;
+	}
+	
+	HashMap<Muscle<?, ?>, Long> getT() {
+		return t;
+	}
+
+	HashMap<Muscle<?, ?>, Integer> getCard() {
+		return card;
+	}
+	
 }
