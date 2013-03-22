@@ -8,6 +8,7 @@ import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.muscles.Condition;
 import cl.niclabs.skandium.muscles.Muscle;
+import cl.niclabs.skandium.muscles.Split;
 import cl.niclabs.skandium.skeletons.AbstractSkeleton;
 import cl.niclabs.skandium.skeletons.DaC;
 import cl.niclabs.skandium.skeletons.Farm;
@@ -126,18 +127,9 @@ class SGenerator implements SkeletonVisitor {
 		Transition toF = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.CONDITION, false),lastState) {
 			@Override
 			protected void execute() {
-				currentAct.get().setTf(System.nanoTime());
-				for (Activity s: lastAct.getSubsequents()) {
-					currentAct.get().addSubsequent(s);
-				}
-				lastAct = currentAct.get();
-				double v;
-				if (card.containsKey(cond)) {
-					v = rho*(double)c.get() + (1-rho)*(double)card.get(cond); 
-				} else {
-					v = (double)c.get();
-				}
-				card.put(cond, (int)v);
+				setLastActivity(currentAct.get());
+				lastAct.setTf(System.nanoTime());
+				setCard(cond,c.get());
 			}
 		};
 		State I = new State();
@@ -147,12 +139,14 @@ class SGenerator implements SkeletonVisitor {
 			protected void execute(int i) {
 				tsi.setIndex(i);
 				initialAct.setTi(System.nanoTime());
+				estimateWhile(initialAct, 0, skeleton, cond);
 			}
 		};
 		final Transition toI = new Transition(new TransitionLabel(tsi, When.BEFORE,  Where.CONDITION, false),I) {
 			@Override
 			protected void execute(int i) {
 				currentAct.get().setTi(System.nanoTime());
+				estimateWhile(currentAct.get(), c.get(), skeleton, cond);
 			}
 		};
 		final State T = new State();
@@ -168,6 +162,7 @@ class SGenerator implements SkeletonVisitor {
 				currentAct.get().addSubsequent(subSkel.getInitialAct());
 				currentAct.set(new Activity(t,cond,rho));
 				subSkel.getLastAct().addSubsequent(currentAct.get());
+				estimateWhile(currentAct.get(), c.get(), skeleton, cond);
 			}
 		};
 		I.addTransition(toT);
@@ -206,11 +201,15 @@ class SGenerator implements SkeletonVisitor {
 		lastState = new State();
 		@SuppressWarnings("rawtypes")
 		Skeleton[] straceArray = getStraceAsArray();
+		
+		initialAct = new Activity(t,skeleton.getSplit(),rho);
+		lastAct = new Activity(t,skeleton.getMerge(),rho);
+		
 		final TransitionSkelIndex tsi = new TransitionSkelIndex(straceArray);
 		Transition toF = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.MERGE, false),lastState) {
 			@Override
 			protected void execute() {
-				//TODO
+				lastAct.setTf(System.nanoTime());
 			}
 		};
 		State M = new State();
@@ -218,20 +217,26 @@ class SGenerator implements SkeletonVisitor {
 		final Transition toM = new Transition(new TransitionLabel(tsi, When.BEFORE,  Where.MERGE, false),M) {
 			@Override
 			protected void execute() {
-				//TODO
+				lastAct.setTi(System.nanoTime());
 			}
 		};
 		final State S = new State(true);
 		Transition toS = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.SPLIT, false),S) {
 			@Override
 			protected void execute(int fsCard) {
+				initialAct.setTf(System.nanoTime());
+				setCard(skeleton.getSplit(), fsCard);
+				initialAct.resetSubsequets();
+				lastAct.resetPredcesors();
 				for (int i=0; i<fsCard; i++) {
 					SGenerator subSkel = new SGenerator(strace,t,card,rho,muscles);
 					skeleton.getSkeleton().accept(subSkel);
 					S.addTransition(subSkel.getInitialTrans());
 					subSkel.getLastState().addTransition(toM);
+
+					initialAct.addSubsequent(subSkel.getInitialAct());
+					subSkel.getLastAct().addSubsequent(lastAct);
 				}
-				//TODO 
 			}
 		};
 		State I = new State();
@@ -240,7 +245,18 @@ class SGenerator implements SkeletonVisitor {
 			@Override
 			protected void execute(int i) {
 				tsi.setIndex(i);
-				//TODO 
+				initialAct.setTi(System.nanoTime());
+				if (card.containsKey(skeleton.getSplit())) {
+					int n = card.get(skeleton.getSplit());
+					initialAct.resetSubsequets();
+					lastAct.resetPredcesors();
+					for (int j=0; j<n; j++) {
+						SGenerator subSkel = new SGenerator(strace,t,card,rho,muscles);
+						skeleton.getSkeleton().accept(subSkel);
+						initialAct.addSubsequent(subSkel.getInitialAct());
+						subSkel.getLastAct().addSubsequent(lastAct);						
+					}
+				}
 			}
 		}; 
 	}
@@ -357,6 +373,47 @@ class SGenerator implements SkeletonVisitor {
 	Activity getLastAct() {
 		return lastAct;
 	}
+	boolean isActivityDiagramReady() {
+		for (Muscle<?,?> m:muscles) {
+			if (!t.containsKey(m)) return false;
+			if ((m instanceof Condition<?>)&&(!card.containsKey(m))) return false;
+			if ((m instanceof Split<?,?>)&&(!card.containsKey(m))) return false;
+		}
+		return true;
+	}
+	private void setCard(Muscle<?,?> m, int newCard) {
+		double v;
+		if (card.containsKey(m)) {
+			v = rho*(double)newCard + (1-rho)*(double)card.get(m); 
+		} else {
+			v = (double)newCard;
+		}
+		card.put(m, (int)v);
+	}
+	private void setLastActivity(Activity a) {
+		a.resetSubsequets();
+		for (Activity s: lastAct.getSubsequents()) {
+			a.addSubsequent(s);
+		}
+		lastAct = a;
+		
+	}
+	private void estimateWhile(Activity current, int c, While<?> w, Muscle<?,?> m) {
+		if(card.containsKey(m)) {
+			current.resetSubsequets();
+			Activity a = current;
+			int n = card.get(m);
+			for (int i=c; i<n; i++) {
+				SGenerator subSkel = new SGenerator(strace,t,card,rho,muscles);
+				w.getSubskel().accept(subSkel);
+				a.addSubsequent(subSkel.getInitialAct());
+				a = new Activity(t,m,rho);
+				subSkel.getLastAct().addSubsequent(a);
+			}
+			setLastActivity(a);
+		}
+	}
+	// TODO borrar get muscles, T y card.
 	HashSet<Muscle<?,?>> getMuscles() {
 		return muscles;
 	}
@@ -368,5 +425,6 @@ class SGenerator implements SkeletonVisitor {
 	HashMap<Muscle<?, ?>, Integer> getCard() {
 		return card;
 	}
+	
 	
 }

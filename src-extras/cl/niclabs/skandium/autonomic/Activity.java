@@ -13,6 +13,7 @@ class Activity {
 	private long tf;
 	private Muscle<?,?> m;
 	private List<Activity> s;
+	private List<Activity> p;
 	private HashMap<Muscle<?,?>,Long> t;
 	private double rho;
 	Activity(HashMap<Muscle<?,?>,Long> t, Muscle<?,?> m, double rho) {
@@ -20,6 +21,7 @@ class Activity {
 		this.tf = UDEF;
 		this.m = m;
 		this.s = new ArrayList<Activity>();
+		this.p = new ArrayList<Activity>();
 		this.t = t;
 		this.rho = rho;
 	}
@@ -43,15 +45,31 @@ class Activity {
 	long getTf() {
 		return tf;
 	}
-	long getD() {
+	private long getD() {
 		if (tf != UDEF && ti != UDEF) return tf - ti;
 		return UDEF;
 	}
 	void addSubsequent(Activity a) {
 		s.add(a);
+		a.p.add(this);
+	}
+	void resetSubsequets() {
+		for (Activity a: s) {
+			a.p.remove(this);
+		}
+		s.clear();
+	}
+	void resetPredcesors() {
+		for (Activity a: p) {
+			a.s.remove(this);
+		}
+		p.clear();
 	}
 	List<Activity> getSubsequents() {
 		return s;
+	}
+	List<Activity> getPredecesors() {
+		return p;
 	}
 	// TODO: borrar getMuscle
 	public Muscle<?,?> getMuscle() {

@@ -2,7 +2,6 @@ package cl.niclabs.skandium.autonomic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -10,9 +9,7 @@ import cl.niclabs.skandium.Skandium;
 import cl.niclabs.skandium.events.GenericListener;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
-import cl.niclabs.skandium.muscles.Condition;
 import cl.niclabs.skandium.muscles.Muscle;
-import cl.niclabs.skandium.muscles.Split;
 import cl.niclabs.skandium.skeletons.DaC;
 import cl.niclabs.skandium.skeletons.Map;
 import cl.niclabs.skandium.skeletons.Seq;
@@ -29,9 +26,7 @@ class Controller extends GenericListener {
 //	private float redThreshold;
 //	private long lastExecution;
 //	private long poolCheck;
-	private HashSet<Muscle<?,?>> muscles;
-	private HashMap<Muscle<?,?>,Long> t;
-	private HashMap<Muscle<?,?>, Integer> card;
+	SGenerator visitor;
 
 	
 	Controller(Skeleton<?,?> skel, Skandium skandium, float yellowThreshold, float redThreshold, long poolCheck, double rho) {
@@ -41,7 +36,7 @@ class Controller extends GenericListener {
 //		this.poolCheck = poolCheck;
 //		lastExecution = 0;
 		//Inicializar maquina de estados
-		SGenerator visitor = new SGenerator(rho);
+		visitor = new SGenerator(rho);
 		skel.accept(visitor);
 		State I = new State();
 		I.addTransition(visitor.getInitialTrans());
@@ -49,10 +44,7 @@ class Controller extends GenericListener {
 		active.add(I);
 		initialAct = visitor.getInitialAct();
 		lastAct = visitor.getLastAct();
-		lastAct.addSubsequent(lastAct);
-		muscles = visitor.getMuscles();
-		t = visitor.getT();
-		card = visitor.getCard();
+		lastAct.addSubsequent(initialAct);
 	}
 
 	@Override
@@ -119,7 +111,7 @@ class Controller extends GenericListener {
 		printActivities(initialAct);
 		printT();
 		printCard();
-		System.out.println("Is ready: " + isActivityDiagramReady());
+		System.out.println("Is ready: " + visitor.isActivityDiagramReady());
 /*		
 		if (System.currentTimeMillis() - lastExecution > poolCheck) {
 			threadsControl();
@@ -128,17 +120,9 @@ class Controller extends GenericListener {
 */
 		return param;
 	}
-	private boolean isActivityDiagramReady() {
-		for (Muscle<?,?> m:muscles) {
-			if (!t.containsKey(m)) return false;
-			if ((m instanceof Condition<?>)&&(!card.containsKey(m))) return false;
-			if ((m instanceof Split<?,?>)&&(!card.containsKey(m))) return false;
-		}
-		return true;
-	}
 	private boolean isLastActivity(Activity a) {
 		for (Activity s: a.getSubsequents()) {
-			if (s == lastAct) return true;
+			if (s == initialAct) return true;
 		}
 		return false;
 	}
@@ -158,14 +142,14 @@ class Controller extends GenericListener {
 	}
 	void printT() {
 		System.out.println("T(f)");
-		for (Muscle<?,?> m:t.keySet()) {
-			System.out.println(m + "\t" + t.get(m).longValue());
+		for (Muscle<?,?> m:visitor.getT().keySet()) {
+			System.out.println(m + "\t" + visitor.getT().get(m).longValue());
 		}
 	}
 	void printCard() {
 		System.out.println("Card(f)");
-		for (Muscle<?,?> m:card.keySet()) {
-			System.out.println(m + "\t" + card.get(m).intValue());
+		for (Muscle<?,?> m:visitor.getCard().keySet()) {
+			System.out.println(m + "\t" + visitor.getCard().get(m).intValue());
 		}
 	}
 /*	
