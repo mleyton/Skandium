@@ -25,11 +25,11 @@ class Activity {
 		this.t = t;
 		this.rho = rho;
 	}
-	void setTi(long ti) {
-		this.ti = ti;
+	void setTi() {
+		this.ti = System.nanoTime();
 	}
-	void setTf(long tf) {
-		this.tf = tf;
+	void setTf() {
+		this.tf = System.nanoTime();
 		double v;
 		if (t.containsKey(m)) {
 			double vp = t.get(m);
@@ -53,7 +53,11 @@ class Activity {
 		s.add(a);
 		a.p.add(this);
 	}
-	void resetSubsequets() {
+	void addPredecesor(Activity a) {
+		p.add(a);
+		a.s.add(this);
+	}
+	void resetSubsequents() {
 		for (Activity a: s) {
 			a.p.remove(this);
 		}

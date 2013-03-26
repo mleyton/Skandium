@@ -1,14 +1,15 @@
 package cl.niclabs.skandium.autonomic;
 
-class Box<T> {
+// TODO borrar el public de la clase y de los metodos
+public class Box<T> {
 	private T var;
-	Box(T var) {
+	public Box(T var) {
 		this.var = var;
 	}
-	void set(T var) {
+	public void set(T var) {
 		this.var = var;
 	}
-	T get() {
+	public T get() {
 		return var;
 	}
 }
