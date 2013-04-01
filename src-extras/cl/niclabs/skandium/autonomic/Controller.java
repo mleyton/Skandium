@@ -73,7 +73,7 @@ class Controller extends GenericListener {
 	@Override
 	synchronized public Object handler(Object param, @SuppressWarnings("rawtypes") Skeleton[] strace, int index,
 			boolean cond, int parent, When when, Where where) {
-		TransitionLabel event = new TransitionLabel(new TransitionSkelIndex(strace),when, where, cond);
+		TransitionLabel event = new TransitionLabel(new SMHead(strace),when, where, cond);
 		HashMap<Transition,State> fromTransToState = new HashMap<Transition,State>();
 		// Buscar evento entre transiciones de estados activos.
 		PriorityQueue<Transition> areIn = new PriorityQueue<Transition>() ;

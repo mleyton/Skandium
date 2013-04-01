@@ -10,11 +10,11 @@ class TransitionLabel implements Comparable<TransitionLabel> {
 	static final int INDEX = 1;
 	static final int FS_CARD = 2;
 	
-	private TransitionSkelIndex ts;
+	private SMHead ts;
 	private When when;
 	private Where where;
 	private boolean cond;
-	TransitionLabel(TransitionSkelIndex ts, When when, Where where, boolean cond) {
+	TransitionLabel(SMHead ts, When when, Where where, boolean cond) {
 		this.ts = ts;
 		this.when = when;
 		this.where = where;
@@ -45,9 +45,9 @@ class TransitionLabel implements Comparable<TransitionLabel> {
 		return i1.compareTo(i2);
 	}
 	boolean isTheOne(int eventIndex, int eventParent) {
-		if(ts.getParent() != TransitionSkelIndex.UDEF && ts.getParent() != eventParent)
+		if(ts.getParent() != SMHead.UDEF && ts.getParent() != eventParent)
 			return false; 
-		if(ts.getIndex() == TransitionSkelIndex.UDEF) return true;
+		if(ts.getIndex() == SMHead.UDEF) return true;
 		if(eventIndex == ts.getIndex()) return true;		
 		return false;
 	}
@@ -64,7 +64,7 @@ class TransitionLabel implements Comparable<TransitionLabel> {
 		}
 		return VOID;
 	}
-	TransitionSkelIndex getTs() {
+	SMHead getTs() {
 		return ts;
 	}
 }

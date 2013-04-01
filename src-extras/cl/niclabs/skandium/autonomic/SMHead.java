@@ -2,14 +2,14 @@ package cl.niclabs.skandium.autonomic;
 
 import cl.niclabs.skandium.skeletons.Skeleton;
 
-class TransitionSkelIndex {
+class SMHead {
 	static final int UDEF = -1;
 	@SuppressWarnings("rawtypes")
 	private Skeleton[] strace;
 	private int index;
 	private int parent;
 	@SuppressWarnings("rawtypes")
-	TransitionSkelIndex(Skeleton[] strace) {
+	SMHead(Skeleton[] strace) {
 		this.strace = strace;
 		index = UDEF;
 		parent = UDEF;

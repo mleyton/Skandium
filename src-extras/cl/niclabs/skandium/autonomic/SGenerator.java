@@ -86,7 +86,7 @@ class SGenerator implements SkeletonVisitor {
 		Skeleton[] straceArray = getStraceAsArray();
 		initialAct = new Activity(t,skeleton.getExecute(),rho);
 		lastAct = initialAct;
-		final TransitionSkelIndex tsi = new TransitionSkelIndex(straceArray);
+		final SMHead tsi = new SMHead(straceArray);
 		Transition toF = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.SKELETON, false),lastState) {
 			@Override
 			protected void execute() {
@@ -123,7 +123,7 @@ class SGenerator implements SkeletonVisitor {
 		final Box<Activity> currentAct = new Box<Activity>(initialAct);
 		final Box<Integer> c = new Box<Integer>(0);
 		
-		final TransitionSkelIndex tsi = new TransitionSkelIndex(straceArray);
+		final SMHead tsi = new SMHead(straceArray);
 		Transition toF = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.CONDITION, false),lastState) {
 			@Override
 			protected void execute() {
@@ -139,14 +139,12 @@ class SGenerator implements SkeletonVisitor {
 			protected void execute(int i) {
 				tsi.setIndex(i);
 				initialAct.setTi();
-				estimateWhile(initialAct, 0, skeleton, cond);
 			}
 		};
 		final Transition toI = new Transition(new TransitionLabel(tsi, When.BEFORE,  Where.CONDITION, false),I) {
 			@Override
 			protected void execute(int i) {
 				currentAct.get().setTi();
-				estimateWhile(currentAct.get(), c.get(), skeleton, cond);
 			}
 		};
 		final State T = new State();
@@ -162,7 +160,6 @@ class SGenerator implements SkeletonVisitor {
 				currentAct.get().addSubsequent(subSkel.getInitialAct());
 				currentAct.set(new Activity(t,cond,rho));
 				subSkel.getLastAct().addSubsequent(currentAct.get());
-				estimateWhile(currentAct.get(), c.get(), skeleton, cond);
 			}
 		};
 		I.addTransition(toT);
@@ -205,7 +202,7 @@ class SGenerator implements SkeletonVisitor {
 		initialAct = new Activity(t,skeleton.getSplit(),rho);
 		lastAct = new Activity(t,skeleton.getMerge(),rho);
 		
-		final TransitionSkelIndex tsi = new TransitionSkelIndex(straceArray);
+		final SMHead tsi = new SMHead(straceArray);
 		Transition toF = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.MERGE, false),lastState) {
 			@Override
 			protected void execute() {
@@ -226,8 +223,8 @@ class SGenerator implements SkeletonVisitor {
 			protected void execute(int fsCard) {
 				initialAct.setTf();
 				setCard(skeleton.getSplit(), fsCard);
-				initialAct.resetSubsequents();
-				lastAct.resetPredcesors();
+//				initialAct.resetSubsequents();
+//				lastAct.resetPredcesors();
 				for (int i=0; i<fsCard; i++) {
 					SGenerator subSkel = new SGenerator(strace,t,card,rho,muscles);
 					skeleton.getSkeleton().accept(subSkel);
@@ -246,6 +243,7 @@ class SGenerator implements SkeletonVisitor {
 			protected void execute(int i) {
 				tsi.setIndex(i);
 				initialAct.setTi();
+/*
 				if (card.containsKey(skeleton.getSplit())) {
 					int n = card.get(skeleton.getSplit());
 					initialAct.resetSubsequents();
@@ -257,6 +255,7 @@ class SGenerator implements SkeletonVisitor {
 						subSkel.getLastAct().addSubsequent(lastAct);						
 					}
 				}
+*/				
 			}
 		}; 
 	}
@@ -301,7 +300,7 @@ class SGenerator implements SkeletonVisitor {
 		lastAct = new Activity(t, skeleton.getMerge(), rho);
 		@SuppressWarnings("rawtypes")
 		Skeleton[] straceArray = getStraceAsArray();
-		final TransitionSkelIndex tsi = new TransitionSkelIndex(straceArray);
+		final SMHead tsi = new SMHead(straceArray);
 		Transition toF = new Transition(new TransitionLabel(tsi, When.AFTER,  Where.MERGE, false),lastState) {
 			@Override
 			protected void execute() {
@@ -410,6 +409,7 @@ class SGenerator implements SkeletonVisitor {
 		lastAct = a;
 		
 	}
+/*	
 	private void setInitialActivity(Activity a) {
 		a.resetPredcesors();
 		for (Activity p: initialAct.getPredecesors()) {
@@ -418,6 +418,7 @@ class SGenerator implements SkeletonVisitor {
 		initialAct.resetPredcesors();
 		initialAct = a;
 	}
+
 	private void estimateWhile(Activity current, int c, While<?> w, Muscle<?,?> m) {
 		if(card.containsKey(m)) {
 			current.resetSubsequents();
@@ -433,7 +434,7 @@ class SGenerator implements SkeletonVisitor {
 			setLastActivity(a);
 		}
 	}
-/*
+
 	private void estimateDaC(When when, Where where, DaC<?,?> skeleton, int deep) {
 		if (card.containsKey(skeleton.getCondition()) && card.containsKey(skeleton.getSplit())) {
 			int cardFc = card.get(skeleton.getCondition());
@@ -452,7 +453,7 @@ class SGenerator implements SkeletonVisitor {
 			}
 		}
 	}
-*/
+	
 	private void estimatedDaCR(int cardFc, int cardFs, DaC<?,?> skeleton, int deep, Box<Activity> ini, Box<Activity> las) {
 		ini.set(new Activity(t,skeleton.getCondition(),rho));
 		if (deep == cardFc) {
@@ -473,6 +474,7 @@ class SGenerator implements SkeletonVisitor {
 			sublas.get().addSubsequent(las.get());
 		}
 	}
+*/	
 	// TODO borrar get muscles, T y card.
 	HashSet<Muscle<?,?>> getMuscles() {
 		return muscles;
