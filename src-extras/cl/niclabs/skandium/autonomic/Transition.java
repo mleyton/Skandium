@@ -44,4 +44,7 @@ abstract class Transition implements Comparable<Transition> {
 	int getType() {
 		return tl.getType();
 	}
+	void setCurrentState() {
+		tl.getTs().setCurrentState(dest);
+	}
 }

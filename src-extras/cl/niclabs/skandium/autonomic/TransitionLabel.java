@@ -45,7 +45,7 @@ class TransitionLabel implements Comparable<TransitionLabel> {
 		return i1.compareTo(i2);
 	}
 	boolean isTheOne(int eventIndex, int eventParent) {
-		if(ts.getParent() != SMHead.UDEF && ts.getParent() != eventParent)
+		if(ts.getDaCParent() != SMHead.UDEF && ts.getDaCParent() != eventParent)
 			return false; 
 		if(ts.getIndex() == SMHead.UDEF) return true;
 		if(eventIndex == ts.getIndex()) return true;		

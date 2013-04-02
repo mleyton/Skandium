@@ -2,6 +2,7 @@ package cl.niclabs.skandium.autonomic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -9,7 +10,9 @@ import cl.niclabs.skandium.Skandium;
 import cl.niclabs.skandium.events.GenericListener;
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
+import cl.niclabs.skandium.muscles.Condition;
 import cl.niclabs.skandium.muscles.Muscle;
+import cl.niclabs.skandium.muscles.Split;
 import cl.niclabs.skandium.skeletons.DaC;
 import cl.niclabs.skandium.skeletons.Map;
 import cl.niclabs.skandium.skeletons.Seq;
@@ -20,14 +23,15 @@ class Controller extends GenericListener {
 	
 	List<State> active;
 	Activity initialAct;
-	Activity lastAct;
 //	private Skandium skandium;
 //	private float yellowThreshold;
 //	private float redThreshold;
 //	private long lastExecution;
 //	private long poolCheck;
-	SGenerator visitor;
-
+	private HashMap<Muscle<?,?>,Long> t;
+	private HashMap<Muscle<?,?>, Integer> card;
+	private HashSet<Muscle<?,?>> muscles;
+	private SMHead smHead;
 	
 	Controller(Skeleton<?,?> skel, Skandium skandium, float yellowThreshold, float redThreshold, long poolCheck, double rho) {
 //		this.skandium = skandium; 
@@ -36,15 +40,19 @@ class Controller extends GenericListener {
 //		this.poolCheck = poolCheck;
 //		lastExecution = 0;
 		//Inicializar maquina de estados
-		visitor = new SGenerator(rho);
+		SGenerator visitor = new SGenerator(rho);
 		skel.accept(visitor);
-		State I = new State();
+		State I = new State(StateType.I);
 		I.addTransition(visitor.getInitialTrans());
 		active = new ArrayList<State>();
 		active.add(I);
 		initialAct = visitor.getInitialAct();
-		lastAct = visitor.getLastAct();
+		Activity lastAct = visitor.getLastAct();
 		lastAct.addSubsequent(initialAct);
+		t = visitor.getT();
+		card = visitor.getCard();
+		muscles = visitor.getMuscles();
+		smHead = visitor.getSMHead();
 	}
 
 	@Override
@@ -105,13 +113,15 @@ class Controller extends GenericListener {
 				t.execute(index);
 			}
 		}
+
+		t.setCurrentState();
 		active.add(t.getDest());
 // TODO BORRAR PRUEBA DE ACTIVIDADES
 		System.out.println("ACTIVITIES");
 		printActivities(initialAct);
 		printT();
 		printCard();
-		System.out.println("Is ready: " + visitor.isActivityDiagramReady());
+		System.out.println("Is ready: " + isActivityDiagramReady());
 /*		
 		if (System.currentTimeMillis() - lastExecution > poolCheck) {
 			threadsControl();
@@ -125,6 +135,14 @@ class Controller extends GenericListener {
 			if (s == initialAct) return true;
 		}
 		return false;
+	}
+	private boolean isActivityDiagramReady() {
+		for (Muscle<?,?> m:muscles) {
+			if (!t.containsKey(m)) return false;
+			if ((m instanceof Condition<?>)&&(!card.containsKey(m))) return false;
+			if ((m instanceof Split<?,?>)&&(!card.containsKey(m))) return false;
+		}
+		return true;
 	}
 	// TODO: borrar printActivities, printT, y printCard,
 	void printActivities(Activity a) {
@@ -142,14 +160,14 @@ class Controller extends GenericListener {
 	}
 	void printT() {
 		System.out.println("T(f)");
-		for (Muscle<?,?> m:visitor.getT().keySet()) {
-			System.out.println(m + "\t" + visitor.getT().get(m).longValue());
+		for (Muscle<?,?> m:t.keySet()) {
+			System.out.println(m + "\t" + t.get(m).longValue());
 		}
 	}
 	void printCard() {
 		System.out.println("Card(f)");
-		for (Muscle<?,?> m:visitor.getCard().keySet()) {
-			System.out.println(m + "\t" + visitor.getCard().get(m).intValue());
+		for (Muscle<?,?> m:card.keySet()) {
+			System.out.println(m + "\t" + card.get(m).intValue());
 		}
 	}
 /*	
@@ -178,4 +196,5 @@ class Controller extends GenericListener {
 		System.gc();
 	}
 */	
+
 }

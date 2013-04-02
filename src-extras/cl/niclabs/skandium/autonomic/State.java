@@ -5,14 +5,18 @@ import java.util.List;
 
 
 class State {
-	private List<Transition> transitions;
+	
+ 	private List<Transition> transitions;
 	private boolean isPersistent;
-	State() {
+	private StateType type;
+	
+	State(StateType type) {
 		transitions = new ArrayList<Transition>();
 		this.isPersistent = false;
+		this.type = type;
 	}
-	State(boolean isPersistent) {
-		this();
+	State(StateType type, boolean isPersistent) {
+		this(type);
 		this.isPersistent = isPersistent;
 	}
 	void addTransition(Transition t) {
@@ -36,5 +40,8 @@ class State {
 				l.remove(this);
 			}
 		}
+	}
+	StateType getType() {
+		return type;
 	}
 }
