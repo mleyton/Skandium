@@ -75,6 +75,15 @@ class Activity {
 	List<Activity> getPredecesors() {
 		return p;
 	}
+	Activity copyForward(Controller ctrl) {
+		Activity a = new Activity(t,m,rho);
+		a.ti = ti;
+		a.tf = tf;
+		if (ctrl.isLastActivity(a)) return a;
+		for (Activity n : s) 
+			a.addSubsequent(n.copyForward(ctrl));
+		return a;
+	}
 	// TODO: borrar getMuscle
 	public Muscle<?,?> getMuscle() {
 		return m;

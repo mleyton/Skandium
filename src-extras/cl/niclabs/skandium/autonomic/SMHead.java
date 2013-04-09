@@ -1,12 +1,14 @@
 package cl.niclabs.skandium.autonomic;
 
+import java.util.ArrayList;
+import java.util.Stack;
+
 import cl.niclabs.skandium.skeletons.Skeleton;
 
 class SMHead {
 	static final int UDEF = -1;
 	
-	@SuppressWarnings("rawtypes")
-	private Skeleton[] strace;
+	private Stack<Skeleton<?,?>> strace;
 	private int index;
 	private int dacParent;
 	
@@ -17,12 +19,14 @@ class SMHead {
 	private int whileCounter;
 	private Activity whileCurrentActivity;
 	
-	@SuppressWarnings("rawtypes")
-	SMHead(Skeleton[] strace) {
+	private ArrayList<SMHead> subs;
+	
+	SMHead(Stack<Skeleton<?,?>> strace) {
 		this.strace = strace;
 		index = UDEF;
 		dacParent = UDEF;
 		currState = null;
+		subs = new ArrayList<SMHead>();
 	}
 	void setIndex(int index) {
 		this.index = index;
@@ -57,8 +61,7 @@ class SMHead {
 	Activity getLastActivity() {
 		return last;
 	}
-	@SuppressWarnings("rawtypes")
-	Skeleton[] getStrace() {
+	Stack<Skeleton<?,?>> getStrace() {
 		return strace;
 	}
 	int getIndex() {
@@ -69,5 +72,11 @@ class SMHead {
 	}
 	State getCurrentState() {
 		return currState;
+	}
+	void addSub(SMHead sub) {
+		subs.add(sub);
+	}
+	ArrayList<SMHead> getSubs() {
+		return subs;
 	}
 }

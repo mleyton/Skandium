@@ -1,5 +1,7 @@
 package cl.niclabs.skandium.autonomic;
 
+import java.util.Stack;
+
 import cl.niclabs.skandium.events.When;
 import cl.niclabs.skandium.events.Where;
 import cl.niclabs.skandium.skeletons.DaC;
@@ -27,13 +29,11 @@ class TransitionLabel implements Comparable<TransitionLabel> {
 		if (cond != event.cond) return false;
 		return true;
 	}
-	private boolean stackComparison(@SuppressWarnings("rawtypes") Skeleton[] s) {
-		if (ts.getStrace().length != s.length) return false;
-		for (int i=0; i<s.length; i++) {
-			@SuppressWarnings("rawtypes")
-			Skeleton s1 = ts.getStrace()[i];
-			@SuppressWarnings("rawtypes")
-			Skeleton s2 = s[i];
+	private boolean stackComparison(Stack<Skeleton<?,?>> s) {
+		if (ts.getStrace().size() != s.size()) return false;
+		for (int i=0; i<s.size(); i++) {
+			Skeleton<?,?> s1 = ts.getStrace().get(i);
+			Skeleton<?,?> s2 = s.get(i);
 			if (!s1.equals(s2)) return false;
 		}
 		return true;
@@ -57,7 +57,7 @@ class TransitionLabel implements Comparable<TransitionLabel> {
 		if (when == When.BEFORE) {
 			if (where == Where.MERGE ) return VOID;
 			{
-				Skeleton<?,?> current = ts.getStrace()[ts.getStrace().length-1];
+				Skeleton<?,?> current = ts.getStrace().peek();
 				if (current instanceof DaC && where == Where.SPLIT) return VOID;
 			}
 			return INDEX;

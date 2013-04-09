@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Stack;
 
 import cl.niclabs.skandium.Skandium;
 import cl.niclabs.skandium.events.GenericListener;
@@ -32,6 +33,8 @@ class Controller extends GenericListener {
 	private HashMap<Muscle<?,?>, Integer> card;
 	private HashSet<Muscle<?,?>> muscles;
 	private SMHead smHead;
+	private double rho;
+	private Skeleton<?,?> skel;
 	
 	Controller(Skeleton<?,?> skel, Skandium skandium, float yellowThreshold, float redThreshold, long poolCheck, double rho) {
 //		this.skandium = skandium; 
@@ -53,6 +56,8 @@ class Controller extends GenericListener {
 		card = visitor.getCard();
 		muscles = visitor.getMuscles();
 		smHead = visitor.getSMHead();
+		this.rho = rho;
+		this.skel = skel;
 	}
 
 	@Override
@@ -81,7 +86,9 @@ class Controller extends GenericListener {
 	@Override
 	synchronized public Object handler(Object param, @SuppressWarnings("rawtypes") Skeleton[] strace, int index,
 			boolean cond, int parent, When when, Where where) {
-		TransitionLabel event = new TransitionLabel(new SMHead(strace),when, where, cond);
+		Stack<Skeleton<?,?>> trace = new Stack<Skeleton<?,?>>();
+		for(Skeleton<?,?> s: strace) trace.add(s);
+		TransitionLabel event = new TransitionLabel(new SMHead(trace),when, where, cond);
 		HashMap<Transition,State> fromTransToState = new HashMap<Transition,State>();
 		// Buscar evento entre transiciones de estados activos.
 		PriorityQueue<Transition> areIn = new PriorityQueue<Transition>() ;
@@ -116,21 +123,26 @@ class Controller extends GenericListener {
 
 		t.setCurrentState();
 		active.add(t.getDest());
-// TODO BORRAR PRUEBA DE ACTIVIDADES
-		System.out.println("ACTIVITIES");
-		printActivities(initialAct);
-		printT();
-		printCard();
-		System.out.println("Is ready: " + isActivityDiagramReady());
 /*		
 		if (System.currentTimeMillis() - lastExecution > poolCheck) {
 			threadsControl();
 			lastExecution = System.currentTimeMillis();
 		}
 */
+//		if (isActivityDiagramReady()) {
+			AEstimator aest = new AEstimator(this.t,card,smHead,muscles,rho);
+			skel.accept(aest);
+//		}
+
+// TODO BORRAR PRUEBA DE ACTIVIDADES
+		System.out.println("ACTIVITIES");
+		printActivities(initialAct);
+		printT();
+		printCard();
+		System.out.println("Is ready: " + isActivityDiagramReady());
 		return param;
 	}
-	private boolean isLastActivity(Activity a) {
+	boolean isLastActivity(Activity a) {
 		for (Activity s: a.getSubsequents()) {
 			if (s == initialAct) return true;
 		}
