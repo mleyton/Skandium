@@ -278,6 +278,7 @@ class SGenerator implements SkeletonVisitor {
 	private <P,R> void DaCM(final DaC<P,R> skeleton, final int fcCard) {
 		lastState = new State(StateType.F);
 		smHead = new SMHead(strace);
+		smHead.setDaCDeep(fcCard);
 		smHead.setInitialActivity(new Activity(t, skeleton.getCondition(), rho));		
 		final Activity splitAct = new Activity(t, skeleton.getSplit(), rho);
 		smHead.setLastActivity(new Activity(t, skeleton.getMerge(), rho));

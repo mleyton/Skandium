@@ -148,51 +148,64 @@ class AEstimator implements SkeletonVisitor {
 
 	@Override
 	public <P, R> void visit(DaC<P, R> skeleton) {
-		// TODO Auto-generated method stub
-/*
-	private void estimateDaC(When when, Where where, DaC<?,?> skeleton, int deep) {
-		if (card.containsKey(skeleton.getCondition()) && card.containsKey(skeleton.getSplit())) {
-			int cardFc = card.get(skeleton.getCondition());
-			int cardFs = card.get(skeleton.getSplit());
-			Box<Activity> ini = new Box<Activity>(null);
-			Box<Activity> las = new Box<Activity>(null);
-			estimatedDaCR(cardFc,cardFs,skeleton,deep,ini,las);
-			if (when==When.BEFORE && where==Where.CONDITION) {
-				setInitialActivity(ini.get());
-				setLastActivity(las.get());
+		Split<?,?> s = skeleton.getSplit();
+		Condition<?> c = skeleton.getCondition();
+		if(card.containsKey(s) && card.containsKey(c)) {
+			int fsCard = card.get(s);
+			int fcCard = card.get(c);
+			int deep = smHead.getDaCDeep();
+			if(smHead.getCurrentState() == null || 
+					smHead.getCurrentState().getType()==StateType.I) {
+				smHead.getInitialActivity().resetSubsequents();
+				if (deep >= fcCard) {
+					SGenerator subSkel = new SGenerator(smHead.getStrace(),t,card,rho,muscles);
+					skeleton.getSkeleton().accept(subSkel);
+					smHead.getInitialActivity().addSubsequent(subSkel.getInitialAct());
+					setLastActivity(subSkel.getLastAct());
+					return;
+				}
+				Activity spl = new Activity(t,s,rho);
+				addDaCChildren(fsCard, deep, skeleton, spl);
 				return;
 			}
-			if ((when==When.AFTER && where==Where.CONDITION) ||
-				(when==When.BEFORE && where==Where.SPLIT)) {
-				
+			if(smHead.getCurrentState().getType()==StateType.C || 
+					smHead.getCurrentState().getType()==StateType.S) {
+				Activity spl = smHead.getInitialActivity().getSubsequents().get(0);
+				addDaCChildren(fsCard, deep, skeleton, spl);
+				return;
+			}
+			if(smHead.getCurrentState().getType()==StateType.G) {
+				AEstimator subAE = new AEstimator(t, card, smHead.getSubs().get(0), muscles, rho);
+				skeleton.getSkeleton().accept(subAE);
+				return;
+			}
+			if(smHead.getCurrentState().getType()==StateType.T) {
+				for (SMHead sub : smHead.getSubs()) {
+					AEstimator subAE = new AEstimator(t, card, sub, muscles, rho);
+					skeleton.accept(subAE);
+				}
+				return;
 			}
 		}
 	}
+
+	private void addDaCChildren(int fsCard, int deep, DaC<?,?> skeleton, Activity spl) {
+		Activity mrg = new Activity(t,skeleton.getMerge(),rho);
+		smHead.getInitialActivity().addSubsequent(spl);
+		for (int i=0; i<fsCard; i++) {
+			SMHead subSM = new SMHead(smHead.getStrace());
+			subSM.setInitialActivity(new Activity(t,skeleton.getCondition(),rho));
+			subSM.setLastActivity(new Activity(t,skeleton.getMerge(),rho));
+			subSM.setDaCParent(smHead.getIndex());
+			subSM.setDaCDeep(deep+1);
+			AEstimator subAE = new AEstimator(t,card,subSM,muscles,rho);
+			skeleton.accept(subAE);
+			spl.addSubsequent(subSM.getInitialActivity());
+			subSM.getLastActivity().addSubsequent(mrg);
+		}
+		setLastActivity(mrg);
+	}
 	
-	private void estimatedDaCR(int cardFc, int cardFs, DaC<?,?> skeleton, int deep, Box<Activity> ini, Box<Activity> las) {
-		ini.set(new Activity(t,skeleton.getCondition(),rho));
-		if (deep == cardFc) {
-			SGenerator subSkel = new SGenerator(strace,t,card,rho,muscles);
-			skeleton.getSkeleton().accept(subSkel);
-			ini.get().addSubsequent(subSkel.getInitialAct());
-			las.set(subSkel.getLastAct());
-			return;
-		}
-		Activity spl = new Activity(t,skeleton.getSplit(),rho);
-		ini.get().addSubsequent(spl);
-		las.set(new Activity(t,skeleton.getMerge(),rho));
-		for (int i=0; i<cardFs; i++) {
-			Box<Activity> subini = new Box<Activity>(null);
-			Box<Activity> sublas = new Box<Activity>(null);
-			estimatedDaCR(cardFc, cardFs, skeleton, deep+1, subini, sublas);
-			spl.addSubsequent(subini.get());
-			sublas.get().addSubsequent(las.get());
-		}
-	}
-
- */
-	}
-
 	@Override
 	public <P, R> void visit(AbstractSkeleton<P, R> skeleton) {
 		throw new RuntimeException("Should not be here!");

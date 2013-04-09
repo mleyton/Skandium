@@ -19,6 +19,8 @@ class SMHead {
 	private int whileCounter;
 	private Activity whileCurrentActivity;
 	
+	private int dacDeep;
+	
 	private ArrayList<SMHead> subs;
 	
 	SMHead(Stack<Skeleton<?,?>> strace) {
@@ -78,5 +80,11 @@ class SMHead {
 	}
 	ArrayList<SMHead> getSubs() {
 		return subs;
+	}
+	void setDaCDeep(int deep) {
+		this.dacDeep = deep;
+	}
+	int getDaCDeep() {
+		return this.dacDeep;
 	}
 }
