@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import cl.niclabs.skandium.muscles.Condition;
 import cl.niclabs.skandium.muscles.Muscle;
+import cl.niclabs.skandium.muscles.Split;
 import cl.niclabs.skandium.skeletons.AbstractSkeleton;
 import cl.niclabs.skandium.skeletons.DaC;
 import cl.niclabs.skandium.skeletons.Farm;
@@ -108,27 +109,36 @@ class AEstimator implements SkeletonVisitor {
 
 	@Override
 	public <P> void visit(For<P> skeleton) {
-		// TODO Auto-generated method stub
-
+		for (int i=0; i<skeleton.getTimes(); i++) {
+			AEstimator sub = new AEstimator(t,card,smHead.getSubs().get(i),muscles,rho);
+			skeleton.getSubskel().accept(sub);
+		}
 	}
 
 	@Override
 	public <P, R> void visit(Map<P, R> skeleton) {
-		// TODO Auto-generated method stub
-		/*
-		if (card.containsKey(skeleton.getSplit())) {
-			int n = card.get(skeleton.getSplit());
-			initialAct.resetSubsequents();
-			lastAct.resetPredcesors();
-			for (int j=0; j<n; j++) {
-				SGenerator subSkel = new SGenerator(strace,t,card,rho,muscles);
-				skeleton.getSkeleton().accept(subSkel);
-				initialAct.addSubsequent(subSkel.getInitialAct());
-				subSkel.getLastAct().addSubsequent(lastAct);						
+		Split<?,?> s = skeleton.getSplit();
+		if(card.containsKey(s)) {
+			if(smHead.getCurrentState() == null || 
+					smHead.getCurrentState().getType()==StateType.I) {
+				smHead.getInitialActivity().resetSubsequents();
+				smHead.getLastActivity().resetPredcesors();
+				for (int i=0; i<card.get(s); i++) {
+					SGenerator subSkel = new SGenerator(smHead.getStrace(),t,card,rho,muscles);
+					skeleton.getSkeleton().accept(subSkel);
+					smHead.getInitialActivity().addSubsequent(subSkel.getInitialAct());
+					subSkel.getLastAct().addSubsequent(smHead.getLastActivity());
+				}
+				return;
+			}
+			if(smHead.getCurrentState().getType()==StateType.S) {
+				for (int i=0; i<smHead.getSubs().size(); i++) {
+					AEstimator sub = new AEstimator(t,card,smHead.getSubs().get(i),muscles,rho);
+					skeleton.getSkeleton().accept(sub);
+				}
+				return;
 			}
 		}
-*/				
-
 	}
 
 	@Override

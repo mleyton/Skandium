@@ -136,7 +136,7 @@ class Controller extends GenericListener {
 
 // TODO BORRAR PRUEBA DE ACTIVIDADES
 		System.out.println("ACTIVITIES");
-		printActivities(initialAct);
+		printActivities(initialAct, new HashSet<Activity>());
 		printT();
 		printCard();
 		System.out.println("Is ready: " + isActivityDiagramReady());
@@ -157,7 +157,9 @@ class Controller extends GenericListener {
 		return true;
 	}
 	// TODO: borrar printActivities, printT, y printCard,
-	void printActivities(Activity a) {
+	void printActivities(Activity a, HashSet<Activity> p) {
+		if (p.contains(a)) return;
+		p.add(a);
 		String sub = new String();
 		for (Activity s: a.getSubsequents()) {
 			sub += "\t" + s;
@@ -166,7 +168,7 @@ class Controller extends GenericListener {
 		System.out.println(a + "\t" + a.getTi() + "\t" + a.getTf() + "\t" + a.getMuscle() + sub + "\t" + isLA);
 		if (!isLA) {
 			for (Activity s: a.getSubsequents()) {
-				printActivities(s);
+				printActivities(s,p);
 			}
 		}
 	}
