@@ -34,6 +34,7 @@ public class Skandium {
 	TaskExecutor executor;
 	private static Skandium singleton = null;
 	private SkandiumEventRegistry eregis;
+	private int maxThreads;
 	
 	/**
 	 * A constructor which creates a new Skandium instance with a maximum number of computation 
@@ -48,7 +49,7 @@ public class Skandium {
 	 * @param maxThreads The maximum number of threads to compute concurrently. This number must be larger than 1.
 	 */
 	public Skandium(int maxThreads){
-		
+		this.maxThreads = maxThreads;
 		if(maxThreads < 1) throw new IllegalArgumentException("The specified number of threads must be larger than 1");
 		
 		executor = new TaskExecutor(maxThreads);		
@@ -60,6 +61,8 @@ public class Skandium {
 	 * @param maxThreads The maximum number of threads to compute concurrently. This number must be larger than 1.
 	 */
 	public void setMaxThreads(int maxThreads) {
+		
+		this.maxThreads = maxThreads;
 
 		if(maxThreads < 1) throw new IllegalArgumentException("The specified number of threads must be larger than 1");
 		
@@ -67,6 +70,10 @@ public class Skandium {
 		executor.setMaximumPoolSize(maxThreads);
 		eregis.triggerEvent(executor.getMaximumPoolSize()); 
 
+	}
+	
+	public int getMaxThreads() {
+		return maxThreads;
 	}
 	
 	/**

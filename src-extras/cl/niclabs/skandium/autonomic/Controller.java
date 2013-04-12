@@ -24,26 +24,32 @@ class Controller extends GenericListener {
 	
 	List<State> active;
 	Activity initialAct;
-//	private Skandium skandium;
-//	private float yellowThreshold;
-//	private float redThreshold;
-//	private long lastExecution;
-//	private long poolCheck;
+	private Skandium skandium;
+	private long lastExecution;
+	private long poolCheck;
 	private HashMap<Muscle<?,?>,Long> t;
 	private HashMap<Muscle<?,?>, Integer> card;
 	private HashSet<Muscle<?,?>> muscles;
 	private SMHead smHead;
 	private double rho;
 	private Skeleton<?,?> skel;
+	private long wallClocktimeGoal;
+	private int threadLimit;
+	private boolean verboseMode;
 	
-	Controller(Skeleton<?,?> skel, Skandium skandium, float yellowThreshold, float redThreshold, long poolCheck, double rho) {
-//		this.skandium = skandium; 
-//		this.yellowThreshold = yellowThreshold;
-//		this.redThreshold = redThreshold;
-//		this.poolCheck = poolCheck;
-//		lastExecution = 0;
+	Controller(Skeleton<?,?> skel, Skandium skandium, long poolCheck, 
+			HashMap<Muscle<?,?>,Long> t, HashMap<Muscle<?,?>, Integer> card, double rho,
+			long wallClocktimeGoal, int threadLimit, boolean verboseMode) {
+		this.skandium = skandium; 
+		this.poolCheck = poolCheck;
+		this.threadLimit = threadLimit;
+		this.verboseMode = verboseMode;
+		this.t = t;
+		this.card = card;
+		this.wallClocktimeGoal = wallClocktimeGoal;
+		lastExecution = 0;
 		//Inicializar maquina de estados
-		SGenerator visitor = new SGenerator(rho);
+		SGenerator visitor = new SGenerator(t, card, rho);
 		skel.accept(visitor);
 		State I = new State(StateType.I);
 		I.addTransition(visitor.getInitialTrans());
@@ -52,8 +58,6 @@ class Controller extends GenericListener {
 		initialAct = visitor.getInitialAct();
 		Activity lastAct = visitor.getLastAct();
 		lastAct.addSubsequent(initialAct);
-		t = visitor.getT();
-		card = visitor.getCard();
 		muscles = visitor.getMuscles();
 		smHead = visitor.getSMHead();
 		this.rho = rho;
@@ -123,23 +127,12 @@ class Controller extends GenericListener {
 
 		t.setCurrentState();
 		active.add(t.getDest());
-/*		
 		if (System.currentTimeMillis() - lastExecution > poolCheck) {
-			threadsControl();
-			lastExecution = System.currentTimeMillis();
+			if (isActivityDiagramReady()) {
+				threadsControl();
+			}
 		}
-*/
-//		if (isActivityDiagramReady()) {
-			AEstimator aest = new AEstimator(this.t,card,smHead,muscles,rho);
-			skel.accept(aest);
-//		}
 
-// TODO BORRAR PRUEBA DE ACTIVIDADES
-		System.out.println("ACTIVITIES");
-		printActivities(initialAct, new HashSet<Activity>());
-		printT();
-		printCard();
-		System.out.println("Is ready: " + isActivityDiagramReady());
 		return param;
 	}
 	boolean isLastActivity(Activity a) {
@@ -156,59 +149,61 @@ class Controller extends GenericListener {
 		}
 		return true;
 	}
-	// TODO: borrar printActivities, printT, y printCard,
-	void printActivities(Activity a, HashSet<Activity> p) {
-		if (p.contains(a)) return;
-		p.add(a);
-		String sub = new String();
-		for (Activity s: a.getSubsequents()) {
-			sub += "\t" + s;
-		}
-		boolean isLA = isLastActivity(a);
-		System.out.println(a + "\t" + a.getTi() + "\t" + a.getTf() + "\t" + a.getMuscle() + sub + "\t" + isLA);
-		if (!isLA) {
-			for (Activity s: a.getSubsequents()) {
-				printActivities(s,p);
-			}
-		}
-	}
 	void printT() {
-		System.out.println("T(f)");
+		System.out.println("Estimated execution times (ms)");
 		for (Muscle<?,?> m:t.keySet()) {
-			System.out.println(m + "\t" + t.get(m).longValue());
+			System.out.println(m.getClass().getName() + "\t" + ((long)t.get(m).longValue()/1000000));
 		}
 	}
 	void printCard() {
-		System.out.println("Card(f)");
+		System.out.println("Estimated cardinality");
 		for (Muscle<?,?> m:card.keySet()) {
-			System.out.println(m + "\t" + card.get(m).intValue());
+			System.out.println(m.getClass().getName() + "\t" + card.get(m).intValue());
 		}
 	}
-/*	
+	
 	private void threadsControl() {
-		long currMemory = Runtime.getRuntime().totalMemory();
-		long maxMemory = Runtime.getRuntime().maxMemory();
-		float consumption = (float) currMemory / maxMemory;
-		if (consumption < yellowThreshold) {
-			int currThreads = Thread.activeCount();
-			int neededThreads = 0; //= root.threadsCalculator();
-			if (2*currThreads < neededThreads) {
-				skandium.setMaxThreads(2*currThreads);
-				return;
-			}
-			skandium.setMaxThreads(neededThreads);
-			return;
-		}
-		if (consumption < redThreshold) {
-			int currThreads = Thread.activeCount();
-			int neededThreads = 0;/root.threadsCalculator();
-			if (currThreads > neededThreads) 
-				skandium.setMaxThreads(neededThreads);
-			return;
-		}
-		skandium.setMaxThreads(1);
-		System.gc();
-	}
-*/	
+		AEstimator aest = new AEstimator(this.t,card,smHead,muscles,rho);
+		skel.accept(aest);
+		
+		Activity beAct = initialAct.copyForward(this);
+		TimeLine beTL = new TimeLine();
+		Box<Long> beCurr = new Box<Long>((long)0);
+		Box<Long> beMax = new Box<Long>((long)0);
+		beAct.bestEffortFillForward(beTL, beCurr, beMax);
+		int beMaxThreads = beTL.maxThreads(beCurr.get());
+		beMaxThreads = beMaxThreads == 0? 1: beMaxThreads;
 
+		Activity fifoAct = initialAct.copyForward(this);
+		TimeLine fifoTL = new TimeLine();
+		Box<Long> fifoMax = new Box<Long>((long)0);
+		int testThreads = skandium.getMaxThreads() == 1? 1: skandium.getMaxThreads()/2;
+		fifoAct.fifoFillForward(fifoTL, fifoMax, testThreads);
+
+		long elapsedTime = beCurr.get() - initialAct.getTi();
+		long beTimeLeft = beMax.get() - beCurr.get();
+		long fifoTimeLeft = fifoMax.get() - beCurr.get();
+		long goal = wallClocktimeGoal - elapsedTime;
+		if (goal >= fifoTimeLeft) {
+			skandium.setMaxThreads(testThreads);
+		} else {
+			skandium.setMaxThreads(beMaxThreads > threadLimit? threadLimit : beMaxThreads);
+		}
+
+		if (verboseMode) {
+			System.out.println("--");
+			System.out.println("CURRENT THREADS:\t"+ ((int) Thread.activeCount()-1));
+			System.out.println("GOAL (ms):\t" + ((long)wallClocktimeGoal/1000000));
+			System.out.println("ELAPSED TIME (ms):\t" + ((long) elapsedTime/1000000));
+			System.out.println("BEST EFFORT TOTAL TIME (ms):\t" + ((long) (beTimeLeft + elapsedTime)/1000000));
+			System.out.println("FIFO TOTAL TIME (ms):\t" + ((long) (fifoTimeLeft + elapsedTime)/1000000));
+			if (goal >= fifoTimeLeft) {
+				System.out.println("NEW THREADS FIFO:\t" + testThreads);
+			} else {
+				System.out.println("NEW THREADS BEST EFFORT:\t" + beMaxThreads);
+			}
+			printT();
+			printCard();
+		}
+	}
 }

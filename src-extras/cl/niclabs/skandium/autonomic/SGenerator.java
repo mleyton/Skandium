@@ -34,10 +34,10 @@ class SGenerator implements SkeletonVisitor {
 	private double rho;
 	private SMHead smHead;
 
-	SGenerator(double rho) {
+	SGenerator(HashMap<Muscle<?,?>,Long> t, HashMap<Muscle<?,?>, Integer> card, double rho) {
 		this.strace = new Stack<Skeleton<?,?>>();
-		this.t = new HashMap<Muscle<?,?>,Long>();
-		this.card = new HashMap<Muscle<?,?>,Integer>();
+		this.t = t;
+		this.card = card;
 		this.muscles = new HashSet<Muscle<?,?>>();
 		this.rho = rho;
 	}
@@ -46,10 +46,8 @@ class SGenerator implements SkeletonVisitor {
 			Stack<Skeleton<?,?>> trace,
 			HashMap<Muscle<?,?>,Long> t, HashMap<Muscle<?,?>,Integer> card, double rho,
 			HashSet<Muscle<?,?>> muscles) {
-		this(rho);
+		this(t, card, rho);
 		this.strace.addAll((Collection<? extends Skeleton<?, ?>>) trace);
-		this.t = t;
-		this.card = card;
 		this.muscles = muscles; 
 	}
 
@@ -395,10 +393,12 @@ class SGenerator implements SkeletonVisitor {
 	HashSet<Muscle<?,?>> getMuscles() {
 		return muscles;
 	}
+/*
 	HashMap<Muscle<?, ?>, Long> getT() {
 		return t;
 	}
 	HashMap<Muscle<?, ?>, Integer> getCard() {
 		return card;
 	}
+*/	
 }
