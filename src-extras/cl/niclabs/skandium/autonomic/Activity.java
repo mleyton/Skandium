@@ -37,23 +37,46 @@ class Activity {
 	/**
 	 * UDEF, constant that represents the value "undefined" for time variables
 	 */
-	public static final long UDEF = -1; 
-	private long ti;	/* activity initial time */
-	private long tf;	/* activity final time */
-	private Muscle<?,?> m;	/* muscle that will be/is being/was executed */
-	private List<Activity> s;	/* list of subsequent activities, activities
-								that depends of "this" */
-	private List<Activity> p;	/* list of predecessor activities, "this" 
-								depends of such activities */
-	private HashMap<Muscle<?,?>,Long> t;	/* Map that holds the function 
-											time "t", where t(f) is the 
-											expected execution timein nanosecs
-											of muscle f */ 
-	private double rho;	/* parameter that defines the weight of a new actual
-						value for the calculation of the new estimated value.
-						the formula is:
-						estimated_value = rho*actual_value + 
-										  (1-rho)*previous_estimated_value */
+	public static final long UDEF = -1;
+
+	/*
+	 * activity initial time
+	 */
+	private long ti;
+	
+	/*
+	 * activity final time
+	 */
+	private long tf;
+	
+	/*
+	 * muscle that will be/is being/was executed
+	 */
+	private Muscle<?,?> m;	
+	
+	/*
+	 * list of subsequent activities, activities that depends of "this"
+	 */
+	private List<Activity> s;
+	
+	/*
+	 * list of predecessor activities, "this" depends of such activities
+	 */
+	private List<Activity> p;
+	
+	/*
+	 * Map that holds the function time "t", where t(f) is the expected 
+	 * execution timein nanosecs of muscle f
+	 */
+	private HashMap<Muscle<?,?>,Long> t;
+	
+	/*
+	 * parameter that defines the weight of a new actual value for the 
+	 * calculation of the new estimated value.  The formula is: 
+	 * estimated_value = rho*actual_value + (1-rho)*previous_estimated_value 
+	 */
+	private double rho;
+	
 	/**
 	 * 
 	 * @param t	Map that holds the function time "t", where t(f) is the 
@@ -72,12 +95,14 @@ class Activity {
 		this.t = t;
 		this.rho = rho;
 	}
+	
 	/**
 	 * Sets the initial time of the activity with the current time in nanosecs.
 	 */
 	void setTi() {
 		this.ti = System.nanoTime();
 	}
+	
 	/**
 	 * Sets the final time of the activity with the current time in nanosecs, 
 	 * and updates the t(f) function with a new actual value using rho.
@@ -93,18 +118,21 @@ class Activity {
 		}
 		t.put(m, (long) v);
 	}
+	
 	/**
 	 * @return activity's initial value.
 	 */
 	long getTi() {
 		return ti;
 	}
+	
 	/**
 	 * @return activity's final value.
 	 */
 	long getTf() {
 		return tf;
 	}
+	
 	/*
 	 * Returns the actual duration of an activity given its initial and final
 	 * time values.
@@ -113,6 +141,7 @@ class Activity {
 		if (tf != UDEF && ti != UDEF) return tf - ti;
 		return UDEF;
 	}
+	
 	/**
 	 * Adds the activity "a", as subsequent activity.
 	 * @param a Subsequent activity to be declared as such.
@@ -121,6 +150,7 @@ class Activity {
 		s.add(a);
 		a.p.add(this);
 	}
+	
 	/**
 	 * Adds the activity "a" as predecessor activity.
 	 * @param a Pedecessor activity to be declared as such.
@@ -129,6 +159,7 @@ class Activity {
 		p.add(a);
 		a.s.add(this);
 	}
+	
 	/**
 	 * Reset list of subsequent activities, removing "this" from the list of 
 	 * predecessor activities on each subsequent activity. 
@@ -139,6 +170,7 @@ class Activity {
 		}
 		s.clear();
 	}
+	
 	/**
 	 * Reset list of predecessor activities, removing "this" from the list of 
 	 * subsequent activities on each subsequent activity.
@@ -149,18 +181,21 @@ class Activity {
 		}
 		p.clear();
 	}
+	
 	/**
 	 * @return list of subsequent activities
 	 */
 	List<Activity> getSubsequents() {
 		return s;
 	}
+	
 	/**
 	 * @return list of predecessor activities
 	 */
 	List<Activity> getPredecesors() {
 		return p;
 	}
+	
 	/**
 	 * @param ctrl Reference of the controlling object that knows which is the
 	 * last activity.
@@ -170,6 +205,7 @@ class Activity {
 	Activity copyForward(Controller ctrl) {
 		return copyForwardRec(ctrl, new HashMap<Activity,Activity>());
 	}
+	
 	/*
 	 * amap is an accumulator map that holds the relation of the original 
 	 * activity with the copy activity in order to maintain the relations of
@@ -187,12 +223,14 @@ class Activity {
 			a.addSubsequent(n.copyForwardRec(ctrl, amap));
 		return a;
 	}
+	
 	/**
 	 * @return the muscle that will be/is being/was executed.
 	 */
 	Muscle<?,?> getMuscle() {
 		return m;
 	}
+	
 	/**
 	 * Sets initial time with the "ti" time.
 	 * @param ti initial time
@@ -200,6 +238,7 @@ class Activity {
 	void setTi(long ti) {
 		this.ti = ti;
 	}
+	
 	/**
 	 * Sets final time with the "tf" time.
 	 * @param tf final time
@@ -207,6 +246,7 @@ class Activity {
 	void setTf(long tf) {
 		this.tf = tf;
 	}
+	
 	/**
 	 * Gets the estimated, not actual, duration of the activity.  Actually 
 	 * this is the value of t(m). 
@@ -215,6 +255,7 @@ class Activity {
 	long getMuscleDuration() {
 		return t.get(m);
 	}
+	
 	/**
 	 * Completes the initial and final time givem the relations of dependency
 	 * with its subsequent and predecessor activities.
@@ -232,6 +273,7 @@ class Activity {
 	void bestEffortFillForward(TimeLine tl, Box<Long> curr, Box<Long> max) {
 		bestEffortFillForward(tl, curr, max, new HashSet<Activity>());
 	}
+	
 	/*
 	 * visitados is an accumulator set that holds the activities already 
 	 * calculated, for avoiding double calculations.
@@ -289,6 +331,7 @@ class Activity {
 			return;
 		}
 	}
+	
 	/**
 	 * Completes the initial and final time given the relations of dependency
 	 * with its subsequent and predecessor activities and the limitation of
@@ -306,6 +349,7 @@ class Activity {
 		fifoFillForward(tl, max, new HashSet<Activity>(),
 				threads);
 	}
+	
 	/*
 	 * visitados is an accumulator set that holds the activities already 
 	 * calculated, for avoiding double calculations.
