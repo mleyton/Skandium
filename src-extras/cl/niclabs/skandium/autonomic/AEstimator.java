@@ -291,13 +291,25 @@ class AEstimator implements SkeletonVisitor {
 	/**
 	 * In Map case there are the following scenarios
 	 * 1. The Map execution is not started, or the before split event was 
-	 *    raised but the after split event is not.  In this case the DAG is 
-	 *    completed as follows:
+	 *    raised but the after split event is not (I state).  In this case the 
+	 *    DAG is completed as follows:
 	 *       -> AEstimator(SGenerator(subSkel)) ->
 	 *    s --> ...                             --> m
 	 *       -> AEstimator(SGenerator(subSkel)) ->
 	 *     where "-> AEstimator(SGenerator(subSkel)) ->" is repeated as many as
-	 *     card(s)
+	 *     card(s). And AEstimator(SGenerator(subSkel)) produces an estimation
+	 *     of the sub-DAGs.
+	 * 2. The split muscle was executed and the subSkeletons are in the middle 
+	 *    of its execution (S state). In this case the DAG is completed as 
+	 *    follows:
+	 *       -> AEstimator(subSkel) ->
+	 *    s --> ...                 --> m
+	 *       -> AEstimator(subSkel) ->
+	 *    where "-> AEstimator(subSkel) ->" corresponds to the actual sub DAGs,
+	 *    Therefore it is not necessary to create a new SGenerator for them 
+	 *    because it was created during the transition from state I to S.
+	 * 3. States M (before merge event was raised) and F (final). The DAG is 
+	 *    completed, therefore there is nothing to do here.
 	 */
 	@Override
 	public <P, R> void visit(Map<P, R> skeleton) {
@@ -311,9 +323,12 @@ class AEstimator implements SkeletonVisitor {
 					SGenerator subSkel = new SGenerator(smHead.getStrace(),
 							t,card,rho,muscles);
 					skeleton.getSkeleton().accept(subSkel);
+					AEstimator subAE = new AEstimator(t,card, 
+							subSkel.getSMHead(),muscles,rho);
+					skeleton.getSkeleton().accept(subAE);
 					smHead.getInitialActivity().addSubsequent(
-							subSkel.getInitialAct());
-					subSkel.getLastAct().addSubsequent(
+							subSkel.getSMHead().getInitialActivity());
+					subSkel.getSMHead().getLastActivity().addSubsequent(
 							smHead.getLastActivity());
 				}
 				return;
@@ -329,6 +344,9 @@ class AEstimator implements SkeletonVisitor {
 		}
 	}
 
+	/**
+	 * Fork skeleton is not supported.
+	 */
 	@Override
 	public <P, R> void visit(Fork<P, R> skeleton) {
 		throw new RuntimeException("Should not be here!");
