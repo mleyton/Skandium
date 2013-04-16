@@ -351,7 +351,36 @@ class AEstimator implements SkeletonVisitor {
 	public <P, R> void visit(Fork<P, R> skeleton) {
 		throw new RuntimeException("Should not be here!");
 	}
-
+	
+	/**
+	 * In DaC case, there are the following scenarios:
+	 * 1. The DaC execution has not started, or the before condition event was
+	 *    raised (state I). In this scenario there are two alternatives for 
+	 *    complete the DAG
+	 *    a) This is a leaf on the recursive tree (current deep = card(c))
+	 *       -> c -> AEstimator(SGenerator(subSkel)) ->
+	 *       where "AEstimator(SGenerator(subSkel))" is the subSkel DAG 
+	 *       estimation.
+	 *    b) Is a node on the recursive tree (current deep < card(c))
+	 *                              
+	 *                  -> c (deep+1) -> ... ->
+	 *       -> c -> s --> ...              --> m ->
+	 *                  -> c (deep+1) -> ... -> 
+	 *       where "c (deep+1) -> ..." is repeated as many as card(s) calling
+	 *       recursively with deep+1, until it reaches alternative (a).
+	 * 2. Condition returned "true" (C state) or before split event was raised
+	 *    but after split event is not (S state). This is a very similar case
+	 *    than the (1b), the only difference is that the root split activity 
+	 *    already exists therefore is not necessary to create it. The rest of 
+	 *    activities are the same. 
+	 * 3. Condition returned "false" (G state). In this case it is just a 
+	 *    passthru to the subSkel estimation.
+	 * 4. After split event was raised (T state) there fore its sub DaC are
+	 *    in the middle of its own execution. It is just a passthru to the
+	 *    estimation of the sub DaCs
+	 * 5. Before merge event was raised (M state) or after merge was raised (F
+	 *    state).  The DAG is complete, nothing to estimate!
+	 */
 	@Override
 	public <P, R> void visit(DaC<P, R> skeleton) {
 		Split<?,?> s = skeleton.getSplit();
@@ -367,9 +396,12 @@ class AEstimator implements SkeletonVisitor {
 					SGenerator subSkel = new SGenerator(smHead.getStrace(),
 							t,card,rho,muscles);
 					skeleton.getSkeleton().accept(subSkel);
+					AEstimator subAE = new AEstimator(t,card, 
+							subSkel.getSMHead(),muscles,rho);
+					skeleton.getSkeleton().accept(subAE);
 					smHead.getInitialActivity().addSubsequent(
-							subSkel.getInitialAct());
-					setLastActivity(subSkel.getLastAct());
+							subSkel.getSMHead().getInitialActivity());
+					setLastActivity(subSkel.getSMHead().getLastActivity());
 					return;
 				}
 				Activity spl = new Activity(t,s,rho);
@@ -400,6 +432,9 @@ class AEstimator implements SkeletonVisitor {
 		}
 	}
 
+	/*
+	 * This private method has the common code for the DaC 1b and 2 scenarios
+	 */
 	private void addDaCChildren(int fsCard, int deep, DaC<?,?> skeleton,
 			Activity spl) {
 		Activity mrg = new Activity(t,skeleton.getMerge(),rho);
@@ -424,6 +459,9 @@ class AEstimator implements SkeletonVisitor {
 		throw new RuntimeException("Should not be here!");
 	}
 
+	/*
+	 * This private method is used for setting Activity a as last activity.
+	 */
 	private void setLastActivity(Activity a) {
 		a.resetSubsequents();
 		for (Activity s: smHead.getLastActivity().getSubsequents()) {
