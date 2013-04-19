@@ -105,7 +105,7 @@ public class AutonomicThreads {
 	 * This allows to set the seeds for the estimating algorithm.
 	 * @param rho rho system parameter, default value: 0.5 
 	 * @param wallClocktimeGoal WCT goal, default value: 0 in order to force a 
-	 * best effort execution..
+	 * best effort execution.
 	 * @param threadLimit It is possible that the level of parallelism needed
 	 * could result in a very high number. This parameter imposes a limit for 
 	 * the increase of threads.  Its default value is 2 times the number of 

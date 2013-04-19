@@ -18,6 +18,15 @@
 
 package cl.niclabs.skandium.autonomic;
 
+/**
+ * Box is an utility class that encloses a variable of type <T> into
+ * a class in order to allow mutation on final variables or pass by reference
+ * of primitives. 
+ * 
+ * @author Gustavo Adolfo Pabón <gustavo.pabon@gmail.com>
+ *
+ * @param <T> Type of variable to be enclosed by the Box
+ */
 class Box<T> {
 	private T var;
 	Box(T var) {
