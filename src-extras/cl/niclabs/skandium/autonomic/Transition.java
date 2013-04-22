@@ -20,10 +20,28 @@ package cl.niclabs.skandium.autonomic;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-
+/**
+ * This class represents a transition for the state machines. A transition is 
+ * comparable in order to allow the use of a priority queue during the 
+ * event/transition analysis. 
+ * 
+ * It is an abstract class because the final classes should implement on of the
+ * three possible execute methods depending of the type and number of 
+ * parameters.
+ * 
+ * @author Gustavo Adolfo Pabón <gustavo.pabon@gmail.com>
+ *
+ */
 abstract class Transition implements Comparable<Transition> {
 	
+	/**
+	 * Transition label is the (uniquely) identification of the transition. 
+	 */
 	protected TransitionLabel tl;
+	
+	/**
+	 * Destination state
+	 */
 	private State dest;
 	
 	Transition(TransitionLabel tl, State dest) {
@@ -56,6 +74,11 @@ abstract class Transition implements Comparable<Transition> {
 		return tl.compareTo(t.tl);
 	}
 	
+	/**
+	 * Checks if the transition is related to the event
+	 * @param event  Event that was raised
+	 * @return if "this" transition is related to the event.
+	 */
 	boolean isTheOne(int eventIndex, int eventParent) {
 		return tl.isTheOne(eventIndex, eventParent);
 	}

@@ -23,22 +23,80 @@ import java.util.Stack;
 
 import cl.niclabs.skandium.skeletons.Skeleton;
 
+/**
+ * State Machine Header. There is a relation one-to-one between a 
+ * Skeleton, on the nested Skeletons, and a State Machine Header (SMHead).
+ * The smHead holds runtime information about state machine:
+ *    a. its related Skeleton trace,
+ *    b. runtime index for identification for relation with the events, 
+ *    c. parent runtime index if its current skeleton is DaC, 
+ *    d. current state, 
+ *    e. initial and last activities, 
+ *    f. specific skeleton runtime information:
+ *     	- Counter of While
+ *		- Current Activity of While
+ *      - Deep of DaC
+ *    g. Sub SMHeads, for modeling nested relations and holds statuses of 
+ *       internal nested skeleton's instances.
+ *         
+ * @author Gustavo Adolfo Pabón <gustavo.pabon@gmail.com>
+ *
+ */
 class SMHead {
+	/**
+	 * Constant that represents an undefined index.
+	 */
 	static final int UDEF = -1;
 	
+	/*
+	 * Skeleton's trace
+	 */
 	private Stack<Skeleton<?,?>> strace;
+
+	/*
+	 * runtime index for identification for relation with the events
+	 */
 	private int index;
+	
+	/*
+	 * parent runtime index if its current skeleton is DaC
+	 */
 	private int dacParent;
 	
+	/*
+	 * current state
+	 */
 	private State currState;
+	
+	/*
+	 * Initial activity
+	 */
 	private Activity initial;
+	
+	/*
+	 * Last activity
+	 */
 	private Activity last;
 	
+	/*
+	 * Counter of while stages
+	 */
 	private int whileCounter;
+	
+	/*
+	 * While last(current) activity
+	 */
 	private Activity whileCurrentActivity;
 	
+	/*
+	 * Recursive tree deep of DaC
+	 */
 	private int dacDeep;
 	
+	/*
+	 * Sub SMHeads, for modeling nested relations and holds statuses of 
+	 * internal nested skeleton's instances
+	 */
 	private ArrayList<SMHead> subs;
 	
 	SMHead(Stack<Skeleton<?,?>> strace) {

@@ -21,11 +21,34 @@ package cl.niclabs.skandium.autonomic;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * An state is composed by tree attributes
+ * a) List of out-bound transitions
+ * b) is it a persistent state? A state is persisten if it is removed from the 
+ *    active states list when all its transitions have been occurred.  For 
+ *    example a "map/dac after split" state. 
+ * c) type of state defined on Enumeration StateType
+ * 
+ * @author Gustavo Adolfo Pabón <gustavo.pabon@gmail.com>
+ *
+ */
 class State {
 	
+	/*
+	 * List of out-bound transitions
+	 */
  	private List<Transition> transitions;
+ 	
+ 	/*
+ 	 * is it a persistent state? A state is persisten if it is removed from the 
+     * active states list when all its transitions have been occurred.  For 
+     * example a "map/dac after split" state.
+ 	 */
 	private boolean isPersistent;
+	
+	/*
+	 * type of state defined on Enumeration StateType
+	 */
 	private StateType type;
 	
 	State(StateType type) {
@@ -40,6 +63,11 @@ class State {
 	void addTransition(Transition t) {
 		transitions.add(t);
 	}
+	
+	/**
+	 * Gets all transitions, from the out-bound transitions list that could be
+	 * related to the event. 
+	 */
 	List<Transition> getTransitions(TransitionLabel event) {
 		List<Transition> areIn = new ArrayList<Transition>();
 		for (Transition t : transitions) 
@@ -49,6 +77,12 @@ class State {
 	List<Transition> getTransitions() {
 		return transitions;
 	}
+	/**
+	 * Removes "this" state from the list of active states, "l", taking into 
+	 * account if "this" is a persistent state or not. 
+	 * @param l List of active state.  "This" will be removed from that list
+	 * @param t Transition that was just executed.
+	 */
 	void remove(List<State> l, Transition t) {
 		if (!isPersistent) {
 			l.remove(this);

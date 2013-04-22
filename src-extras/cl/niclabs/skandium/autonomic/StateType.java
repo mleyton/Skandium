@@ -18,6 +18,45 @@
 
 package cl.niclabs.skandium.autonomic;
 
+/**
+ * Enumeration of Types of States
+ * 
+ * @author Gustavo Adolfo Pabón <gustavo.pabon@gmail.com>
+ *
+ */
 enum StateType {
- I, F, S, M, C, T, G
+	/**
+	 * Initial state for all skeletons
+	 */
+	I, 
+	
+	/**
+	 * Final state for all skeletons
+	 */
+	F, 
+	
+	/**
+	 * After split state for Map, and before split state for DaC
+	 */
+	S, 
+	
+	/**
+	 * Before merge state for Map and DaC
+	 */
+	M, 
+	
+	/**
+	 * After condition state for DaC
+	 */
+	C, 
+	
+	/**
+	 * True case on while and after split state for DaC 
+	 */
+	T, 
+	
+	/**
+	 * Fase case, after condition, for DaC
+	 */
+	G
 }
